@@ -113,7 +113,26 @@ function embeddedMetricFor(p={}){
   const doi=String(p.doi||'').toLowerCase();const issn=normalizeIssn(p.issn);const journal=journalMetricKey(p.journal);
   return {...(embeddedJournalMetrics.by_journal?.[journal]||{}),...(embeddedJournalMetrics.by_issn?.[issn]||{}),...(embeddedJournalMetrics.by_doi?.[doi]||{})};
 }
-let pubs=(Array.isArray(data.publications)?data.publications:[]).map(p=>({...p,...embeddedMetricFor(p)}));
+function publicationTimestamp(p={}){
+  const raw=String(p.publication_date||p.published_date||p.date||'').trim();
+  const parsed=raw?Date.parse(raw):NaN;
+  if(Number.isFinite(parsed))return parsed;
+  const year=Number(p.year)||0;
+  const month=Math.min(12,Math.max(1,Number(p.month)||1));
+  const day=Math.min(31,Math.max(1,Number(p.day)||1));
+  return Date.UTC(year,month-1,day);
+}
+function newestFirst(a={},b={}){
+  // Publication chronology must come first. A newly discovered older record
+  // must never appear ahead of a genuinely newer publication.
+  const byDate=publicationTimestamp(b)-publicationTimestamp(a);
+  if(byDate)return byDate;
+  const byYear=(Number(b.year)||0)-(Number(a.year)||0);
+  if(byYear)return byYear;
+  return (b._newly_discovered?1:0)-(a._newly_discovered?1:0);
+}
+function sortPublications(list=[]){return [...list].sort(newestFirst)}
+let pubs=sortPublications((Array.isArray(data.publications)?data.publications:[]).map(p=>({...p,...embeddedMetricFor(p)})));
 if(embeddedJournalMetrics.updated_at)data.last_updated=embeddedJournalMetrics.updated_at;
 const PUBLICATION_PREVIEW_LIMIT=8;
 let showAllPublications=false;
@@ -206,13 +225,13 @@ function renderPublications(list){
     const media=v.src?`<span class="pub-thumb ${v.isGA?'has-ga':'publisher-preview'}"><img src="${v.src}" data-publication-visual loading="lazy" decoding="async" alt="${safeText(alt)}, ${safeText(original||'publication')}">${v.isGA?`<em>${safeText(t('graphical_abstract'))}</em>`:''}</span>`:'';
     const originalLine=showOriginal?`<small class="pub-original"><b>${safeText(t('pub_original_title'))}:</b> ${safeText(original)}</small>`:'';
     const authors=p.authors?`<small class="pub-authors">${safeText(p.authors)}</small>`:'';
-    return `<a class="pub-row ${v.src?'has-visual':'no-visual'}" href="${safeUrl(p.url||'#')}" target="_blank" rel="noopener">${media}<span class="pub-year">${safeText(p.year||'n.d.')}</span><span class="pub-title">${safeText(title)}${authors}${originalLine}</span><span class="pub-journal">${safeText(p.journal||'')}</span><span class="badges">${publicationMetricBadges(p,true)}</span><span class="pub-arrow">↗</span></a>`
+    return `<a class="pub-row ${v.src?'has-visual':'no-visual'}" href="${safeUrl(p.url||'#')}" target="_blank" rel="noopener"><span class="pub-year">${safeText(p.year||'n.d.')}</span>${media}<span class="pub-title">${safeText(title)}${authors}${originalLine}</span><span class="pub-journal">${safeText(p.journal||'')}</span><span class="badges">${publicationMetricBadges(p,true)}</span><span class="pub-arrow">↗</span></a>`
   }).join('');
   installImageFallbacks(host);
 }
 function renderUpdates(){
   const host=$('#updateGrid');if(!host)return;
-  const latest=[...pubs].sort((a,b)=>(b.year||0)-(a.year||0)).slice(0,3);
+  const latest=sortPublications(pubs).slice(0,3);
   if(!latest.length){host.innerHTML=`<article class="update-card no-visual"><div class="update-body"><span class="date">${safeText(t('news_kicker'))}</span><h3>${safeText(cleanDisplayTitle(t('pub_future')))}</h3></div></article>`;return}
   host.innerHTML=latest.map(p=>{
     const v=visualFor(p);const alt=v.isGA?t('graphical_abstract_alt'):t('publisher_visual_alt');const title=translatedTitle(p);
@@ -250,13 +269,14 @@ async function refreshFromOpenAlex(){
       const doi=String(work.doi||'').replace(/^https?:\/\/(?:dx\.)?doi\.org\//i,'');
       const title=cleanDisplayTitle(work.title);
       const fallback=fallbackByDoi.get(doi.toLowerCase())||fallbackByTitle.get(title.toLowerCase())||{};
+      const newlyDiscovered=!fallback.title&&!fallback.doi;
       const sourceObject=work.primary_location?.source||work.host_venue||{};
       const source=sourceObject.display_name||'Research publication';
       const issn=normalizeIssn(sourceObject.issn_l||sourceObject.issn?.[0]||fallback.issn||'');
       const authors=(work.authorships||[]).map(a=>a.author?.display_name).filter(Boolean);
       const publication={
         ...fallback,
-        year:work.publication_year||fallback.year||'',title,
+        year:work.publication_year||fallback.year||'',publication_date:work.publication_date||fallback.publication_date||'',_newly_discovered:newlyDiscovered,title,
         authors:authors.length?`${authors.slice(0,7).join(', ')}${authors.length>7?' et al.':''}`:(fallback.authors||''),
         journal:source,details:work.biblio?.volume?[work.biblio.volume,work.biblio.issue].filter(Boolean).join('(')+(work.biblio.issue?')':''):(fallback.details||''),
         citations:Number.isFinite(+work.cited_by_count)?+work.cited_by_count:(fallback.citations||0),
@@ -275,7 +295,7 @@ async function refreshFromOpenAlex(){
       const titleKey=`title:${cleanDisplayTitle(p.title).toLowerCase()}`;
       return !(doiKey&&liveKeys.has(doiKey))&&!liveKeys.has(titleKey);
     });
-    pubs=[...fresh,...curatedOnly].sort((a,b)=>(b.year||0)-(a.year||0));
+    pubs=sortPublications([...fresh,...curatedOnly]);
     await refreshJournalMetrics();
     const citationCounts=pubs.map(p=>Number.isFinite(+p.citations)?+p.citations:0).sort((a,b)=>b-a);
     data.metrics={

@@ -672,3 +672,59 @@ html[data-language="ko"] .lab-name small{letter-spacing:.05em;line-height:1.25}
   .hero-emblem.hero-process{width:56vw}
   .hero h1{font-size:32px}
 }
+
+
+/* ========================= V12 requested refinements =========================
+   Keep newest publications first and make text-only Latest Work cards look
+   intentional when no graphical abstract is available. */
+.update-grid{align-items:stretch}
+.update-card{height:100%}
+.update-card.no-visual{
+  border-top:4px solid var(--coral);
+  background:
+    radial-gradient(circle at 88% 12%,rgba(232,111,72,.13),transparent 25%),
+    linear-gradient(145deg,rgba(255,255,255,.94),rgba(243,238,231,.80));
+}
+.update-card.no-visual .update-body{min-height:0;padding:36px 28px 26px}
+.update-card.no-visual h3{margin:30px 0 18px;font-size:clamp(28px,1.75vw,36px);line-height:1.07}
+.update-card.no-visual .update-authors{font-size:13px;line-height:1.42;-webkit-line-clamp:3}
+.update-card.no-visual:after{right:24px;top:22px;opacity:.16}
+.update-card .update-authors{font-size:13px;line-height:1.42;color:rgba(20,47,61,.62);margin:0 0 12px}
+.update-card .update-body>p:not(.update-authors){font-size:14px;line-height:1.45}
+.update-metrics{display:flex;flex-wrap:wrap;gap:6px}
+@media(max-width:720px){
+  .update-card.no-visual .update-body{padding:30px 22px 22px}
+  .update-card.no-visual h3{font-size:29px}
+}
+
+
+/* ========================= V13 publication chronology + row order =========================
+   Latest Work follows the actual publication date. Older papers newly found by
+   OpenAlex no longer jump ahead of newer papers. Publication-list rows always
+   place the year at the far left, followed by the graphical abstract. */
+.pub-row.has-visual{grid-template-columns:62px 170px minmax(330px,1.3fr) minmax(170px,.48fr) 210px 36px}
+.pub-row.has-visual .pub-year{grid-column:1}
+.pub-row.has-visual .pub-thumb{grid-column:2}
+.pub-row.has-visual .pub-title{grid-column:3}
+.pub-row.has-visual .pub-journal{grid-column:4}
+.pub-row.has-visual .badges{grid-column:5}
+.pub-row.has-visual .pub-arrow{grid-column:6}
+
+@media(max-width:1180px){
+  .pub-row.has-visual{grid-template-columns:58px 145px minmax(0,1fr) 190px 34px}
+  .pub-row.has-visual .pub-year{grid-column:1}
+  .pub-row.has-visual .pub-thumb{grid-column:2}
+  .pub-row.has-visual .pub-title{grid-column:3}
+  .pub-row.has-visual .pub-journal{display:none}
+  .pub-row.has-visual .badges{grid-column:4}
+  .pub-row.has-visual .pub-arrow{grid-column:5}
+}
+@media(max-width:720px){
+  .pub-row.has-visual{grid-template-columns:52px 1fr 28px}
+  .pub-row.has-visual .pub-year{grid-column:1/4;grid-row:1}
+  .pub-row.has-visual .pub-thumb{grid-column:1/4;grid-row:2;width:100%;height:auto;aspect-ratio:16/8}
+  .pub-row.has-visual .pub-title{grid-column:1/3;grid-row:3}
+  .pub-row.has-visual .pub-journal{display:block;grid-column:1/3;grid-row:4}
+  .pub-row.has-visual .badges{grid-column:1/3;grid-row:5}
+  .pub-row.has-visual .pub-arrow{grid-column:3;grid-row:3}
+}

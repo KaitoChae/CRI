@@ -236,8 +236,8 @@ function publicationMetricBadges(p={},includeCitations=false){
   const impactTip=hasOfficial?[p.impact_factor_source,p.impact_factor_year,p.impact_factor_kind==='reported_jif'?'Third-party report; official publisher/JCR verification pending':null].filter(Boolean).join(' · '):'No independently year-checked Journal Impact Factor. OpenAlex is not the JIF.';
   const impactSource=hasOfficial?safeImageSrc(p.impact_factor_source_url):'';
   const cite=includeCitations&&Number.isFinite(+p.citations)?`<b class="badge citation-badge">${+p.citations} ${safeText(t('cited'))}</b>`:'';
-  const rankElement=(text,extra='')=>rankUrl&&hasRank?`<a class="badge ${extra}" href="${safeText(rankUrl)}" target="_blank" rel="noopener noreferrer" title="${safeText(sjrTitle)}">${safeText(text)} ↗</a>`:`<span class="badge ${extra} na" title="Not confirmed">${safeText(text)}</span>`;
-  const impactBadge=impactSource?`<a class="badge if" href="${safeText(impactSource)}" target="_blank" rel="noopener noreferrer" title="${safeText(impactTip)}">${safeText(iff)} ↗</a>`:`<span class="badge na" title="${safeText(impactTip)}">${safeText(iff)}</span>`;
+  const rankElement=(text,extra='')=>rankUrl&&hasRank?`<a class="badge ${extra}" href="${safeText(rankUrl)}" target="_blank" rel="noopener noreferrer" title="${safeText(sjrTitle)}">${safeText(text)}</a>`:`<span class="badge ${extra} na" title="Not confirmed">${safeText(text)}</span>`;
+  const impactBadge=impactSource?`<a class="badge if" href="${safeText(impactSource)}" target="_blank" rel="noopener noreferrer" title="${safeText(impactTip)}">${safeText(iff)}</a>`:`<span class="badge na" title="${safeText(impactTip)}">${safeText(iff)}</span>`;
   // Each badge links to its own dated source; article click is a sibling.
   return `<span class="metric-group" title="${safeText(sjrTitle)}">${rankElement(sjr,'sjr')}${rankElement(qtile,badgeClass(qtile))}${impactBadge}</span>${cite}`;
 }
@@ -261,7 +261,7 @@ function renderPublications(list){
     const media=v.src?`<span class="pub-thumb ${v.isGA?'has-ga':'publisher-preview'}"><img src="${v.src}" data-publication-visual loading="lazy" decoding="async" alt="${safeText(alt)}, ${safeText(original||'publication')}">${v.isGA?`<em>${safeText(t('graphical_abstract'))}</em>`:''}</span>`:'';
     const originalLine=showOriginal?`<small class="pub-original"><b>${safeText(t('pub_original_title'))}:</b> ${safeText(original)}</small>`:'';
     const authors=p.authors?`<small class="pub-authors">${safeText(p.authors)}</small>`:'';
-    return `<div class="pub-row ${v.src?'has-visual':'no-visual'}"><a class="pub-row-link" href="${safeUrl(p.url||'#')}" aria-label="${safeText(title)} — publication" target="_blank" rel="noopener noreferrer"></a><span class="pub-year">${safeText(p.year||'n.d.')}</span>${media}<span class="pub-title">${safeText(title)}${authors}${originalLine}</span><span class="pub-journal">${safeText(p.journal||'')}</span><span class="badges">${publicationMetricBadges(p,true)}</span><span class="pub-arrow">↗</span></div>`
+    return `<div class="pub-row ${v.src?'has-visual':'no-visual'}"><a class="pub-row-link" href="${safeUrl(p.url||'#')}" aria-label="${safeText(title)} — publication" target="_blank" rel="noopener noreferrer"></a><span class="pub-year">${safeText(p.year||'n.d.')}</span>${media}<span class="pub-title">${safeText(title)}${authors}${originalLine}</span><span class="pub-journal">${safeText(p.journal||'')}</span><span class="badges">${publicationMetricBadges(p,true)}</span></div>`
   }).join('');
   installImageFallbacks(host);
 }

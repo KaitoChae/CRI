@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
   <link rel="icon" href="assets/cri-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/site.css?v=33">
+  <link rel="stylesheet" href="assets/site.css?v=41">
 </head>
 <body>
   <div class="progress" id="progress"></div>
@@ -238,19 +238,20 @@
         <div class="education" aria-label="Education">
           <span class="education-heading" data-i18n="pi_education">EDUCATION</span>
           <div class="education-list">
-            <a class="degree" href="https://www.ntust.edu.tw/" target="_blank" rel="noopener">
-              <span class="university-mark university-ntust"><img src="https://www.ntust.edu.tw/var/file/0/1000/img/2340/593120903.png" alt="Taiwan Tech university emblem" loading="lazy" decoding="async"><b aria-hidden="true">NTUST</b></span>
-              <span class="degree-copy"><b data-i18n="degree_bsc">Bachelor of Science</b><small data-i18n="university_ntust">National Taiwan University of Science and Technology</small></span><time datetime="2018">2018</time>
-            </a>
-            <a class="degree" href="https://www.global.hokudai.ac.jp/" target="_blank" rel="noopener">
-              <span class="university-mark university-hokudai"><img src="https://www.hokudai.ac.jp/bureau/info-j/image/symbolmark.gif" alt="Hokkaido University emblem" loading="lazy" decoding="async"><b aria-hidden="true">HU</b></span>
-              <span class="degree-copy"><b data-i18n="degree_meng">Master of Engineering</b><small data-i18n="university_hokudai">Hokkaido University</small></span><time datetime="2020">2020</time>
-            </a>
-            <a class="degree" href="https://www.global.hokudai.ac.jp/" target="_blank" rel="noopener">
-              <span class="university-mark university-hokudai"><img src="https://www.hokudai.ac.jp/bureau/info-j/image/symbolmark.gif" alt="Hokkaido University emblem" loading="lazy" decoding="async"><b aria-hidden="true">HU</b></span>
-              <span class="degree-copy"><b data-i18n="degree_phd">Doctor of Philosophy (Ph.D.)</b><small data-i18n="university_hokudai">Hokkaido University</small></span><time datetime="2024">2024</time>
-            </a>
+            <div class="degree">
+              <a class="university-mark university-ntust" href="https://www.ntust.edu.tw/" target="_blank" rel="noopener noreferrer" aria-label="National Taiwan University of Science and Technology website"><img src="https://www.ntust.edu.tw/var/file/0/1000/img/2340/593120903.png" alt="Taiwan Tech university emblem" loading="lazy" decoding="async"><b aria-hidden="true">NTUST</b></a>
+              <span class="degree-copy"><b data-i18n="degree_bsc">Bachelor of Science</b><a class="university-name" href="https://www.ntust.edu.tw/" target="_blank" rel="noopener noreferrer" data-i18n="university_ntust">National Taiwan University of Science and Technology</a><a class="qs-ranking" href="https://www.topuniversities.com/universities/national-taiwan-university-science-technology-taiwan-tech" target="_blank" rel="noopener noreferrer" aria-label="Taiwan Tech QS World University Rankings 2027, tied 379th">QS 2027 <strong>#=379</strong> ↗</a></span><time datetime="2018">2018</time>
+            </div>
+            <div class="degree">
+              <a class="university-mark university-hokudai" href="https://www.global.hokudai.ac.jp/" target="_blank" rel="noopener noreferrer" aria-label="Hokkaido University website"><img src="https://www.hokudai.ac.jp/bureau/info-j/image/symbolmark.gif" alt="Hokkaido University emblem" loading="lazy" decoding="async"><b aria-hidden="true">HU</b></a>
+              <span class="degree-copy"><b data-i18n="degree_meng">Master of Engineering</b><a class="university-name" href="https://www.global.hokudai.ac.jp/" target="_blank" rel="noopener noreferrer" data-i18n="university_hokudai">Hokkaido University</a><a class="qs-ranking" href="https://www.topuniversities.com/universities/hokkaido-university" target="_blank" rel="noopener noreferrer" aria-label="Hokkaido University QS World University Rankings 2027, tied 179th">QS 2027 <strong>#=179</strong> ↗</a></span><time datetime="2020">2020</time>
+            </div>
+            <div class="degree">
+              <a class="university-mark university-hokudai" href="https://www.global.hokudai.ac.jp/" target="_blank" rel="noopener noreferrer" aria-label="Hokkaido University website"><img src="https://www.hokudai.ac.jp/bureau/info-j/image/symbolmark.gif" alt="Hokkaido University emblem" loading="lazy" decoding="async"><b aria-hidden="true">HU</b></a>
+              <span class="degree-copy"><b data-i18n="degree_phd">Doctor of Philosophy (Ph.D.)</b><a class="university-name" href="https://www.global.hokudai.ac.jp/" target="_blank" rel="noopener noreferrer" data-i18n="university_hokudai">Hokkaido University</a><a class="qs-ranking" href="https://www.topuniversities.com/universities/hokkaido-university" target="_blank" rel="noopener noreferrer" aria-label="Hokkaido University QS World University Rankings 2027, tied 179th">QS 2027 <strong>#=179</strong> ↗</a></span><time datetime="2024">2024</time>
+            </div>
           </div>
+          <small class="education-rank-note" data-i18n="qs_rank_note">QS World University Rankings 2027 · Click a rank to verify with QS.</small>
         </div>
         <div class="person-links">
           <a href="https://researchmap.jp/chaerunrislam" target="_blank" rel="noopener"><span data-i18n="pi_researchmap">Researchmap ↗</span></a>
@@ -279,7 +280,7 @@
       <div class="pub-search-status reveal" id="pubSearchStatus" aria-live="polite"></div>
       <div class="pub-list" id="pubList"></div>
       <div class="pub-note">
-        <span data-i18n="metric_note">SJR/Q: SCImago (annual); IF*: OpenAlex 2-year mean citedness (not Clarivate JIF). Citations: OpenAlex.</span>
+        <span data-i18n="metric_note">SJR/Q: SCImago (annual). JIF: publisher-verified, source linked; IF*: OpenAlex proxy (not JIF). Citations: OpenAlex.</span>
         <button class="pub-toggle" id="pubToggle" type="button" aria-controls="pubList" aria-expanded="false">View all publications</button>
       </div>
     </section>
@@ -321,9 +322,9 @@
     </div>
   </footer>
 
-  <script src="assets/journal-metrics.js?v=40"></script>
-  <script src="assets/publications.js?v=40"></script>
-  <script src="assets/translations.js?v=40"></script>
-  <script src="assets/app.js?v=40"></script>
+  <script src="assets/journal-metrics.js?v=41"></script>
+  <script src="assets/publications.js?v=41"></script>
+  <script src="assets/translations.js?v=41"></script>
+  <script src="assets/app.js?v=41"></script>
 </body>
 </html>

@@ -119,7 +119,16 @@ function embeddedMetricFor(p={}){
   const doi=String(p.doi||'').toLowerCase();const issn=normalizeIssn(p.issn);const journal=journalMetricKey(p.journal);
   // Journal indicators belong to a source, not to an article. Old snapshots
   // may contain article citations: NEVER overwrite live OpenAlex citations.
-  const metric={...(embeddedJournalMetrics.by_journal?.[journal]||{}),...(embeddedJournalMetrics.by_issn?.[issn]||{}),...(embeddedJournalMetrics.by_doi?.[doi]||{})};
+  const candidates=[embeddedJournalMetrics.by_journal?.[journal],embeddedJournalMetrics.by_issn?.[issn],embeddedJournalMetrics.by_doi?.[doi]].filter(Boolean);
+  let metric=Object.assign({},...candidates);
+  // A DOI-specific OpenAlex proxy may be stale. Prefer a verified official JIF
+  // from any matching journal-level record over ALL OpenAlex proxies.
+  const publishedJif=candidates.filter(x=>x.impact_factor_kind==='jcr').sort((a,b)=>(Number(b.impact_factor_year)||0)-(Number(a.impact_factor_year)||0))[0];
+  if(publishedJif){
+    for(const k of ['impact_factor','impact_factor_year','impact_factor_kind','impact_factor_source','impact_factor_source_url']){
+      if(k in publishedJif)metric[k]=publishedJif[k];else delete metric[k];
+    }
+  }
   delete metric.citations;delete metric.issn;
   return metric;
 }
@@ -211,11 +220,13 @@ function publicationMetricBadges(p={},includeCitations=false){
   const hasIf=p.impact_factor!==undefined&&p.impact_factor!==null&&p.impact_factor!==''&&Number.isFinite(Number(p.impact_factor));
   const isOpenAlex=p.impact_factor_kind!=='jcr';
   const ifLabel=isOpenAlex?'IF*':'JIF';
-  const iff=hasIf?`${ifLabel} ${Number(p.impact_factor).toFixed(3).replace(/0+$/,'').replace(/\.$/,'')}`:(p.type||'').toLowerCase().includes('conference')?t('no_jif'):`${ifLabel} n/a`;
+  const iff=hasIf?`${ifLabel} ${Number(p.impact_factor).toFixed(3).replace(/0+$/,'').replace(/\.$/,'')}${!isOpenAlex&&p.impact_factor_year?` (${p.impact_factor_year})`:''}`:(p.type||'').toLowerCase().includes('conference')?t('no_jif'):`${ifLabel} n/a`;
   const sjrTitle=[p.sjr_source,p.sjr_year].filter(Boolean).join(', ');
   const ifTitle=[p.impact_factor_source,p.impact_factor_year, ...(isOpenAlex?['OpenAlex proxy; not the Clarivate JIF']:[])].filter(Boolean).join(', ');
   const cite=includeCitations&&Number.isFinite(+p.citations)?`<b class="badge">${+p.citations} ${safeText(t('cited'))}</b>`:'';
-  return `<b class="badge sjr ${hasSjr?'':'na'}" title="${safeText(sjrTitle)}">${safeText(sjr)}</b><b class="badge ${badgeClass(qtile)}" title="${safeText(sjrTitle)}">${safeText(qtile)}</b><b class="badge ${hasIf?'if':'na'}" title="${safeText(ifTitle)}">${safeText(iff)}</b>${cite}`;
+  const jifSource=p.impact_factor_kind==='jcr'?safeImageSrc(p.impact_factor_source_url):'';
+  const impactBadge=jifSource?`<a class="badge ${hasIf?'if':'na'}" href="${safeText(jifSource)}" target="_blank" rel="noopener noreferrer" title="${safeText(ifTitle)}">${safeText(iff)} ↗</a>`:`<b class="badge ${hasIf?'if':'na'}" title="${safeText(ifTitle)}">${safeText(iff)}</b>`;
+  return `<b class="badge sjr ${hasSjr?'':'na'}" title="${safeText(sjrTitle)}">${safeText(sjr)}</b><b class="badge ${badgeClass(qtile)}" title="${safeText(sjrTitle)}">${safeText(qtile)}</b>${impactBadge}${cite}`;
 }
 function updatePublicationToggle(){
   const button=$('#pubToggle');if(!button)return;

@@ -751,3 +751,15 @@ html[data-language="ko"] .lab-name small{letter-spacing:.05em;line-height:1.25}
 
 .university-mark b{display:none;font:800 10px/1 var(--sans);color:var(--navy)}
 .university-mark:not(:has(img)) b{display:block}
+
+/* QS World University Rankings 2027 — cited rankings beside each degree. */
+.degree .university-name{display:inline-block;width:fit-content;max-width:100%;font-size:clamp(11px,.76vw,13px);line-height:1.3;color:rgba(20,47,61,.8);text-decoration:none}
+.degree .university-name:hover{text-decoration:underline;text-underline-offset:2px}
+.degree .qs-ranking{align-self:flex-start;width:fit-content;margin-top:3px;padding:4px 8px;border-radius:5px;border:1px solid rgba(20,47,61,.2);background:rgba(255,255,255,.48);font:700 10px/1.15 var(--display);letter-spacing:.035em;color:var(--navy);text-decoration:none}
+.degree .qs-ranking strong{font-weight:800;color:var(--coral)}
+.degree .qs-ranking:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+.degree .qs-ranking:hover strong{color:#e4ed9b}
+.education-rank-note{display:block;margin:8px 2px 0;opacity:.65;font-size:10px;line-height:1.45}
+.badge.if[href]{text-decoration:none;color:var(--navy);cursor:pointer}
+.badge.if[href]:hover{border-color:var(--navy);background:#ecf4ca}
+@media(max-width:375px){.degree .university-name{font-size:10px}.degree .qs-ranking{font-size:9px}}

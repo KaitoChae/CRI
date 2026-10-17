@@ -2,6 +2,7 @@
 // Impact Factor. We preserve that distinction throughout the UI and data.
 import fs from "node:fs/promises";
 import {PUBLICATIONS_FILE,METRICS_FILE,normalizeIssn,normalizeDoi,journalKey,readData,writeData,request,requestJson} from '../scripts/common.mjs';
+import {indexVerifiedJif,verifiedJifFor,mergePreferJif} from '../scripts/verified-jif.mjs';
 
 const TARGET_SCIMAGO_YEAR=new Date().getUTCFullYear()-1;
 const SCIMAGO_URL=`https://www.scimagojr.com/journalrank.php?out=xls&year=${TARGET_SCIMAGO_YEAR}`;
@@ -63,13 +64,14 @@ async function sourceFor(publication){
   return found.results?.[0]||null;
 }
 function bestMetric(original,patch){
-  // Only supplied/verified Clarivate values may be labeled as a JIF.
-  const result={...original,...patch};
+  const result=mergePreferJif(original,patch);
   if(result.impact_factor_kind==='openalex'){
     result.impact_factor_source='OpenAlex 2-year mean citedness (not Clarivate JIF)';
+    delete result.impact_factor_source_url;
   }
   return result;
 }
+
 async function main(){
   const snapshot=await readData(PUBLICATIONS_FILE,'LAB_PUBLICATION_DATA');
   let existing={updated_at:null,by_issn:{},by_journal:{},by_doi:{}};
@@ -80,10 +82,18 @@ async function main(){
     try{scimago=await fetchScimago();console.log('SCImago: indexed',scimago.size,'ISSNs')}
     catch(error){console.warn('SCImago download failed; retaining previous verified SJR values:',error.message)}
   }
-  // Optional journal-year JIF values obtained from a licensed JCR source.
-  // The file is empty by default; OpenAlex must never masquerade as JCR.
+  // JIF entries require a traceable, publisher-verified citation (not OpenAlex).
   let jcrOverrides={};
   try{jcrOverrides=JSON.parse(await fs.readFile('assets/jcr-jif-overrides.json','utf8'))}catch{}
+  const verified=indexVerifiedJif(jcrOverrides);
+  // Seed all verified journals, even if no paper has been added to the local
+  // publication snapshot yet. This supports new papers fetched in the browser.
+  for(const [issn,metric] of verified.byIssn){
+    next.by_issn[issn]=bestMetric(next.by_issn[issn]||{},metric);
+  }
+  for(const [journal,metric] of verified.byJournal){
+    next.by_journal[journal]=bestMetric(next.by_journal[journal]||{},metric);
+  }
   const sourceCache=new Map();let successful=0;
   for(const pub of snapshot.publications||[]){
     const doi=normalizeDoi(pub.doi);const issn=normalizeIssn(pub.issn);
@@ -100,23 +110,22 @@ async function main(){
       impact_factor:Number(impact.toFixed(3)),impact_factor_year:new Date().getUTCFullYear()-1,
       impact_factor_source:'OpenAlex 2-year mean citedness (not Clarivate JIF)',impact_factor_kind:'openalex'
     }:{};
-    const fromScimago=scimago.get(realIssn)||scimago.get(issn)||{};
-    const jifEntry=jcrOverrides[realIssn]||jcrOverrides[issn]||{};
-    const jcrNumber=Number(jifEntry.jif);
-    const licensed=(jifEntry.jif!==undefined&&jifEntry.year>=2000&&Number.isFinite(jcrNumber))?{
-      impact_factor:jcrNumber,impact_factor_year:jifEntry.year,
-      impact_factor_source:'Clarivate Journal Citation Reports (licensed)',impact_factor_kind:'jcr'
-    }:{};
-    const metric={...fromScimago,...oaImpact,...licensed};
+    const fromScimago=[realIssn,issn,...(source?.issn||[]).map(normalizeIssn)].map(id=>scimago.get(id)).find(Boolean)||{};
+    const official=verifiedJifFor(verified,{issn,sourceIssns:[realIssn,...(source?.issn||[])],journal:pub.journal})||{};
+    const metric={...fromScimago,...oaImpact,...official};
     if(Object.keys(metric).length)successful++;
     if(realIssn)next.by_issn[realIssn]=bestMetric(next.by_issn[realIssn]||{},metric);
     if(issn&&issn!==realIssn)next.by_issn[issn]=bestMetric(next.by_issn[issn]||{},metric);
     if(journal)next.by_journal[journal]=bestMetric(next.by_journal[journal]||{},metric);
     if(doi)next.by_doi[doi]=bestMetric(next.by_doi[doi]||{},metric);
   }
-  // Do not pretend we synced if APIs all failed.
-  if(!successful){console.error('No live journal metrics could be refreshed; snapshot unchanged');process.exitCode=1;return}
-  next.updated_at=new Date().toISOString();
+  // If every remote API failed, still preserve newly verified publisher JIFs
+  // without pretending remote journal/citation data have been refreshed.
+  if(!successful){
+    if(!verified.byIssn.size){console.error('No journal metrics could be refreshed; snapshot unchanged');process.exitCode=1;return}
+    console.warn('No live journal metrics available; retaining existing SJR/OpenAlex and verified publisher JIF only');
+  }
+  next.updated_at=successful?new Date().toISOString():existing.updated_at;
   await writeData(METRICS_FILE,'CRI_JOURNAL_METRICS',next);
   console.log(`Refreshed metrics for ${successful} journal entries; SJR export ${scimago.size?'fresh':'previous data preserved'}.`);
 }

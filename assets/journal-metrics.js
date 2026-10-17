@@ -248,6 +248,13 @@ window.CRI_JOURNAL_METRICS={
       "impact_factor_kind": "openalex",
       "citations": 26,
       "issn": "00223131"
+    },
+    "27728269": {
+      "impact_factor": 9.1,
+      "impact_factor_year": 2025,
+      "impact_factor_kind": "jcr",
+      "impact_factor_source": "Elsevier / ScienceDirect — publisher-listed Journal Impact Factor",
+      "impact_factor_source_url": "https://www.sciencedirect.com/browse/calls-for-papers?subject=chemistry"
     }
   },
   "by_journal": {
@@ -448,6 +455,13 @@ window.CRI_JOURNAL_METRICS={
       "impact_factor_kind": "openalex",
       "citations": 2,
       "issn": "29481546"
+    },
+    "sustainable chemistry for climate action": {
+      "impact_factor": 9.1,
+      "impact_factor_year": 2025,
+      "impact_factor_kind": "jcr",
+      "impact_factor_source": "Elsevier / ScienceDirect — publisher-listed Journal Impact Factor",
+      "impact_factor_source_url": "https://www.sciencedirect.com/browse/calls-for-papers?subject=chemistry"
     }
   },
   "by_doi": {

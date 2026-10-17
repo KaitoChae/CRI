@@ -301,3 +301,56 @@ const PROFILE_EDUCATION_TRANSLATIONS={
   }
 };
 Object.entries(PROFILE_EDUCATION_TRANSLATIONS).forEach(([language,labels])=>Object.assign(window.LAB_TRANSLATIONS[language],labels));
+
+// QS published June 2026 ranking release; publisher-confirmed JIF labels.
+const VERIFIED_RANK_METRIC_TRANSLATIONS = {
+  "en": {
+    "qs_rank_note": "QS World University Rankings 2027 · Click a ranking to check QS.",
+    "metric_note": "SJR/Q: SCImago (annual). JIF: publisher-verified (linked). IF*: OpenAlex citation proxy, not official JIF. Citations: OpenAlex."
+  },
+  "id": {
+    "qs_rank_note": "QS World University Rankings 2027 · Klik peringkat untuk melihat sumber QS.",
+    "metric_note": "SJR/Q: SCImago (tahunan). JIF: diverifikasi melalui penerbit (tautan tersedia). IF*: indikator OpenAlex, bukan JIF resmi. Sitasi: OpenAlex."
+  },
+  "ja": {
+    "qs_rank_note": "QS世界大学ランキング2027 · 順位を押すとQS公式ページを確認できます。",
+    "metric_note": "SJR/Q：SCImago（年次）。JIF：出版社の公表値（出典リンク付き）。IF*：OpenAlexの参考指標であり公式JIFではありません。被引用数：OpenAlex。"
+  },
+  "zh-CN": {
+    "qs_rank_note": "QS世界大学排名2027 · 点击排名查看QS官方页面。",
+    "metric_note": "SJR/Q：SCImago（每年）。JIF：出版社公布并附来源链接。IF*：OpenAlex引用指标，非官方JIF。引用次数：OpenAlex。"
+  },
+  "zh-TW": {
+    "qs_rank_note": "QS世界大學排名2027 · 點擊排名查看QS官方頁面。",
+    "metric_note": "SJR/Q：SCImago（每年）。JIF：出版社公布並附來源連結。IF*：OpenAlex引文指標，非官方JIF。引用次數：OpenAlex。"
+  },
+  "ko": {
+    "qs_rank_note": "QS 세계대학평가 2027 · 순위를 누르면 QS 공식 자료로 이동합니다.",
+    "metric_note": "SJR/Q: SCImago(연간). JIF: 출판사 공개값(출처 링크). IF*: OpenAlex 인용 지표이며 공식 JIF가 아님. 인용: OpenAlex."
+  },
+  "de": {
+    "qs_rank_note": "QS World University Rankings 2027 · Rang anklicken, um die QS-Quelle zu prüfen.",
+    "metric_note": "SJR/Q: SCImago (jährlich). JIF: durch den Verlag belegt (mit Quellenlink). IF*: OpenAlex-Zitationswert, kein offizieller JIF. Zitationen: OpenAlex."
+  },
+  "fr": {
+    "qs_rank_note": "Classement QS 2027 · Cliquez sur un rang pour vérifier la source QS.",
+    "metric_note": "SJR/Q : SCImago (annuel). JIF : valeur vérifiée auprès de l’éditeur (lien). IF* : indicateur OpenAlex, pas le JIF officiel. Citations : OpenAlex."
+  },
+  "es": {
+    "qs_rank_note": "QS World University Rankings 2027 · Haz clic en la posición para consultar QS.",
+    "metric_note": "SJR/Q: SCImago (anual). JIF: verificado por la editorial (enlace). IF*: indicador de OpenAlex, no JIF oficial. Citas: OpenAlex."
+  },
+  "it": {
+    "qs_rank_note": "QS World University Rankings 2027 · Clicca sulla posizione per verificare su QS.",
+    "metric_note": "SJR/Q: SCImago (annuale). JIF: confermato dall’editore (link). IF*: indice OpenAlex, non JIF ufficiale. Citazioni: OpenAlex."
+  },
+  "pt": {
+    "qs_rank_note": "QS World University Rankings 2027 · Clique na posição para conferir na QS.",
+    "metric_note": "SJR/Q: SCImago (anual). JIF: confirmado pela editora (link). IF*: métrica OpenAlex, não JIF oficial. Citações: OpenAlex."
+  },
+  "tr": {
+    "qs_rank_note": "QS Dünya Üniversite Sıralaması 2027 · QS kaynağı için sıralamaya tıklayın.",
+    "metric_note": "SJR/Q: SCImago (yıllık). JIF: yayıncı verisi (kaynak bağlantılı). IF*: OpenAlex göstergesi, resmî JIF değildir. Atıflar: OpenAlex."
+  }
+};
+Object.entries(VERIFIED_RANK_METRIC_TRANSLATIONS).forEach(([language,labels])=>Object.assign(window.LAB_TRANSLATIONS[language],labels));

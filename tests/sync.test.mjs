@@ -54,3 +54,61 @@ test('The shipped curated publication file is parseable',async()=>{
   const data=await readData(PUBLICATIONS_FILE,'LAB_PUBLICATION_DATA');
   assert.ok(data.publications.length>=10);
 });
+
+// Verification regression tests for user-reported wrong JIF (4.374 vs 9.1)
+const {indexVerifiedJif,verifiedJifFor,verifiedJifMetric,mergePreferJif}=await import('../scripts/verified-jif.mjs');
+const fs=await import('node:fs/promises');
+test('Elsevier publisher JIF 9.1 (2025) is preferred to the OpenAlex proxy 4.374',async()=>{
+  const verified=JSON.parse(await fs.readFile('assets/jcr-jif-overrides.json','utf8'));
+  const idx=indexVerifiedJif(verified);
+  const jifByIssn=verifiedJifFor(idx,{issn:'2772-8269',journal:'Sustainable Chemistry for Climate Action'});
+  const jifByTitle=verifiedJifFor(idx,{issn:'1234-5678',journal:'Sustainable Chemistry for Climate Action'});
+  assert.equal(jifByIssn.impact_factor,9.1);
+  assert.equal(jifByIssn.impact_factor_year,2025);
+  assert.equal(jifByIssn.impact_factor_kind,'jcr');
+  assert.equal(jifByTitle.impact_factor,9.1);
+  assert.match(jifByIssn.impact_factor_source_url,/sciencedirect\.com/);
+  const notJif={impact_factor:4.374,impact_factor_year:2025,impact_factor_kind:'openalex'};
+  assert.equal(mergePreferJif(jifByIssn,notJif).impact_factor,9.1);
+  assert.equal(mergePreferJif(notJif,jifByIssn).impact_factor,9.1);
+});
+test('Missing publisher provenance or invalid JIF cannot masquerade as official',()=>{
+  assert.equal(verifiedJifMetric({jif:9.1,year:2025}),null);
+  assert.equal(verifiedJifMetric({jif:'',year:2025,source:'Elsevier',source_url:'https://publisher.test/'}),null);
+  assert.equal(verifiedJifMetric({jif:9.1,year:2025,source:'Elsevier',source_url:'javascript:alert(1)'}),null);
+});
+test('Already-shipped website metrics include verified JIF for journal not yet in snapshot',async()=>{
+  const m=await readData('assets/journal-metrics.js','CRI_JOURNAL_METRICS');
+  assert.equal(m.by_issn['27728269'].impact_factor,9.1);
+  assert.equal(m.by_journal['sustainable chemistry for climate action'].impact_factor_kind,'jcr');
+});
+test('2027 QS university ranking badges link to official rankings',async()=>{
+  const html=await fs.readFile('index.html','utf8');
+  assert.match(html,/Taiwan Tech QS World University Rankings 2027, tied 379th/);
+  assert.match(html,/Hokkaido University QS World University Rankings 2027, tied 179th/);
+  assert.match(html,/QS 2027 <strong>#=379<\/strong>/);
+  assert.equal((html.match(/QS 2027 <strong>#=179<\/strong>/g)||[]).length,2);
+  assert.match(html,/https:\/\/www\.topuniversities\.com\/universities\/hokkaido-university/);
+});
+
+test('Browser merger cannot hide publisher JIF under article-specific stale IF*',async()=>{
+  const source=await fs.readFile('assets/app.js','utf8');
+  const vm=await import('node:vm');
+  const matcher=source.match(/function embeddedMetricFor\(p=\{\}\)\{[\s\S]*?\n\}/);
+  assert.ok(matcher,'Browser has journal-metrics merger');
+  const metrics=await readData('assets/journal-metrics.js','CRI_JOURNAL_METRICS');
+  const doi='10.0000/example-new-paper';
+  metrics.by_doi[doi]={impact_factor:4.374,impact_factor_kind:'openalex',impact_factor_year:2025};
+  const ctx={embeddedJournalMetrics:metrics,
+    normalizeIssn:v=>String(v||'').toUpperCase().replace(/[^0-9X]/g,'').slice(0,8),
+    journalMetricKey:v=>String(v||'').toLowerCase().trim()};
+  vm.runInNewContext(matcher[0]+'\nthis.metricFor=embeddedMetricFor;',ctx);
+  for(const paper of [
+    {journal:'Sustainable Chemistry for Climate Action',doi,issn:'2772-8269'},
+    {journal:'Sustainable Chemistry for Climate Action',doi,issn:''}]){
+    const resolved=ctx.metricFor(paper);
+    assert.equal(resolved.impact_factor,9.1);
+    assert.equal(resolved.impact_factor_kind,'jcr');
+    assert.equal(resolved.impact_factor_year,2025);
+  }
+});

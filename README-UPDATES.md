@@ -14,15 +14,19 @@ This is a **static HTML website** (works on GitHub Pages). There is no `/api/jou
 
 - **SJR** and **Q1–Q4** are from the SCImago ranking export by ISSN, with ranking year shown in each badge tooltip when available. Download blocking by SCImago preserves prior values instead of inventing new scores. Newly indexed journals may be unrated.
 - **IF\*** on this site is **OpenAlex two-year mean citedness**. This is an IF-style open bibliometric approximation, **not** the Clarivate Journal Citation Reports (JCR) official Journal Impact Factor (JIF). OpenAlex source indicators usually refresh sooner than annual SJR; the source/year is shown on hover.
-- To display **official JIF** values you have permission to share, add journal entries to `assets/jcr-jif-overrides.json`, keyed by *normalized eight-character ISSN*, e.g.:
+- **JIF** values require an independently verified journal/publisher or licensed JCR source. This release includes **Sustainable Chemistry for Climate Action: JIF 9.1 for 2025**, as shown on Elsevier's ScienceDirect page, verified 17 Oct 2026: https://www.sciencedirect.com/browse/calls-for-papers?subject=chemistry. ISSN 2772-8269. Earlier **4.374** values are the different, OpenAlex-derived **IF*** and must not be called the official JIF.
+- Edit `assets/jcr-jif-overrides.json` to add official JIFs **only with a year, journal name, identifiable publisher source, and full source URL**. Example:
 
 ```json
 {
-  "12345678": {"jif": 4.2, "year": 2025}
+  "27728269": {"jif": 9.1, "year": 2025,
+    "journal": "Sustainable Chemistry for Climate Action",
+    "source": "Elsevier / ScienceDirect — publisher-listed Journal Impact Factor",
+    "source_url": "https://www.sciencedirect.com/browse/calls-for-papers?subject=chemistry"}
 }
 ```
 
-Do not enter guessed JIFs. When authorized data are provided, badges show `JIF` instead of `IF*` and protect the JCR value from the OpenAlex browser updater. There is **no unauthenticated general-purpose official JCR JIF API**.
+The publication list prefers a verified JIF over *any* stale OpenAlex number, including article-specific records. The rank/value badge links to the source when a URL exists; rankings and publisher indicators are not interchangeable. A **new journal** gets a refreshed OpenAlex IF* automatically, but **JIF cannot be fetched as a verified official value for every journal without a suitable reliable publisher/JCR source**. This system therefore never labels an unverified estimate 'JIF'. Annual SCImago data may also lag behind newly indexed journals.
 
 ## Graphical abstract images
 
@@ -40,11 +44,11 @@ Committed visual overrides persist across OpenAlex syncs. Images that publishers
 
 ## Profile education
 
-Degrees are displayed in the **About Me** section, with university emblems sourced from the universities' own official websites. The information below interprets the request as **B.Sc. 2018 at Taiwan Tech, M.Eng. 2020 at Hokkaido University, and Ph.D. 2024 at Hokkaido University**. Confirm the years before publication if different. Because the universities host the original emblems, the image display depends on their sites permitting image linking. No unofficial emblem was fabricated.
+Degrees are displayed in the **About Me** section, with university emblems referenced from the universities' websites. The current **QS World University Rankings 2027** are placed next to each degree: Taiwan Tech **=379** and Hokkaido University **=179** (a shared/tied rank in both cases). QS source links appear beside each badge: https://www.topuniversities.com/universities/national-taiwan-university-science-technology-taiwan-tech and https://www.topuniversities.com/universities/hokkaido-university . These are university ranking-year 2027 values, not rankings at graduation. The information below interprets the request as **B.Sc. 2018 at Taiwan Tech, M.Eng. 2020 at Hokkaido University, and Ph.D. 2024 at Hokkaido University**. Confirm the years before publication if different. Because the universities host the original emblems, the image display depends on their sites permitting image linking. No unofficial emblem was fabricated.
 
 ## Local checks
 
-Requirements: Node.js 22. Run `node --test tests/*.test.mjs` to validate the data merge, SCImago parsing and image metadata rules. Live sync requires network access and is intentionally not asserted by offline unit tests. You can manually run:
+Requirements: Node.js 22. Run `node --test tests/*.test.mjs` to validate the data merge, SCImago parsing, JIF source checks, university rankings and image metadata rules. Live sync requires network access and is intentionally not asserted by offline unit tests. You can manually run:
 
 ```
 node scripts/sync-publications.mjs

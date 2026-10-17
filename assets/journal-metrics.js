@@ -1,18 +1,19 @@
 window.CRI_JOURNAL_METRICS={
-  "updated_at": "2026-08-12T04:28:30.219Z",
+  "updated_at": "2026-10-17T15:32:35.383Z",
   "by_issn": {
     "13835866": {
       "sjr": 1.564,
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 9.218,
+      "impact_factor": 9.777,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 24,
       "issn": "13835866"
     },
+    "14336839": {},
     "18653529": {
       "sjr": 0.153,
       "quartile": "Q4",
@@ -20,7 +21,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_source": "SCImago Journal & Country Rank",
       "impact_factor": 0.686,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 3,
       "issn": "18653529"
@@ -67,14 +68,20 @@ window.CRI_JOURNAL_METRICS={
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank"
     },
+    "18835864": {
+      "impact_factor": 0.095,
+      "impact_factor_year": 2025,
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
+      "impact_factor_kind": "openalex"
+    },
     "20452322": {
       "sjr": 0.893,
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 4.812,
+      "impact_factor": 5.267,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 4,
       "issn": "20452322"
@@ -84,9 +91,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 2.848,
+      "impact_factor": 3.135,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 8,
       "issn": "21993823"
@@ -102,9 +109,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q3",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 0.818,
+      "impact_factor": 0.956,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 1,
       "issn": "25726641"
@@ -114,29 +121,36 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 5.555,
+      "impact_factor": 5.984,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 14,
       "issn": "26665239"
+    },
+    "27728269": {
+      "impact_factor": 9.1,
+      "impact_factor_year": 2025,
+      "impact_factor_kind": "jcr",
+      "impact_factor_source": "Elsevier / ScienceDirect — publisher-listed Journal Impact Factor",
+      "impact_factor_source_url": "https://www.sciencedirect.com/browse/calls-for-papers?subject=chemistry"
     },
     "28371445": {
       "sjr": 0.667,
       "quartile": "Q2",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 3.718,
+      "impact_factor": 4.088,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 3,
       "issn": "28371445"
     },
     "29481546": {
-      "impact_factor": 3.922,
+      "impact_factor": 4.227,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 2,
       "issn": "29481546"
@@ -146,9 +160,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 5.321,
+      "impact_factor": 5.739,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 0,
       "issn": "01691317"
@@ -158,9 +172,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 12.732,
+      "impact_factor": 13.95,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 0,
       "issn": "00088846"
@@ -176,9 +190,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 9.366,
+      "impact_factor": 10.157,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 1,
       "issn": "09500618"
@@ -194,9 +208,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 9.945,
+      "impact_factor": 10.772,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 3,
       "issn": "00456535"
@@ -206,9 +220,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q2",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 2.775,
+      "impact_factor": 3.115,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 9,
       "issn": "2075163X"
@@ -218,9 +232,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 5.371,
+      "impact_factor": 5.849,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 11,
       "issn": "01665162"
@@ -230,9 +244,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 10.02,
+      "impact_factor": 10.768,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 96,
       "issn": "03043894"
@@ -242,19 +256,12 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q2",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 1.092,
+      "impact_factor": 1.123,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 26,
       "issn": "00223131"
-    },
-    "27728269": {
-      "impact_factor": 9.1,
-      "impact_factor_year": 2025,
-      "impact_factor_kind": "jcr",
-      "impact_factor_source": "Elsevier / ScienceDirect — publisher-listed Journal Impact Factor",
-      "impact_factor_source_url": "https://www.sciencedirect.com/browse/calls-for-papers?subject=chemistry"
     }
   },
   "by_journal": {
@@ -263,9 +270,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 5.321,
+      "impact_factor": 5.739,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 0,
       "issn": "01691317"
@@ -275,9 +282,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 12.732,
+      "impact_factor": 13.95,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 0,
       "issn": "00088846"
@@ -287,9 +294,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 9.366,
+      "impact_factor": 10.157,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 1,
       "issn": "09500618"
@@ -299,9 +306,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 2.848,
+      "impact_factor": 3.135,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 8,
       "issn": "21993823"
@@ -311,9 +318,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q2",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 3.718,
+      "impact_factor": 4.088,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 3,
       "issn": "28371445"
@@ -323,9 +330,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 5.555,
+      "impact_factor": 5.984,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 14,
       "issn": "26665239"
@@ -346,7 +353,11 @@ window.CRI_JOURNAL_METRICS={
       "sjr": 0.251,
       "quartile": "Q3",
       "sjr_year": 2025,
-      "sjr_source": "SCImago Journal & Country Rank"
+      "sjr_source": "SCImago Journal & Country Rank",
+      "impact_factor": 0.956,
+      "impact_factor_year": 2025,
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
+      "impact_factor_kind": "openalex"
     },
     "green energy and technology": {
       "sjr": 0.153,
@@ -355,7 +366,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_source": "SCImago Journal & Country Rank",
       "impact_factor": 0.686,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 3,
       "issn": "18653529"
@@ -365,9 +376,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 9.945,
+      "impact_factor": 10.772,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 3,
       "issn": "00456535"
@@ -377,9 +388,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 4.812,
+      "impact_factor": 5.267,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 4,
       "issn": "20452322"
@@ -389,9 +400,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q2",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 2.775,
+      "impact_factor": 3.115,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 9,
       "issn": "2075163X"
@@ -401,9 +412,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 5.371,
+      "impact_factor": 5.849,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 11,
       "issn": "01665162"
@@ -413,9 +424,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 9.218,
+      "impact_factor": 9.777,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 24,
       "issn": "13835866"
@@ -425,9 +436,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q1",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 10.02,
+      "impact_factor": 10.768,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 96,
       "issn": "03043894"
@@ -437,9 +448,9 @@ window.CRI_JOURNAL_METRICS={
       "quartile": "Q2",
       "sjr_year": 2025,
       "sjr_source": "SCImago Journal & Country Rank",
-      "impact_factor": 1.092,
+      "impact_factor": 1.123,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 26,
       "issn": "00223131"
@@ -449,9 +460,9 @@ window.CRI_JOURNAL_METRICS={
       "issn": ""
     },
     "discover civil engineering": {
-      "impact_factor": 3.922,
+      "impact_factor": 4.227,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 2,
       "issn": "29481546"
@@ -462,61 +473,76 @@ window.CRI_JOURNAL_METRICS={
       "impact_factor_kind": "jcr",
       "impact_factor_source": "Elsevier / ScienceDirect — publisher-listed Journal Impact Factor",
       "impact_factor_source_url": "https://www.sciencedirect.com/browse/calls-for-papers?subject=chemistry"
+    },
+    "the handbook of environmental chemistry": {},
+    "elsevier ebooks": {},
+    "springer ebooks": {},
+    "material cycles and waste management research": {
+      "impact_factor": 0.095,
+      "impact_factor_year": 2025,
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
+      "impact_factor_kind": "openalex"
+    },
+    "atomic energy society of japan": {
+      "impact_factor": 0,
+      "impact_factor_year": 2025,
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
+      "impact_factor_kind": "openalex"
     }
   },
   "by_doi": {
     "10.1016/j.clay.2026.108330": {
-      "impact_factor": 5.321,
+      "impact_factor": 5.739,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 0,
       "issn": "01691317"
     },
     "10.1016/j.cemconres.2026.108169": {
-      "impact_factor": 12.732,
+      "impact_factor": 13.95,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 0,
       "issn": "00088846"
     },
     "10.1016/j.conbuildmat.2025.144270": {
-      "impact_factor": 9.366,
+      "impact_factor": 10.157,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 1,
       "issn": "09500618"
     },
     "10.1007/s40831-025-01320-y": {
-      "impact_factor": 2.848,
+      "impact_factor": 3.135,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 8,
       "issn": "21993823"
     },
     "10.1021/acssusresmgt.5c00315": {
-      "impact_factor": 3.718,
+      "impact_factor": 4.088,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 3,
       "issn": "28371445"
     },
     "10.1016/j.apsadv.2025.100774": {
-      "impact_factor": 5.555,
+      "impact_factor": 5.984,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 14,
       "issn": "26665239"
     },
     "10.1177/25726641251316396": {
-      "impact_factor": 0.818,
+      "impact_factor": 0.956,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 1,
       "issn": "25726641"
@@ -524,15 +550,15 @@ window.CRI_JOURNAL_METRICS={
     "10.1007/978-981-96-1921-4_5": {
       "impact_factor": 0.686,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 3,
       "issn": "18653529"
     },
     "10.1016/j.chemosphere.2024.143871": {
-      "impact_factor": 9.945,
+      "impact_factor": 10.772,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 3,
       "issn": "00456535"
@@ -542,68 +568,83 @@ window.CRI_JOURNAL_METRICS={
       "issn": ""
     },
     "10.1038/s41598-024-69681-0": {
-      "impact_factor": 4.812,
+      "impact_factor": 5.267,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 4,
       "issn": "20452322"
     },
     "10.1007/s44290-024-00047-1": {
-      "impact_factor": 3.922,
+      "impact_factor": 4.227,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 2,
       "issn": "29481546"
     },
     "10.3390/min14030311": {
-      "impact_factor": 2.775,
+      "impact_factor": 3.115,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 9,
       "issn": "2075163X"
     },
     "10.1016/j.coal.2023.104370": {
-      "impact_factor": 5.371,
+      "impact_factor": 5.849,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 11,
       "issn": "01665162"
     },
     "10.1016/j.seppur.2023.124530": {
-      "impact_factor": 9.218,
+      "impact_factor": 9.777,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 24,
       "issn": "13835866"
     },
     "10.1016/j.jhazmat.2022.129732": {
-      "impact_factor": 10.02,
+      "impact_factor": 10.768,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 27,
       "issn": "03043894"
     },
     "10.1016/j.jhazmat.2022.128373": {
-      "impact_factor": 10.02,
+      "impact_factor": 10.768,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 96,
       "issn": "03043894"
     },
     "10.1080/00223131.2020.1775717": {
-      "impact_factor": 1.092,
+      "impact_factor": 1.123,
       "impact_factor_year": 2025,
-      "impact_factor_source": "OpenAlex 2-year mean citedness",
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
       "citations": 26,
       "issn": "00223131"
+    },
+    "10.1016/j.scca.2026.100242": {
+      "impact_factor": 9.1,
+      "impact_factor_year": 2025,
+      "impact_factor_source": "Elsevier / ScienceDirect — publisher-listed Journal Impact Factor",
+      "impact_factor_kind": "jcr",
+      "impact_factor_source_url": "https://www.sciencedirect.com/browse/calls-for-papers?subject=chemistry"
+    },
+    "10.1007/698_2026_1287": {},
+    "10.1016/b978-0-443-34088-8.00106-3": {},
+    "10.3985/mcwmr.33.448": {
+      "impact_factor": 0.095,
+      "impact_factor_year": 2025,
+      "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
+      "impact_factor_kind": "openalex"
     }
   }
 };

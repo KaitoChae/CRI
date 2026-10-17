@@ -58,21 +58,22 @@ test('The shipped curated publication file is parseable',async()=>{
 // Verification regression tests for user-reported wrong JIF (4.374 vs 9.1)
 const {indexVerifiedJif,verifiedJifFor,verifiedJifMetric,mergePreferJif}=await import('../scripts/verified-jif.mjs');
 const fs=await import('node:fs/promises');
-test('Elsevier publisher JIF 9.1 (2025) is preferred to the OpenAlex proxy 4.374',async()=>{
+test('Year-scoped independent 9.1 (2025) cannot be replaced with OpenAlex proxy 4.374',async()=>{
   const verified=JSON.parse(await fs.readFile('assets/jcr-jif-overrides.json','utf8'));
   const idx=indexVerifiedJif(verified);
   const jifByIssn=verifiedJifFor(idx,{issn:'2772-8269',journal:'Sustainable Chemistry for Climate Action'});
   const jifByTitle=verifiedJifFor(idx,{issn:'1234-5678',journal:'Sustainable Chemistry for Climate Action'});
   assert.equal(jifByIssn.impact_factor,9.1);
   assert.equal(jifByIssn.impact_factor_year,2025);
-  assert.equal(jifByIssn.impact_factor_kind,'jcr');
+  assert.equal(jifByIssn.impact_factor_kind,'reported_jif');
   assert.equal(jifByTitle.impact_factor,9.1);
-  assert.match(jifByIssn.impact_factor_source_url,/sciencedirect\.com/);
+  assert.match(jifByIssn.impact_factor_source_url,/minicod\.com/);
   const notJif={impact_factor:4.374,impact_factor_year:2025,impact_factor_kind:'openalex'};
   assert.equal(mergePreferJif(jifByIssn,notJif).impact_factor,9.1);
   assert.equal(mergePreferJif(notJif,jifByIssn).impact_factor,9.1);
 });
 test('Missing publisher provenance or invalid JIF cannot masquerade as official',()=>{
+  assert.equal(verifiedJifMetric({jif:9.1,year:2025,verification:'publisher_and_year_check',source:'Undated claim',source_url:'https://publisher.test/'}),null);
   assert.equal(verifiedJifMetric({jif:9.1,year:2025}),null);
   assert.equal(verifiedJifMetric({jif:'',year:2025,source:'Elsevier',source_url:'https://publisher.test/'}),null);
   assert.equal(verifiedJifMetric({jif:9.1,year:2025,source:'Elsevier',source_url:'javascript:alert(1)'}),null);
@@ -80,7 +81,7 @@ test('Missing publisher provenance or invalid JIF cannot masquerade as official'
 test('Already-shipped website metrics include verified JIF for journal not yet in snapshot',async()=>{
   const m=await readData('assets/journal-metrics.js','CRI_JOURNAL_METRICS');
   assert.equal(m.by_issn['27728269'].impact_factor,9.1);
-  assert.equal(m.by_journal['sustainable chemistry for climate action'].impact_factor_kind,'jcr');
+  assert.equal(m.by_journal['sustainable chemistry for climate action'].impact_factor_kind,'reported_jif');
 });
 test('2027 QS university ranking badges link to official rankings',async()=>{
   const html=await fs.readFile('index.html','utf8');
@@ -108,7 +109,55 @@ test('Browser merger cannot hide publisher JIF under article-specific stale IF*'
     {journal:'Sustainable Chemistry for Climate Action',doi,issn:''}]){
     const resolved=ctx.metricFor(paper);
     assert.equal(resolved.impact_factor,9.1);
-    assert.equal(resolved.impact_factor_kind,'jcr');
+    assert.equal(resolved.impact_factor_kind,'reported_jif');
     assert.equal(resolved.impact_factor_year,2025);
   }
+});
+
+// Extra regression coverage for user-reported incorrect/wrong-year JIF,
+// 2025 annual SJR/Q and unexpectedly wrapping JIF below Q on desktop.
+const {loadAuditedSjr,matchingAuditedSjr,bestRank}=await import('../scripts/audited-metrics.mjs');
+const {explicitJif}=await import('../scripts/refresh-verified-jif.mjs');
+test('Audited SJR values and SCImago quartile are stored by annual year and journal title',async()=>{
+  const idx=await loadAuditedSjr();
+  const a=matchingAuditedSjr(idx,{journal:'Sustainable Chemistry for Climate Action',issns:['2772-8269']});
+  assert.equal(a.sjr,1.091);assert.equal(a.quartile,'Q1');assert.equal(a.sjr_year,2025);
+  const wrong=matchingAuditedSjr(idx,{journal:'Unrelated Journal',issns:['2772-8269']});
+  assert.equal(wrong,null);
+  assert.equal(bestRank(a,{sjr:9.99,quartile:'Q2',sjr_year:2024}).sjr,1.091);
+  assert.equal(bestRank(a,{sjr:0,quartile:'Q1',sjr_year:2026}).sjr,1.091);
+});
+test('Never substitute a 2024 Impact Factor for its explicitly dated 2025 successor',async()=>{
+  const v=JSON.parse(await fs.readFile('assets/jcr-jif-overrides.json','utf8'));
+  for(const [issn,expected] of Object.entries({
+    '01691317':5.2,'00088846':14,'03043894':10.6,
+    '13835866':9.1,'01665162':7.3,'25726641':1.3
+  })){
+    assert.equal(v[issn].year,2025,issn);assert.equal(v[issn].jif,expected,issn);
+  }
+  const html='<h2>Journal of Hazardous Materials</h2><table><tr><td>2025 (2026 update)</td><td>10.6</td></tr><tr><td>2024</td><td>11.3</td></tr></table>';
+  assert.equal(explicitJif(html,'bioxbio',2025),10.6);
+  assert.equal(explicitJif(html,'bioxbio',2026),null);
+  assert.equal(explicitJif('<div>Impact Factor: 13.1</div>','nature',2025),null);
+});
+test('No SCImago ranking year may be mislabelled when download serves older export',()=>{
+  const rows=Array.from({length:1001},(_,i)=>`${i+1};Journal ${i};${String(i).padStart(8,'0')};1,234;Q1;10`).join('\n');
+  const csv='Rank;Title;Issn;SJR;SJR Best Quartile;Total Docs. (2024)\n'+rows;
+  assert.throws(()=>scimagoIndex(csv,2025),/does not match requested/);
+});
+test('University and publication label improvements: large font and single desktop metrics row',async()=>{
+  const css=await fs.readFile('assets/site.css','utf8');
+  const js=await fs.readFile('assets/app.js','utf8');
+  assert.match(css,/V44: layout fix/);
+  assert.match(css,/\.pub-row \.metric-group\{white-space:nowrap/);
+  assert.match(css,/\.degree \.university-name\{font-size:14px!important/);
+  assert.match(js,/SJR \${normalizedQuartile\(p.quartile\)}/);
+  assert.match(js,/JIF\$\{mark\}/);
+  assert.match(js,/const byName=embeddedJournalMetrics.by_journal/);
+});
+test('Official publisher JIF wins equal-year independent reports in normal merging',()=>{
+  const publisher={impact_factor:1.3,impact_factor_year:2025,impact_factor_kind:'jcr',impact_factor_source_url:'https://www.iom3.org/'};
+  const patch={impact_factor:1.24,impact_factor_year:2025,impact_factor_kind:'reported_jif',impact_factor_source_url:'https://www.scijournal.org/'};
+  assert.equal(mergePreferJif(publisher,patch).impact_factor,1.3);
+  assert.equal(mergePreferJif(publisher,{...patch,impact_factor_year:2024}).impact_factor,1.3);
 });

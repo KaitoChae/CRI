@@ -116,18 +116,26 @@ const data=window.LAB_PUBLICATION_DATA||{metrics:{},publications:[],last_updated
 const embeddedJournalMetrics=window.CRI_JOURNAL_METRICS||{by_issn:{},by_journal:{},by_doi:{}};
 function journalMetricKey(v=''){return String(v).toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g,' ').trim()}
 function embeddedMetricFor(p={}){
-  const doi=String(p.doi||'').toLowerCase();const issn=normalizeIssn(p.issn);const journal=journalMetricKey(p.journal);
-  // Journal indicators belong to a source, not to an article. Old snapshots
-  // may contain article citations: NEVER overwrite live OpenAlex citations.
-  const candidates=[embeddedJournalMetrics.by_journal?.[journal],embeddedJournalMetrics.by_issn?.[issn],embeddedJournalMetrics.by_doi?.[doi]].filter(Boolean);
-  let metric=Object.assign({},...candidates);
-  // A DOI-specific OpenAlex proxy may be stale. Prefer a verified official JIF
-  // from any matching journal-level record over ALL OpenAlex proxies.
-  const publishedJif=candidates.filter(x=>x.impact_factor_kind==='jcr').sort((a,b)=>(Number(b.impact_factor_year)||0)-(Number(a.impact_factor_year)||0))[0];
-  if(publishedJif){
-    for(const k of ['impact_factor','impact_factor_year','impact_factor_kind','impact_factor_source','impact_factor_source_url']){
-      if(k in publishedJif)metric[k]=publishedJif[k];else delete metric[k];
-    }
+  const issn=normalizeIssn(p.issn), journal=journalMetricKey(p.journal);
+  // Prefer the actual journal ISSN, then the exact journal title. Old
+  // article-level DOI metrics were incorrectly overriding SJR/Q/JIF.
+  const byName=embeddedJournalMetrics.by_journal?.[journal];
+  const candidateIssn=embeddedJournalMetrics.by_issn?.[issn];
+  const byIssn=candidateIssn && (!candidateIssn.impact_factor_journal || journalMetricKey(candidateIssn.impact_factor_journal)===journal)?candidateIssn:null;
+  const metric={...(byName||{}),...(byIssn||{})};
+  // The newest audited annual SJR wins, but never replace an audited annual
+  // value with a legacy article-specific or undated duplicate.
+  const rankCandidates=[byName,byIssn].filter(x=>x&&(!x.sjr_journal || journalMetricKey(x.sjr_journal)===journal)&&Number.isFinite(Number(x.sjr))&&/^Q[1-4]$/.test(String(x.quartile||'')));
+  rankCandidates.sort((a,b)=>(Number(b.sjr_year)||0)-(Number(a.sjr_year)||0)
+    || (Number(['scimago-export','publisher-listed','audited'].includes(b.sjr_status))-Number(['scimago-export','publisher-listed','audited'].includes(a.sjr_status))));
+  if(rankCandidates[0])for(const key of ['sjr','quartile','sjr_year','sjr_source','sjr_source_url','sjr_status','sjr_journal']){
+    if(key in rankCandidates[0])metric[key]=rankCandidates[0][key];
+  }
+  const verified=[byName,byIssn].filter(x=>['jcr','reported_jif'].includes(x?.impact_factor_kind));
+  verified.sort((a,b)=>(Number(b.impact_factor_year)||0)-(Number(a.impact_factor_year)||0)
+    || (Number(b.impact_factor_kind==='jcr')-Number(a.impact_factor_kind==='jcr')));
+  if(verified[0])for(const key of ['impact_factor','impact_factor_year','impact_factor_kind','impact_factor_source','impact_factor_source_url','impact_factor_verified_at','impact_factor_journal']){
+    if(key in verified[0])metric[key]=verified[0][key];else delete metric[key];
   }
   delete metric.citations;delete metric.issn;
   return metric;
@@ -214,19 +222,24 @@ function updateSearchStatus(totalMatches=null){
   else{host.textContent=fillTemplate(t('pub_search_hint'),{shown:showAllPublications?total:Math.min(PUBLICATION_PREVIEW_LIMIT,total),total});}
 }
 function publicationMetricBadges(p={},includeCitations=false){
-  const qtile=normalizedQuartile(p.quartile)||'Q n/a';
-  const hasSjr=p.sjr!==null&&p.sjr!==undefined&&p.sjr!==''&&Number.isFinite(Number(p.sjr));
-  const sjr=hasSjr?`SJR ${Number(p.sjr).toFixed(3)}`:'SJR n/a';
-  const hasIf=p.impact_factor!==undefined&&p.impact_factor!==null&&p.impact_factor!==''&&Number.isFinite(Number(p.impact_factor));
-  const isOpenAlex=p.impact_factor_kind!=='jcr';
-  const ifLabel=isOpenAlex?'IF*':'JIF';
-  const iff=hasIf?`${ifLabel} ${Number(p.impact_factor).toFixed(3).replace(/0+$/,'').replace(/\.$/,'')}${!isOpenAlex&&p.impact_factor_year?` (${p.impact_factor_year})`:''}`:(p.type||'').toLowerCase().includes('conference')?t('no_jif'):`${ifLabel} n/a`;
-  const sjrTitle=[p.sjr_source,p.sjr_year].filter(Boolean).join(', ');
-  const ifTitle=[p.impact_factor_source,p.impact_factor_year, ...(isOpenAlex?['OpenAlex proxy; not the Clarivate JIF']:[])].filter(Boolean).join(', ');
-  const cite=includeCitations&&Number.isFinite(+p.citations)?`<b class="badge">${+p.citations} ${safeText(t('cited'))}</b>`:'';
-  const jifSource=p.impact_factor_kind==='jcr'?safeImageSrc(p.impact_factor_source_url):'';
-  const impactBadge=jifSource?`<a class="badge ${hasIf?'if':'na'}" href="${safeText(jifSource)}" target="_blank" rel="noopener noreferrer" title="${safeText(ifTitle)}">${safeText(iff)} ↗</a>`:`<b class="badge ${hasIf?'if':'na'}" title="${safeText(ifTitle)}">${safeText(iff)}</b>`;
-  return `<b class="badge sjr ${hasSjr?'':'na'}" title="${safeText(sjrTitle)}">${safeText(sjr)}</b><b class="badge ${badgeClass(qtile)}" title="${safeText(sjrTitle)}">${safeText(qtile)}</b>${impactBadge}${cite}`;
+  const hasRank=Number.isFinite(Number(p.sjr))&&Number(p.sjr)>0&&normalizedQuartile(p.quartile);
+  const qtile=hasRank?`SJR ${normalizedQuartile(p.quartile)}`:'SJR Q n/a';
+  const sjr=hasRank?`SJR ${Number(p.sjr).toFixed(3)}`:'SJR n/a';
+
+  const sjrTitle=[p.sjr_source||'SCImago ranking snapshot',p.sjr_year,p.sjr_status==='audited'?'independent source checked':null].filter(Boolean).join(' · ');
+  const rankUrl=safeImageSrc(p.sjr_source_url||'https://www.scimagojr.com/');
+  const hasOfficial=['jcr','reported_jif'].includes(p.impact_factor_kind)
+    && p.impact_factor!==null&&p.impact_factor!==undefined&&Number.isFinite(Number(p.impact_factor));
+  // OpenAlex 2yr mean citedness IS NOT a JIF: do not silently label it IF.
+  const mark=p.impact_factor_kind==='reported_jif'?'†':'';
+  const iff=hasOfficial?`JIF${mark} ${Number(p.impact_factor).toFixed(3).replace(/0+$/,'').replace(/\.$/,'')} (${p.impact_factor_year})`:'JIF n/a';
+  const impactTip=hasOfficial?[p.impact_factor_source,p.impact_factor_year,p.impact_factor_kind==='reported_jif'?'Third-party report; official publisher/JCR verification pending':null].filter(Boolean).join(' · '):'No independently year-checked Journal Impact Factor. OpenAlex is not the JIF.';
+  const impactSource=hasOfficial?safeImageSrc(p.impact_factor_source_url):'';
+  const cite=includeCitations&&Number.isFinite(+p.citations)?`<b class="badge citation-badge">${+p.citations} ${safeText(t('cited'))}</b>`:'';
+  const rankElement=(text,extra='')=>rankUrl&&hasRank?`<a class="badge ${extra}" href="${safeText(rankUrl)}" target="_blank" rel="noopener noreferrer" title="${safeText(sjrTitle)}">${safeText(text)} ↗</a>`:`<span class="badge ${extra} na" title="Not confirmed">${safeText(text)}</span>`;
+  const impactBadge=impactSource?`<a class="badge if" href="${safeText(impactSource)}" target="_blank" rel="noopener noreferrer" title="${safeText(impactTip)}">${safeText(iff)} ↗</a>`:`<span class="badge na" title="${safeText(impactTip)}">${safeText(iff)}</span>`;
+  // Each badge links to its own dated source; article click is a sibling.
+  return `<span class="metric-group" title="${safeText(sjrTitle)}">${rankElement(sjr,'sjr')}${rankElement(qtile,badgeClass(qtile))}${impactBadge}</span>${cite}`;
 }
 function updatePublicationToggle(){
   const button=$('#pubToggle');if(!button)return;
@@ -248,7 +261,7 @@ function renderPublications(list){
     const media=v.src?`<span class="pub-thumb ${v.isGA?'has-ga':'publisher-preview'}"><img src="${v.src}" data-publication-visual loading="lazy" decoding="async" alt="${safeText(alt)}, ${safeText(original||'publication')}">${v.isGA?`<em>${safeText(t('graphical_abstract'))}</em>`:''}</span>`:'';
     const originalLine=showOriginal?`<small class="pub-original"><b>${safeText(t('pub_original_title'))}:</b> ${safeText(original)}</small>`:'';
     const authors=p.authors?`<small class="pub-authors">${safeText(p.authors)}</small>`:'';
-    return `<a class="pub-row ${v.src?'has-visual':'no-visual'}" href="${safeUrl(p.url||'#')}" target="_blank" rel="noopener"><span class="pub-year">${safeText(p.year||'n.d.')}</span>${media}<span class="pub-title">${safeText(title)}${authors}${originalLine}</span><span class="pub-journal">${safeText(p.journal||'')}</span><span class="badges">${publicationMetricBadges(p,true)}</span><span class="pub-arrow">↗</span></a>`
+    return `<div class="pub-row ${v.src?'has-visual':'no-visual'}"><a class="pub-row-link" href="${safeUrl(p.url||'#')}" aria-label="${safeText(title)} — publication" target="_blank" rel="noopener noreferrer"></a><span class="pub-year">${safeText(p.year||'n.d.')}</span>${media}<span class="pub-title">${safeText(title)}${authors}${originalLine}</span><span class="pub-journal">${safeText(p.journal||'')}</span><span class="badges">${publicationMetricBadges(p,true)}</span><span class="pub-arrow">↗</span></div>`
   }).join('');
   installImageFallbacks(host);
 }
@@ -265,6 +278,13 @@ function renderUpdates(){
   installImageFallbacks(host);
 }
 function updatePublicationMeta(){
+  const note=document.getElementById('pubMetricSourceNote');
+  if(note){
+    const year=embeddedJournalMetrics.updated_at ? new Date(embeddedJournalMetrics.updated_at).toLocaleDateString(locale(),{year:'numeric',month:'short',day:'numeric'}) : '—';
+    const sjrYear=Math.max(0,...Object.values(embeddedJournalMetrics.by_journal||{}).map(m=>Number(m.sjr_year)||0));
+    note.textContent=`SJR dan SJR Q = pemeringkatan SCImago tahunan (${sjrYear||'belum tersedia'}), bukan JCR Quartile. Status: ${embeddedJournalMetrics.sjr_update_status||'cached'}. Data penelitian terakhir: ${year}. JIF† = laporan pihak ketiga (belum diverifikasi melalui JCR). Klik setiap indikator untuk melihat sumber.`;
+  }
+
   const m=data.metrics||{};Object.entries(m).forEach(([k,v])=>{const el=document.querySelector(`[data-metric="${k}"]`);if(el&&v!==undefined&&v!==null)el.textContent=Number(v).toLocaleString(locale())});
   const last=$('#lastUpdated');if(last)last.textContent=fmtDate(data.last_updated);
   updateSearchStatus();
@@ -339,7 +359,7 @@ async function refreshFromOpenAlex(){
 // Refresh newly discovered journals directly from OpenAlex. GitHub Actions
 // updates the embedded SJR data; there is no /api endpoint on GitHub Pages.
 async function refreshJournalMetrics(){
-  const cacheKey='criSourceIndicatorsV40';
+  const cacheKey='criSourceIndicatorsV43';
   let saved={};
   try{saved=JSON.parse(localStorage.getItem(cacheKey)||'{}')||{}}catch{}
   const cutoff=Date.now()-24*60*60*1000;
@@ -359,7 +379,7 @@ async function refreshJournalMetrics(){
         const source=await response.json();
         const score=source?.summary_stats?.['2yr_mean_citedness'];
         if(source.type!=='journal'||score==null||!Number.isFinite(Number(score)))return;
-        const metric={impact_factor:Number(Number(score).toFixed(3)),impact_factor_kind:'openalex',impact_factor_source:'OpenAlex 2-year mean citedness (not Clarivate JIF)',impact_factor_year:new Date().getUTCFullYear()-1};
+        const metric={impact_factor:Number(Number(score).toFixed(3)),impact_factor_kind:'openalex',impact_factor_source:'OpenAlex 2-year mean citedness (not Clarivate JIF)',impact_factor_year:new Date().getUTCFullYear()-1,impact_factor_journal:source.display_name||''};
         sources.set(id,metric);saved[id]={at:Date.now(),metric};
       }catch{ /* Offline visitors keep the embedded journal snapshot. */ }
     }));
@@ -368,7 +388,7 @@ async function refreshJournalMetrics(){
   pubs=pubs.map(p=>{
     const id=String(p.source_id||'').match(/S\d+$/)?.[0];
     const indicator=sources.get(id);
-    return indicator&&p.impact_factor_kind!=='jcr'?{...p,...indicator}:p;
+    return indicator&&journalMetricKey(indicator.impact_factor_journal)===journalMetricKey(p.journal)&&!['jcr','reported_jif'].includes(p.impact_factor_kind)?{...p,...indicator}:p;
   });
   renderPublications(filteredPublications());renderUpdates();
 }

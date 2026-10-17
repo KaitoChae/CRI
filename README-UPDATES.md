@@ -1,57 +1,50 @@
-# CRI website — automatic publication and metrics updates
+# CRI Academic Website — metric audit + automatic refresh (release v44, 17 Oct 2026)
 
-This is a **static HTML website** (works on GitHub Pages). There is no `/api/journal-metrics` server route. The provided GitHub Actions workflow replaces that broken route and republishes verified information into the existing JavaScript data files.
+This is the **full GitHub Pages static website**, including all images, JavaScript, and the `.github/workflows/sync-research.yml` workflow. It contains a year-scoped, source-linked SJR, SCImago Best Quartile and JIF audit, and an improved publication badge layout. The audit list is in `METRICS_SOURCE_AUDIT.md`.
 
-## What runs automatically
+## How to deploy
 
-- **00:13, 06:13, 12:13 and 18:13 UTC (every day):** `scripts/sync-publications.mjs` syncs new and existing publications using the linked ORCID/OpenAlex author, and `assets/update-journal-metrics.mjs` refreshes OpenAlex *journal-specific* 2-year citedness for each distinct journal. `scripts/update-publication-visuals.mjs` looks for publisher-hosted graphical abstracts, including papers marked open access. Citation counts, source ISSN and newly discovered journals are refreshed. Locally curated abstracts and translated titles are retained.
-- **03:47 UTC (daily):** as above, plus a new attempt to download and parse the latest **SCImago** journal ranking CSV. SJR and its best quartile are **annual journal-level metrics**, not values that change after each new paper.
-- **On each page visit:** OpenAlex is also queried from the browser for newly indexed works and changes in journal 2-year mean citedness (the browser caches successful source queries for 24 hours). The embedded snapshot remains readable without internet. GitHub Actions automatically commits updated public data to the repository for all visitors.
+1. **Back up your GitHub repository.** Unzip this archive. Copy the contents of the `CRI/` folder, **including the hidden `.github/` directory**, over the files in your current repository's website root. Push/commit them to the GitHub Pages default branch. This file is a backup/replacement bundle, *not an actual GitHub deployment*.
+2. In GitHub **Settings → Actions → General → Workflow permissions**, allow workflow read and write. Then open **Actions → Sync publications, journal metrics and graphical abstracts → Run workflow**. In the run log, inspect both the *Recheck explicitly dated journal Impact Factors* and *Refresh all distinct journal sources* steps. They log unavailability rather than silently claiming success.
+3. Open GitHub Pages after Pages rebuilds, hard refresh the browser (`Ctrl+Shift+R`). Asset versions are now `?v=44` to avoid old browser caches. Check a number of papers, including journals whose current JIF differs from the former 2024 value.
 
-**Deploy:** Unzip the project (without any prior `.git` folder), overwrite your website's files in the *existing* GitHub repo, including `.github/workflows/sync-research.yml`, and push to the default branch. Under GitHub **Settings → Actions → General → Workflow permissions**, allow *Read and write permissions* for workflows if not already enabled. On GitHub → Actions → **Sync publications, journal metrics and graphical abstracts**, enable the workflow if GitHub prompts you and click **Run workflow** once to test. GitHub scheduled workflows can be delayed; they only run automatically while the repository/workflow is active. Review Actions logs if an upstream API is temporarily blocked or rate-limited.
+## Which data automatically refreshes?
 
-## SJR, impact factor and JIF are not interchangeable
+| Type | Schedule / logic | Reliability requirements |
+|---|---|---|
+| Publications, article citations, journal discovery, missing graphical abstracts | Four times a day, at 00:13/06:13/12:13/18:13 UTC | OpenAlex publisher data may lag or restrict images. Visuals only are shown as graphical abstracts when publisher metadata supports that identity. |
+| Live OpenAlex journal 2-year citedness | Every 6h in GitHub Actions; once per day per visited browser/source | **Not the Clarivate Journal Impact Factor**. Never presented as JIF. Browser verifies matching journal name before merging. |
+| **2025 SJR and SCImago Best Quartile** | Daily check at 03:47 UTC against year-scoped SCImago CSV export | The official export can block automated downloads; last audited values stay visible with dated source, log flags failure. **Annual** values, not per-article events. Export's inferred year must agree with requested year. |
+| 2025 JIF | Source-by-source check against clearly year-dated publisher websites or identified independent bibliometric pages | **No universal free source or open API for official JCR**; cached publisher data or reports remain if unverified/blocked. Independent reports carry **JIF†** for the user to check and must not be presented as publisher-verified JIF. |
 
-- **SJR** and **Q1–Q4** are from the SCImago ranking export by ISSN, with ranking year shown in each badge tooltip when available. Download blocking by SCImago preserves prior values instead of inventing new scores. Newly indexed journals may be unrated.
-- **IF\*** on this site is **OpenAlex two-year mean citedness**. This is an IF-style open bibliometric approximation, **not** the Clarivate Journal Citation Reports (JCR) official Journal Impact Factor (JIF). OpenAlex source indicators usually refresh sooner than annual SJR; the source/year is shown on hover.
-- **JIF** values require an independently verified journal/publisher or licensed JCR source. This release includes **Sustainable Chemistry for Climate Action: JIF 9.1 for 2025**, as shown on Elsevier's ScienceDirect page, verified 17 Oct 2026: https://www.sciencedirect.com/browse/calls-for-papers?subject=chemistry. ISSN 2772-8269. Earlier **4.374** values are the different, OpenAlex-derived **IF*** and must not be called the official JIF.
-- Edit `assets/jcr-jif-overrides.json` to add official JIFs **only with a year, journal name, identifiable publisher source, and full source URL**. Example:
+**No guaranteed always-correct automatic JIF or SJR.** They are controlled annually by Clarivate (JCR) and SCImago and depend on publication/release dates and external access. **JCR quartile and SCImago Best Quartile are different**, and both may differ from **Scopus CiteScore quartile**. The site labels the latter **SJR Q1–Q4** precisely, to avoid implying it is a JCR quartile. Source links and year-specific provenance are attached to SJR, Q and JIF badges.
 
-```json
-{
-  "27728269": {"jif": 9.1, "year": 2025,
-    "journal": "Sustainable Chemistry for Climate Action",
-    "source": "Elsevier / ScienceDirect — publisher-listed Journal Impact Factor",
-    "source_url": "https://www.sciencedirect.com/browse/calls-for-papers?subject=chemistry"}
-}
-```
+Examples of *distinct* quartile families: **Mineral Processing and Extractive Metallurgy** has JCR Q1 in the IOM3 2025 report, but 2025 **SCImago Best Quartile Q3**. **ACS Sustainable Resource Management** has 2025 **SJR Best Quartile Q2**, while its 2025 **Scopus CiteScore category quartiles are Q3**. This is not a contradiction; the indicator basis/category differs. We cannot guarantee a numerical indicator for a journal without an identified supporting source. Those render `n/a` rather than invented data. The ACS publisher currently shows **Impact Factor: N/A**; therefore we intentionally **do not** assign it the 3.660 number reported on unrelated IF directories.
 
-The publication list prefers a verified JIF over *any* stale OpenAlex number, including article-specific records. The rank/value badge links to the source when a URL exists; rankings and publisher indicators are not interchangeable. A **new journal** gets a refreshed OpenAlex IF* automatically, but **JIF cannot be fetched as a verified official value for every journal without a suitable reliable publisher/JCR source**. This system therefore never labels an unverified estimate 'JIF'. Annual SCImago data may also lag behind newly indexed journals.
+## Corrected 2025 annual Impact Factors
 
-## Graphical abstract images
+The former website labeled some **2024 Elsevier publisher-listed metrics as 2025**. The 2025 values were cross-checked against a *dated* table or publisher/institute announcement:
 
-The update script checks the publisher page and, where supplied, the open-access landing page. It recognizes dedicated publisher GA metadata, visually-labeled graphical abstract images, and Elsevier `ga1` image assets where it can extract an article identifier. If an image can be downloaded and validated, the workflow saves it under `assets/publications/` and displays it as a **Graphical abstract**. Otherwise it may use a publisher preview image, **clearly distinguished** from an actual GA. OA status alone does **not** guarantee a graphical abstract is published or that publisher access rules permit image download.
+| Journal | 2024 (older) | 2025 (shown) | Source status |
+|---|---:|---:|---|
+| Applied Clay Science | 5.8 | **5.2** | Independently reported; BioxBio 2025 (2026 update) |
+| Cement and Concrete Research | 13.1 | **14.0** | Independently reported; BioxBio |
+| Journal of Hazardous Materials | 11.3 | **10.6** | Independently reported; BioxBio |
+| Separation and Purification Technology | 9.0 | **9.1** | Independently reported; BioxBio |
+| International Journal of Coal Geology | 5.7 | **7.3** | Independently reported; BioxBio |
+| Mineral Processing and Extractive Metallurgy | (see IOM3) | **1.3** | Explicit 2025 announcement by professional body IOM3 |
+| Sustainable Chemistry for Climate Action | (separate OpenAlex proxy 4.374) | **9.1†** | An independently reported figure, **not verified from licensed JCR**. |
 
-If a known GA is not discoverable automatically, use `assets/publication-visual-overrides.json` to supply its **verified, publisher-authorized URL** (or a local `assets/...` path). Example:
+The **†** means a third-party 2025 JIF report, NOT a confirmed JCR figure. The reported SCCA 9.1 should NOT be treated as guaranteed official JIF until confirmed in the user's JCR access. Beware that some websites label **Scopus 2-year citations/doc = 9.1** as an 'Impact Factor' even when this is not Clarivate JIF. This website now labels the report explicitly and links its source rather than asserting an official JIF without evidence.
 
-```json
-{
-  "10.1000/example": {"url": "https://publisher.example.org/graphical-abstract.jpg", "kind": "graphical_abstract"}
-}
-```
+## Technical details
 
-Committed visual overrides persist across OpenAlex syncs. Images that publishers restrict or don't expose cannot be automatically fetched or fabricated.
+- `assets/jcr-jif-overrides.json`: verified-by-publisher 2025 or explicitly marked independent JIF reports by canonical 8-digit ISSN, including year and source URL. Automated updater only matches **journal-specific, explicitly dated** 2025 rows on its known source list (`scripts/refresh-verified-jif.mjs`). When no matching dated source is found, previously audited value is retained and unavailable status logged.
+- `assets/audited-sjr-overrides.json`: 2025 SJR and best quartile for 16 audited journals, by ISSN, journal title, year and evidence URL, used when the official SCImago export is unavailable. Unlike a fabricated auto-recalculation, these values retain their annual reporting year.
+- `assets/update-journal-metrics.mjs`: official SCImago export import and independent OpenAlex journal data; rejects incomplete/wrong-year exports and mismatched source journal names. Optional `SCIMAGO_CSV_FILE=/path/to/official-2025-export.csv node assets/update-journal-metrics.mjs --scimago` for a downloaded SCImago official CSV when API disallows automated access. GitHub Actions normally tries the live download.
+- `assets/app.js`, `assets/site.css`: large, single-line **[SJR] [SJR Q] [JIF]** metric group on desktop, bigger education/university/QS text, adaptive mobile layout, separate clickable source links. `JIF n/a` instead of calling OpenAlex proxy a real JIF.
+- `assets/publications/`: publisher pictures and validated graphical abstract images; the existing automated image downloader is retained.
 
-## Profile education
+## Local validation
 
-Degrees are displayed in the **About Me** section, with university emblems referenced from the universities' websites. The current **QS World University Rankings 2027** are placed next to each degree: Taiwan Tech **=379** and Hokkaido University **=179** (a shared/tied rank in both cases). QS source links appear beside each badge: https://www.topuniversities.com/universities/national-taiwan-university-science-technology-taiwan-tech and https://www.topuniversities.com/universities/hokkaido-university . These are university ranking-year 2027 values, not rankings at graduation. The information below interprets the request as **B.Sc. 2018 at Taiwan Tech, M.Eng. 2020 at Hokkaido University, and Ph.D. 2024 at Hokkaido University**. Confirm the years before publication if different. Because the universities host the original emblems, the image display depends on their sites permitting image linking. No unofficial emblem was fabricated.
-
-## Local checks
-
-Requirements: Node.js 22. Run `node --test tests/*.test.mjs` to validate the data merge, SCImago parsing, JIF source checks, university rankings and image metadata rules. Live sync requires network access and is intentionally not asserted by offline unit tests. You can manually run:
-
-```
-node scripts/sync-publications.mjs
-node assets/update-journal-metrics.mjs --scimago
-node scripts/update-publication-visuals.mjs
-```
+Requires Node.js >= 22. Run `node --test tests/*.test.mjs`; there are **17 offline tests**, including wrong-year JIF regression tests, duplicate ISSN matching, year-aligned SCImago export checks, source matching and CSS/JS layout rules. `node --check assets/app.js` checks syntax. The browser was **not visually rendered** in this environment (headless browsing access was blocked by the administrator), nor could the actual GitHub Actions fetch to third-party websites be executed here; this local passing test status is not proof of a successful live sync or deployment. Audit the live GitHub Actions logs after push.

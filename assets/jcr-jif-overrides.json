@@ -3,8 +3,118 @@
     "jif": 9.1,
     "year": 2025,
     "journal": "Sustainable Chemistry for Climate Action",
-    "source": "Elsevier / ScienceDirect \u2014 publisher-listed Journal Impact Factor",
-    "source_url": "https://www.sciencedirect.com/browse/calls-for-papers?subject=chemistry",
+    "source": "SciJournal / Minicod — reported 2025 value; JCR access not independently available",
+    "source_url": "https://www.minicod.com/journals/sustainable-chemistry-for-climate-action-0fc7adcb",
+    "year_evidence_url": "https://scijournal.org/sustainable-chemistry-for-climate-action",
+    "verification": "independent",
+    "verified_at": "2026-10-17"
+  },
+  "20452322": {
+    "jif": 4.9,
+    "year": 2025,
+    "journal": "Scientific Reports",
+    "source": "Springer Nature — explicit 2025 JIF",
+    "source_url": "https://www.nature.com/srep/about",
+    "verification": "publisher_explicit_year",
+    "verified_at": "2026-10-17",
+    "refresh_provider": "nature",
+    "refresh_url": "https://www.nature.com/srep/about"
+  },
+  "2075163X": {
+    "jif": 2.7,
+    "year": 2025,
+    "journal": "Minerals",
+    "source": "MDPI journal imprint — explicit 2025 JIF",
+    "source_url": "https://www.mdpi.com/journal/minerals/imprint",
+    "verification": "publisher_explicit_year",
+    "verified_at": "2026-10-17",
+    "refresh_provider": "mdpi",
+    "refresh_url": "https://www.mdpi.com/journal/minerals/imprint"
+  },
+  "00223131": {
+    "jif": 2.5,
+    "year": 2025,
+    "journal": "Journal of Nuclear Science and Technology",
+    "source": "Taylor & Francis journal metrics — explicit 2025 JIF",
+    "source_url": "https://www.tandfonline.com/action/journalInformation?journalCode=tnst20",
+    "verification": "publisher_explicit_year",
+    "verified_at": "2026-10-17",
+    "refresh_provider": "tandf",
+    "refresh_url": "https://www.tandfonline.com/action/journalInformation?journalCode=tnst20"
+  },
+  "01691317": {
+    "jif": 5.2,
+    "year": 2025,
+    "journal": "Applied Clay Science",
+    "source": "BioxBio — reported 2025 JCR, cross-check with publisher/JCR",
+    "source_url": "https://www.bioxbio.com/journal/APPL-CLAY-SCI",
+    "verification": "independent",
+    "verified_at": "2026-10-17",
+    "refresh_provider": "bioxbio",
+    "refresh_url": "https://www.bioxbio.com/journal/APPL-CLAY-SCI"
+  },
+  "00088846": {
+    "jif": 14.0,
+    "year": 2025,
+    "journal": "Cement and Concrete Research",
+    "source": "BioxBio / Akaturk — reported 2025 JCR, cross-check with publisher/JCR",
+    "source_url": "https://www.bioxbio.com/journal/CEMENT-CONCRETE-RES",
+    "verification": "independent",
+    "verified_at": "2026-10-17",
+    "refresh_provider": "bioxbio",
+    "refresh_url": "https://www.bioxbio.com/journal/CEMENT-CONCRETE-RES"
+  },
+  "09500618": {
+    "jif": 8.9,
+    "year": 2025,
+    "journal": "Construction and Building Materials",
+    "source": "Research Cloud / Akaturk — reported 2025 JCR",
+    "source_url": "https://researchcloud.net/journal/0950-0618",
+    "verification": "independent",
+    "verified_at": "2026-10-17",
+    "refresh_provider": "researchcloud",
+    "refresh_url": "https://researchcloud.net/journal/0950-0618"
+  },
+  "03043894": {
+    "jif": 10.6,
+    "year": 2025,
+    "journal": "Journal of Hazardous Materials",
+    "source": "BioxBio / Research Cloud — reported 2025 JCR; Elsevier 11.3 is the older 2024 value",
+    "source_url": "https://www.bioxbio.com/journal/J-HAZARD-MATER",
+    "verification": "independent",
+    "verified_at": "2026-10-17",
+    "refresh_provider": "bioxbio",
+    "refresh_url": "https://www.bioxbio.com/journal/J-HAZARD-MATER"
+  },
+  "13835866": {
+    "jif": 9.1,
+    "year": 2025,
+    "journal": "Separation and Purification Technology",
+    "source": "BioxBio / Research Cloud — reported 2025 JCR; Elsevier 9.0 is the older 2024 value",
+    "source_url": "https://www.bioxbio.com/journal/SEP-PURIF-TECHNOL",
+    "verification": "independent",
+    "verified_at": "2026-10-17",
+    "refresh_provider": "bioxbio",
+    "refresh_url": "https://www.bioxbio.com/journal/SEP-PURIF-TECHNOL"
+  },
+  "01665162": {
+    "jif": 7.3,
+    "year": 2025,
+    "journal": "International Journal of Coal Geology",
+    "source": "BioxBio — reported 2025 JCR, publisher listing 5.7 is 2024",
+    "source_url": "https://www.bioxbio.com/journal/INT-J-COAL-GEOL",
+    "verification": "independent",
+    "verified_at": "2026-10-17",
+    "refresh_provider": "bioxbio",
+    "refresh_url": "https://www.bioxbio.com/journal/INT-J-COAL-GEOL"
+  },
+  "25726641": {
+    "jif": 1.3,
+    "year": 2025,
+    "journal": "Mineral Processing and Extractive Metallurgy",
+    "source": "Institute of Materials, Minerals and Mining (IOM3) — explicit 2025 Journal Impact Factor",
+    "source_url": "https://www.iom3.org/resource/2025-journal-metrics-in-full.html",
+    "verification": "publisher_explicit_year",
     "verified_at": "2026-10-17"
   }
 }

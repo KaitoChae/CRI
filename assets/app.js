@@ -231,8 +231,7 @@ function publicationMetricBadges(p={},includeCitations=false){
   const hasOfficial=['jcr','reported_jif'].includes(p.impact_factor_kind)
     && p.impact_factor!==null&&p.impact_factor!==undefined&&Number.isFinite(Number(p.impact_factor));
   // OpenAlex 2yr mean citedness IS NOT a JIF: do not silently label it IF.
-  const mark=p.impact_factor_kind==='reported_jif'?'†':'';
-  const iff=hasOfficial?`JIF${mark} ${Number(p.impact_factor).toFixed(3).replace(/0+$/,'').replace(/\.$/,'')} (${p.impact_factor_year})`:'JIF n/a';
+  const iff=hasOfficial?`JIF ${Number(p.impact_factor).toFixed(3).replace(/0+$/,'').replace(/\.$/,'')} (${p.impact_factor_year})`:'JIF n/a';
   const impactTip=hasOfficial?[p.impact_factor_source,p.impact_factor_year,p.impact_factor_kind==='reported_jif'?'Third-party report; official publisher/JCR verification pending':null].filter(Boolean).join(' · '):'No independently year-checked Journal Impact Factor. OpenAlex is not the JIF.';
   const impactSource=hasOfficial?safeImageSrc(p.impact_factor_source_url):'';
   const cite=includeCitations&&Number.isFinite(+p.citations)?`<b class="badge citation-badge">${+p.citations} ${safeText(t('cited'))}</b>`:'';
@@ -278,13 +277,6 @@ function renderUpdates(){
   installImageFallbacks(host);
 }
 function updatePublicationMeta(){
-  const note=document.getElementById('pubMetricSourceNote');
-  if(note){
-    const year=embeddedJournalMetrics.updated_at ? new Date(embeddedJournalMetrics.updated_at).toLocaleDateString(locale(),{year:'numeric',month:'short',day:'numeric'}) : '—';
-    const sjrYear=Math.max(0,...Object.values(embeddedJournalMetrics.by_journal||{}).map(m=>Number(m.sjr_year)||0));
-    note.textContent=`SJR dan SJR Q = pemeringkatan SCImago tahunan (${sjrYear||'belum tersedia'}), bukan JCR Quartile. Status: ${embeddedJournalMetrics.sjr_update_status||'cached'}. Data penelitian terakhir: ${year}. JIF† = laporan pihak ketiga (belum diverifikasi melalui JCR). Klik setiap indikator untuk melihat sumber.`;
-  }
-
   const m=data.metrics||{};Object.entries(m).forEach(([k,v])=>{const el=document.querySelector(`[data-metric="${k}"]`);if(el&&v!==undefined&&v!==null)el.textContent=Number(v).toLocaleString(locale())});
   const last=$('#lastUpdated');if(last)last.textContent=fmtDate(data.last_updated);
   updateSearchStatus();

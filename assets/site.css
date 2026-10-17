@@ -753,7 +753,6 @@ html[data-language="ko"] .lab-name small{letter-spacing:.05em;line-height:1.25}
 .degree .qs-ranking strong{font-weight:800;color:var(--coral)}
 .degree .qs-ranking:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
 .degree .qs-ranking:hover strong{color:#e4ed9b}
-.education-rank-note{display:block;margin:8px 2px 0;opacity:.65;font-size:10px;line-height:1.45}
 .badge.if[href]{text-decoration:none;color:var(--navy);cursor:pointer}
 .badge.if[href]:hover{border-color:var(--navy);background:#ecf4ca}
 @media(max-width:375px){.degree .university-name{font-size:10px}.degree .qs-ranking{font-size:9px}}
@@ -775,7 +774,6 @@ html[data-language="ko"] .lab-name small{letter-spacing:.05em;line-height:1.25}
 .pub-row .badges .badge:hover,.update-metrics .badge:hover{box-shadow:0 0 0 2px rgba(16,53,71,.2)}
 .update-metrics{display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:7px;overflow-x:auto;scrollbar-width:thin;max-width:100%;padding:3px 0 7px}
 .update-metrics .metric-group{justify-content:flex-start}
-.pub-metrics-status{max-width:1500px;margin:21px auto 0;padding:12px 17px;background:rgba(240,245,228,.72);border-left:4px solid var(--coral);color:#254554;font-size:13px;line-height:1.55}
 /* Guarantee room for [SJR] [Q] [JIF] at the RIGHT of every paper. */
 @media(min-width:1321px){
   .pub-row.has-visual{grid-template-columns:54px 145px minmax(0,1fr) minmax(145px,.27fr) minmax(300px,auto) 24px;gap:17px}
@@ -821,7 +819,6 @@ html[data-language="ko"] .lab-name small{letter-spacing:.05em;line-height:1.25}
 .degree .university-name{font-size:clamp(14px,.93vw,16px)!important;line-height:1.35}
 .degree .qs-ranking{font-size:clamp(12px,.83vw,14px)!important;padding:7px 10px;margin-top:5px}
 .degree time{font-size:clamp(15px,.95vw,18px);line-height:1.15}
-.education-rank-note{font-size:12px;line-height:1.5;margin-top:11px}
 @media(max-width:720px){
   .degree{grid-template-columns:44px minmax(0,1fr) 42px;gap:9px;padding:13px 9px}
   .university-mark{width:44px;height:44px}
@@ -890,3 +887,6 @@ html[data-language="ko"] .lab-name small{letter-spacing:.05em;line-height:1.25}
   .pub-row .pub-journal,
   .pub-row .badges { grid-column: 1 / -1 !important; }
 }
+
+/* V46: Explanatory footnotes removed; keep the publication toggle neatly aligned. */
+.pub-note{justify-content:flex-end;align-items:center}

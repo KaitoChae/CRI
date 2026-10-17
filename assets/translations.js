@@ -188,3 +188,116 @@ const PUBLICATION_TOGGLE_TRANSLATIONS={
   tr:{pub_view_all:"Tüm yayınları görüntüle",pub_show_less:"Daha az yayın göster"}
 };
 Object.entries(PUBLICATION_TOGGLE_TRANSLATIONS).forEach(([language,labels])=>Object.assign(window.LAB_TRANSLATIONS[language],labels));
+
+// Education labels + precise journal-metric provenance for every supported language.
+const PROFILE_EDUCATION_TRANSLATIONS={
+  "en": {
+    "pi_education": "EDUCATION",
+    "degree_bsc": "Bachelor of Science",
+    "degree_meng": "Master of Engineering",
+    "degree_phd": "Doctor of Philosophy (Ph.D.)",
+    "university_ntust": "National Taiwan University of Science and Technology",
+    "university_hokudai": "Hokkaido University",
+    "metric_note": "SJR/Q: SCImago (annual). IF*: OpenAlex 2-year mean citedness, not Clarivate JIF. Citations: OpenAlex."
+  },
+  "id": {
+    "pi_education": "PENDIDIKAN",
+    "degree_bsc": "Sarjana Sains (B.Sc.)",
+    "degree_meng": "Magister Teknik (M.Eng.)",
+    "degree_phd": "Doktor (Ph.D.)",
+    "university_ntust": "National Taiwan University of Science and Technology",
+    "university_hokudai": "Hokkaido University",
+    "metric_note": "SJR/Q: SCImago (tahunan). IF*: rata-rata sitasi 2 tahun OpenAlex, bukan JIF Clarivate. Sitasi: OpenAlex."
+  },
+  "ja": {
+    "pi_education": "学歴",
+    "degree_bsc": "理学士（B.Sc.）",
+    "degree_meng": "工学修士（M.Eng.）",
+    "degree_phd": "博士（Ph.D.）",
+    "university_ntust": "国立台湾科技大学",
+    "university_hokudai": "北海道大学",
+    "metric_note": "SJR・Q：SCImago（年次更新）。IF*：OpenAlexの2年間平均被引用数（ClarivateのJIFではありません）。引用数：OpenAlex。"
+  },
+  "zh-CN": {
+    "pi_education": "教育背景",
+    "degree_bsc": "理学学士",
+    "degree_meng": "工学硕士",
+    "degree_phd": "博士（Ph.D.）",
+    "university_ntust": "国立台湾科技大学",
+    "university_hokudai": "北海道大学",
+    "metric_note": "SJR/Q：SCImago（每年更新）。IF*：OpenAlex两年平均被引频次，不是Clarivate官方JIF。引用次数：OpenAlex。"
+  },
+  "zh-TW": {
+    "pi_education": "學歷",
+    "degree_bsc": "理學學士",
+    "degree_meng": "工學碩士",
+    "degree_phd": "博士（Ph.D.）",
+    "university_ntust": "國立臺灣科技大學",
+    "university_hokudai": "北海道大學",
+    "metric_note": "SJR/Q：SCImago（每年更新）。IF*：OpenAlex兩年平均被引次數，非Clarivate官方JIF。引用次數：OpenAlex。"
+  },
+  "ko": {
+    "pi_education": "학력",
+    "degree_bsc": "이학사",
+    "degree_meng": "공학 석사",
+    "degree_phd": "박사 (Ph.D.)",
+    "university_ntust": "국립타이완과학기술대학교",
+    "university_hokudai": "홋카이도대학교",
+    "metric_note": "SJR/Q: SCImago(연간). IF*: OpenAlex 2년 평균 피인용 수이며 Clarivate JIF가 아닙니다. 인용 수: OpenAlex."
+  },
+  "de": {
+    "pi_education": "AUSBILDUNG",
+    "degree_bsc": "Bachelor of Science",
+    "degree_meng": "Master of Engineering",
+    "degree_phd": "Doktor (Ph.D.)",
+    "university_ntust": "National Taiwan University of Science and Technology",
+    "university_hokudai": "Hokkaido University",
+    "metric_note": "SJR/Q: SCImago (jährlich). IF*: OpenAlex 2-Jahres-Zitationsmittel, kein Clarivate JIF. Zitate: OpenAlex."
+  },
+  "fr": {
+    "pi_education": "FORMATION",
+    "degree_bsc": "Licence ès sciences",
+    "degree_meng": "Master en ingénierie",
+    "degree_phd": "Doctorat (Ph.D.)",
+    "university_ntust": "National Taiwan University of Science and Technology",
+    "university_hokudai": "Hokkaido University",
+    "metric_note": "SJR/Q : SCImago (annuel). IF* : moyenne de citations sur 2 ans (OpenAlex), et non JIF Clarivate. Citations : OpenAlex."
+  },
+  "es": {
+    "pi_education": "FORMACIÓN",
+    "degree_bsc": "Grado en Ciencias",
+    "degree_meng": "Máster en Ingeniería",
+    "degree_phd": "Doctorado (Ph.D.)",
+    "university_ntust": "National Taiwan University of Science and Technology",
+    "university_hokudai": "Hokkaido University",
+    "metric_note": "SJR/Q: SCImago (anual). IF*: media de citas en 2 años de OpenAlex, no JIF de Clarivate. Citas: OpenAlex."
+  },
+  "it": {
+    "pi_education": "FORMAZIONE",
+    "degree_bsc": "Laurea triennale in Scienze",
+    "degree_meng": "Laurea magistrale in Ingegneria",
+    "degree_phd": "Dottorato (Ph.D.)",
+    "university_ntust": "National Taiwan University of Science and Technology",
+    "university_hokudai": "Hokkaido University",
+    "metric_note": "SJR/Q: SCImago (annuale). IF*: media citazioni a 2 anni di OpenAlex, non JIF Clarivate. Citazioni: OpenAlex."
+  },
+  "pt": {
+    "pi_education": "FORMAÇÃO",
+    "degree_bsc": "Bacharelado em Ciências",
+    "degree_meng": "Mestrado em Engenharia",
+    "degree_phd": "Doutorado (Ph.D.)",
+    "university_ntust": "National Taiwan University of Science and Technology",
+    "university_hokudai": "Hokkaido University",
+    "metric_note": "SJR/Q: SCImago (anual). IF*: média de citações em 2 anos da OpenAlex, não o JIF da Clarivate. Citações: OpenAlex."
+  },
+  "tr": {
+    "pi_education": "EĞİTİM",
+    "degree_bsc": "Fen Bilimleri Lisansı",
+    "degree_meng": "Mühendislik Yüksek Lisansı",
+    "degree_phd": "Doktora (Ph.D.)",
+    "university_ntust": "National Taiwan University of Science and Technology",
+    "university_hokudai": "Hokkaido University",
+    "metric_note": "SJR/Q: SCImago (yıllık). IF*: OpenAlex iki yıllık ortalama atıfı; Clarivate JIF değildir. Atıflar: OpenAlex."
+  }
+};
+Object.entries(PROFILE_EDUCATION_TRANSLATIONS).forEach(([language,labels])=>Object.assign(window.LAB_TRANSLATIONS[language],labels));

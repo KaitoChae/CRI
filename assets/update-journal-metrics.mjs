@@ -1,84 +1,123 @@
+// OpenAlex 2-year mean citedness is NOT the licensed Clarivate JCR Journal
+// Impact Factor. We preserve that distinction throughout the UI and data.
 import fs from "node:fs/promises";
-import vm from "node:vm";
+import {PUBLICATIONS_FILE,METRICS_FILE,normalizeIssn,normalizeDoi,journalKey,readData,writeData,request,requestJson} from '../scripts/common.mjs';
 
-const SCIMAGO_EXPORT_URL="https://www.scimagojr.com/journalrank.php?out=xls";
-const PUBLICATIONS_FILE="assets/publications.js";
-const OUTPUT_FILE="assets/journal-metrics.js";
-
-function normalizeIssn(value=""){
-  const compact=String(value).toUpperCase().replace(/[^0-9X]/g,"");
-  return compact.length===8?compact:"";
-}
-function journalKey(value=""){
-  return String(value).toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g," ").trim();
-}
-function numberValue(value=""){
-  const number=Number.parseFloat(String(value).trim().replace(/\s/g,"").replace(",","."));
-  return Number.isFinite(number)?number:null;
-}
-function parseDelimited(text,delimiter=";"){
-  const rows=[];let row=[],field="",quoted=false;
-  for(let index=0;index<text.length;index+=1){
-    const character=text[index];
-    if(character==='"'){
-      if(quoted&&text[index+1]==='"'){field+='"';index+=1}else quoted=!quoted;
-    }else if(character===delimiter&&!quoted){row.push(field.trim());field=""}
-    else if((character==="\n"||character==="\r")&&!quoted){
-      if(character==="\r"&&text[index+1]==="\n")index+=1;
-      row.push(field.trim());field="";if(row.some(Boolean))rows.push(row);row=[];
-    }else field+=character;
+const TARGET_SCIMAGO_YEAR=new Date().getUTCFullYear()-1;
+const SCIMAGO_URL=`https://www.scimagojr.com/journalrank.php?out=xls&year=${TARGET_SCIMAGO_YEAR}`;
+export const parseDelimited=(input,separator=';')=>{
+  const rows=[];let row=[],cell='',quoted=false;
+  for(let i=0;i<input.length;i++){
+    const c=input[i];
+    if(c==='"'){
+      if(quoted&&input[i+1]==='"'){cell+='"';i++}else quoted=!quoted;
+    }else if(c===separator&&!quoted){row.push(cell.trim());cell=''}
+    else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&input[i+1]==='\n')i++;row.push(cell.trim());cell='';if(row.some(Boolean))rows.push(row);row=[]}
+    else cell+=c;
   }
-  if(field||row.length){row.push(field.trim());if(row.some(Boolean))rows.push(row)}
+  if(cell||row.length){row.push(cell.trim());if(row.some(Boolean))rows.push(row)}
   return rows;
-}
-function csvObjects(text){
-  const rows=parseDelimited(text.replace(/^\uFEFF/,""));
-  const headers=(rows.shift()||[]).map(value=>value.trim());
-  return rows.map(cells=>Object.fromEntries(headers.map((header,index)=>[header,cells[index]||""])));
-}
-function field(row,names){
-  const key=Object.keys(row).find(value=>names.includes(value.trim().toLowerCase()));
-  return key?row[key]:"";
-}
-async function readWindowAssignment(path,property){
-  const source=await fs.readFile(path,"utf8");const context={window:{}};
-  vm.runInNewContext(source,context,{filename:path});return context.window[property]||{};
-}
-async function fetchJson(url){
-  const response=await fetch(url,{headers:{Accept:"application/json","User-Agent":"CRI-academic-website-metrics/1.0"}});
-  if(!response.ok)throw new Error(`${response.status} from ${url}`);return response.json();
-}
-async function loadScimago(){
-  const response=await fetch(SCIMAGO_EXPORT_URL,{headers:{Accept:"text/csv,text/plain,*/*","User-Agent":"Mozilla/5.0 CRI academic website updater"}});
-  if(!response.ok)throw new Error(`SCImago returned ${response.status}`);
-  const rows=csvObjects(await response.text());const map={};
-  for(const row of rows){
-    const sjr=numberValue(field(row,["sjr"]));const quartile=field(row,["sjr best quartile","best quartile"]).trim().toUpperCase();
-    const title=field(row,["title"]);const issns=field(row,["issn"]).split(/[,;\s]+/).map(normalizeIssn).filter(Boolean);
-    for(const issn of issns)map[issn]={...(sjr!==null?{sjr}:{}),...(quartile?{quartile}:{}),sjr_year:new Date().getUTCFullYear()-1,sjr_source:"SCImago Journal & Country Rank (Scopus data)",journal_title:title};
+};
+export function scimagoIndex(text,selectedYear=null){
+  const first=text.replace(/^\uFEFF/,'').split(/\r?\n/,1)[0];
+  const delimiter=first.split(';').length>=first.split('\t').length?';':'\t';
+  const rows=parseDelimited(text.replace(/^\uFEFF/,''),delimiter);
+  const columns=(rows.shift()||[]).map(x=>x.toLowerCase());
+  const get=(cells,headers)=>{const i=columns.findIndex(x=>headers.includes(x));return i>=0?cells[i]||'':''};
+  if(!columns.includes('sjr')||!columns.includes('issn'))throw new Error('Unexpected SCImago export headers');
+  // The official export may omit a separate Year column; its year-scoped
+  // download URL identifies the dataset, or the 'Total Docs. (YYYY)' header.
+  const inferredYear=Number(columns.find(c=>/^total docs\. \(\d{4}\)$/.test(c))?.match(/(\d{4})/)?.[1]||0);
+  const exportYear=selectedYear||inferredYear;
+  const index=new Map();
+  for(const cells of rows){
+    const score=Number.parseFloat(get(cells,['sjr']).replace(/\s/g,'').replace(',','.'));
+    const quartile=get(cells,['sjr best quartile','best quartile']).toUpperCase();
+    const year=Number(get(cells,['year']))||exportYear;
+    const metric={...(Number.isFinite(score)?{sjr:score}:{}),...(/^Q[1-4]$/.test(quartile)?{quartile}:{}),
+      ...(year>=1990&&year<=2100?{sjr_year:year}:{}),sjr_source:'SCImago Journal & Country Rank (Scopus)'};
+    for(const token of get(cells,['issn']).split(/[,;\s]+/)){
+      const issn=normalizeIssn(token);if(!issn)continue;
+      // Some journals have multiple historical rows; prefer actual newer year.
+      const previous=index.get(issn);
+      if(!previous||(metric.sjr_year||0)>(previous.sjr_year||0))index.set(issn,metric);
+    }
   }
-  return map;
+  if(index.size<1000)throw new Error('SCImago export is incomplete; do not overwrite stored rankings');
+  return index;
 }
-
-const publicationData=await readWindowAssignment(PUBLICATIONS_FILE,"LAB_PUBLICATION_DATA");
-let existing={updated_at:null,by_issn:{},by_journal:{},by_doi:{}};
-try{existing=await readWindowAssignment(OUTPUT_FILE,"CRI_JOURNAL_METRICS")}catch{}
-let scimago={};try{scimago=await loadScimago()}catch(error){console.warn(error.message)}
-const next={updated_at:new Date().toISOString(),by_issn:{...(existing.by_issn||{})},by_journal:{...(existing.by_journal||{})},by_doi:{...(existing.by_doi||{})}};
-
-for(const publication of publicationData.publications||[]){
-  const doi=String(publication.doi||"").toLowerCase();if(!doi)continue;
-  try{
-    const work=await fetchJson(`https://api.openalex.org/works/https://doi.org/${doi}`);
-    const sourceSummary=work?.primary_location?.source||{};const issn=normalizeIssn(sourceSummary.issn_l||sourceSummary.issn?.[0]||"");
-    let source={};if(sourceSummary.id)source=await fetchJson(sourceSummary.id.replace("https://openalex.org/","https://api.openalex.org/sources/"));
-    const impact=Number(source?.summary_stats?.["2yr_mean_citedness"]);
-    const metric={...(scimago[issn]||{}),...(Number.isFinite(impact)?{impact_factor:Number(impact.toFixed(3)),impact_factor_year:new Date().getUTCFullYear()-1,impact_factor_source:"OpenAlex 2-year mean citedness",impact_factor_kind:"openalex"}:{}),citations:Number(work?.cited_by_count||0),issn};
-    if(issn)next.by_issn[issn]={...(next.by_issn[issn]||{}),...metric};
-    next.by_journal[journalKey(publication.journal)]={...(next.by_journal[journalKey(publication.journal)]||{}),...metric};
-    next.by_doi[doi]={...(next.by_doi[doi]||{}),...metric};
-  }catch(error){console.warn(`${doi}: ${error.message}`)}
-  await new Promise(resolve=>setTimeout(resolve,120));
+async function fetchScimago(){
+  const response=await request(SCIMAGO_URL,{timeout:45000,attempts:2});
+  const text=await response.text();return scimagoIndex(text,TARGET_SCIMAGO_YEAR);
 }
-
-await fs.writeFile(OUTPUT_FILE,`window.CRI_JOURNAL_METRICS=${JSON.stringify(next,null,2)};\n`);
+async function sourceFor(publication){
+  let id=String(publication.source_id||'').match(/S\d+$/)?.[0];
+  if(!id&&publication.doi){
+    const work=await requestJson(`https://api.openalex.org/works/https://doi.org/${encodeURIComponent(normalizeDoi(publication.doi))}`);
+    id=work?.primary_location?.source?.id?.match(/S\d+$/)?.[0];
+  }
+  if(id)return requestJson(`https://api.openalex.org/sources/${id}`);
+  const issn=normalizeIssn(publication.issn);
+  if(!issn)return null;
+  const found=await requestJson(`https://api.openalex.org/sources?filter=issn:${issn}&per-page=1`);
+  return found.results?.[0]||null;
+}
+function bestMetric(original,patch){
+  // Only supplied/verified Clarivate values may be labeled as a JIF.
+  const result={...original,...patch};
+  if(result.impact_factor_kind==='openalex'){
+    result.impact_factor_source='OpenAlex 2-year mean citedness (not Clarivate JIF)';
+  }
+  return result;
+}
+async function main(){
+  const snapshot=await readData(PUBLICATIONS_FILE,'LAB_PUBLICATION_DATA');
+  let existing={updated_at:null,by_issn:{},by_journal:{},by_doi:{}};
+  try{existing=await readData(METRICS_FILE,'CRI_JOURNAL_METRICS')}catch{}
+  const next={updated_at:existing.updated_at,by_issn:{...existing.by_issn},by_journal:{...existing.by_journal},by_doi:{...existing.by_doi}};
+  let scimago=new Map();
+  if(process.argv.includes('--scimago')){
+    try{scimago=await fetchScimago();console.log('SCImago: indexed',scimago.size,'ISSNs')}
+    catch(error){console.warn('SCImago download failed; retaining previous verified SJR values:',error.message)}
+  }
+  // Optional journal-year JIF values obtained from a licensed JCR source.
+  // The file is empty by default; OpenAlex must never masquerade as JCR.
+  let jcrOverrides={};
+  try{jcrOverrides=JSON.parse(await fs.readFile('assets/jcr-jif-overrides.json','utf8'))}catch{}
+  const sourceCache=new Map();let successful=0;
+  for(const pub of snapshot.publications||[]){
+    const doi=normalizeDoi(pub.doi);const issn=normalizeIssn(pub.issn);
+    const journal=journalKey(pub.journal);
+    const cacheKey=pub.source_id||issn||doi;
+    let source=null;
+    try{
+      if(sourceCache.has(cacheKey))source=sourceCache.get(cacheKey);
+      else{source=await sourceFor(pub);sourceCache.set(cacheKey,source)}
+    }catch(error){console.warn('Source metrics unavailable:',pub.journal,error.message)}
+    const realIssn=normalizeIssn(source?.issn_l||source?.issn?.[0]||issn);
+    const impact=Number(source?.summary_stats?.['2yr_mean_citedness']);
+    const oaImpact=(source?.type==='journal'&&source?.summary_stats?.['2yr_mean_citedness']!=null&&Number.isFinite(impact))?{
+      impact_factor:Number(impact.toFixed(3)),impact_factor_year:new Date().getUTCFullYear()-1,
+      impact_factor_source:'OpenAlex 2-year mean citedness (not Clarivate JIF)',impact_factor_kind:'openalex'
+    }:{};
+    const fromScimago=scimago.get(realIssn)||scimago.get(issn)||{};
+    const jifEntry=jcrOverrides[realIssn]||jcrOverrides[issn]||{};
+    const jcrNumber=Number(jifEntry.jif);
+    const licensed=(jifEntry.jif!==undefined&&jifEntry.year>=2000&&Number.isFinite(jcrNumber))?{
+      impact_factor:jcrNumber,impact_factor_year:jifEntry.year,
+      impact_factor_source:'Clarivate Journal Citation Reports (licensed)',impact_factor_kind:'jcr'
+    }:{};
+    const metric={...fromScimago,...oaImpact,...licensed};
+    if(Object.keys(metric).length)successful++;
+    if(realIssn)next.by_issn[realIssn]=bestMetric(next.by_issn[realIssn]||{},metric);
+    if(issn&&issn!==realIssn)next.by_issn[issn]=bestMetric(next.by_issn[issn]||{},metric);
+    if(journal)next.by_journal[journal]=bestMetric(next.by_journal[journal]||{},metric);
+    if(doi)next.by_doi[doi]=bestMetric(next.by_doi[doi]||{},metric);
+  }
+  // Do not pretend we synced if APIs all failed.
+  if(!successful){console.error('No live journal metrics could be refreshed; snapshot unchanged');process.exitCode=1;return}
+  next.updated_at=new Date().toISOString();
+  await writeData(METRICS_FILE,'CRI_JOURNAL_METRICS',next);
+  console.log(`Refreshed metrics for ${successful} journal entries; SJR export ${scimago.size?'fresh':'previous data preserved'}.`);
+}
+if(import.meta.url===`file://${process.argv[1]}`)await main();

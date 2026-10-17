@@ -104,6 +104,12 @@ if(menuButton&&mobileNav){
   $$('a',mobileNav).forEach(a=>a.addEventListener('click',()=>{mobileNav.classList.remove('open');menuButton.setAttribute('aria-expanded','false')}));
 }
 const year=$('#year');if(year)year.textContent=new Date().getFullYear();
+// Official university emblems are hosted by their respective universities.
+// If a remote server blocks hotlinking, show a readable university monogram.
+$$('.university-mark img').forEach(img=>{
+  img.addEventListener('error',()=>img.remove(),{once:true});
+  if(img.complete&&img.naturalWidth===0)img.remove();
+});
 
 // ------------------------- PUBLICATIONS -------------------------
 const data=window.LAB_PUBLICATION_DATA||{metrics:{},publications:[],last_updated:null,source:'embedded snapshot'};
@@ -111,7 +117,11 @@ const embeddedJournalMetrics=window.CRI_JOURNAL_METRICS||{by_issn:{},by_journal:
 function journalMetricKey(v=''){return String(v).toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g,' ').trim()}
 function embeddedMetricFor(p={}){
   const doi=String(p.doi||'').toLowerCase();const issn=normalizeIssn(p.issn);const journal=journalMetricKey(p.journal);
-  return {...(embeddedJournalMetrics.by_journal?.[journal]||{}),...(embeddedJournalMetrics.by_issn?.[issn]||{}),...(embeddedJournalMetrics.by_doi?.[doi]||{})};
+  // Journal indicators belong to a source, not to an article. Old snapshots
+  // may contain article citations: NEVER overwrite live OpenAlex citations.
+  const metric={...(embeddedJournalMetrics.by_journal?.[journal]||{}),...(embeddedJournalMetrics.by_issn?.[issn]||{}),...(embeddedJournalMetrics.by_doi?.[doi]||{})};
+  delete metric.citations;delete metric.issn;
+  return metric;
 }
 function publicationTimestamp(p={}){
   const raw=String(p.publication_date||p.published_date||p.date||'').trim();
@@ -133,7 +143,7 @@ function newestFirst(a={},b={}){
 }
 function sortPublications(list=[]){return [...list].sort(newestFirst)}
 let pubs=sortPublications((Array.isArray(data.publications)?data.publications:[]).map(p=>({...p,...embeddedMetricFor(p)})));
-if(embeddedJournalMetrics.updated_at)data.last_updated=embeddedJournalMetrics.updated_at;
+if(embeddedJournalMetrics.updated_at&&Date.parse(embeddedJournalMetrics.updated_at)>Date.parse(data.last_updated||0))data.last_updated=embeddedJournalMetrics.updated_at;
 const PUBLICATION_PREVIEW_LIMIT=8;
 let showAllPublications=false;
 function locale(){return LANG_LOCALES[activeLang]||'en-GB'}
@@ -196,12 +206,14 @@ function updateSearchStatus(totalMatches=null){
 }
 function publicationMetricBadges(p={},includeCitations=false){
   const qtile=normalizedQuartile(p.quartile)||'Q n/a';
-  const hasSjr=Number.isFinite(Number(p.sjr));
+  const hasSjr=p.sjr!==null&&p.sjr!==undefined&&p.sjr!==''&&Number.isFinite(Number(p.sjr));
   const sjr=hasSjr?`SJR ${Number(p.sjr).toFixed(3)}`:'SJR n/a';
-  const hasIf=p.impact_factor!==undefined&&p.impact_factor!==null&&Number.isFinite(Number(p.impact_factor));
-  const iff=hasIf?`IF ${Number(p.impact_factor).toFixed(3).replace(/0+$/,'').replace(/\.$/,'')}`:(p.type||'').toLowerCase().includes('conference')?t('no_jif'):'IF n/a';
+  const hasIf=p.impact_factor!==undefined&&p.impact_factor!==null&&p.impact_factor!==''&&Number.isFinite(Number(p.impact_factor));
+  const isOpenAlex=p.impact_factor_kind!=='jcr';
+  const ifLabel=isOpenAlex?'IF*':'JIF';
+  const iff=hasIf?`${ifLabel} ${Number(p.impact_factor).toFixed(3).replace(/0+$/,'').replace(/\.$/,'')}`:(p.type||'').toLowerCase().includes('conference')?t('no_jif'):`${ifLabel} n/a`;
   const sjrTitle=[p.sjr_source,p.sjr_year].filter(Boolean).join(', ');
-  const ifTitle=[p.impact_factor_source,p.impact_factor_year].filter(Boolean).join(', ');
+  const ifTitle=[p.impact_factor_source,p.impact_factor_year, ...(isOpenAlex?['OpenAlex proxy; not the Clarivate JIF']:[])].filter(Boolean).join(', ');
   const cite=includeCitations&&Number.isFinite(+p.citations)?`<b class="badge">${+p.citations} ${safeText(t('cited'))}</b>`:'';
   return `<b class="badge sjr ${hasSjr?'':'na'}" title="${safeText(sjrTitle)}">${safeText(sjr)}</b><b class="badge ${badgeClass(qtile)}" title="${safeText(sjrTitle)}">${safeText(qtile)}</b><b class="badge ${hasIf?'if':'na'}" title="${safeText(ifTitle)}">${safeText(iff)}</b>${cite}`;
 }
@@ -309,29 +321,45 @@ async function refreshFromOpenAlex(){
     renderPublications(filteredPublications());renderUpdates();updatePublicationMeta();
   }catch{
     // The curated local snapshot remains fully usable if the live index is unavailable.
+    await refreshJournalMetrics();
   }
 }
 
+// Refresh newly discovered journals directly from OpenAlex. GitHub Actions
+// updates the embedded SJR data; there is no /api endpoint on GitHub Pages.
 async function refreshJournalMetrics(){
-  const issns=[...new Set(pubs.map(p=>normalizeIssn(p.issn)).filter(Boolean))];
-  if(!issns.length)return;
-  let cached={};
-  try{cached=JSON.parse(localStorage.getItem('criJournalMetrics')||'{}')||{}}catch{}
-  pubs=pubs.map(p=>({...p,...(cached[normalizeIssn(p.issn)]||{})}));
-  try{
-    const response=await fetch(`/api/journal-metrics?issns=${encodeURIComponent(issns.join(','))}`);
-    if(!response.ok)throw new Error('Journal metric request failed');
-    const payload=await response.json();const byIssn=payload?.by_issn||{};
-    pubs=pubs.map(p=>{
-      const key=normalizeIssn(p.issn);const metric={...(cached[key]||{}),...(byIssn[key]||{})};
-      return {...p,...metric};
-    });
-    const nextCache={...cached};
-    Object.entries(byIssn).forEach(([key,value])=>{nextCache[key]={...(nextCache[key]||{}),...value}});
-    try{localStorage.setItem('criJournalMetrics',JSON.stringify(nextCache))}catch{}
-  }catch{
-    // Keep the last verified values cached in the visitor's browser.
+  const cacheKey='criSourceIndicatorsV40';
+  let saved={};
+  try{saved=JSON.parse(localStorage.getItem(cacheKey)||'{}')||{}}catch{}
+  const cutoff=Date.now()-24*60*60*1000;
+  // New snapshot versions always invalidate the old per-browser cache.
+  const snapshotTime=Date.parse(embeddedJournalMetrics.updated_at||0)||0;
+  const sources=new Map();
+  pubs.forEach(p=>{const id=String(p.source_id||'').match(/S\d+$/)?.[0];if(id)sources.set(id,null)});
+  const ids=[...sources.keys()];
+  for(let i=0;i<ids.length;i+=5){
+    const slice=ids.slice(i,i+5);
+    await Promise.all(slice.map(async id=>{
+      const record=saved[id];
+      if(record&&record.at>cutoff&&record.at>=snapshotTime){sources.set(id,record.metric);return}
+      try{
+        const response=await fetch(`https://api.openalex.org/sources/${id}`,{cache:'no-cache'});
+        if(!response.ok)return;
+        const source=await response.json();
+        const score=source?.summary_stats?.['2yr_mean_citedness'];
+        if(source.type!=='journal'||score==null||!Number.isFinite(Number(score)))return;
+        const metric={impact_factor:Number(Number(score).toFixed(3)),impact_factor_kind:'openalex',impact_factor_source:'OpenAlex 2-year mean citedness (not Clarivate JIF)',impact_factor_year:new Date().getUTCFullYear()-1};
+        sources.set(id,metric);saved[id]={at:Date.now(),metric};
+      }catch{ /* Offline visitors keep the embedded journal snapshot. */ }
+    }));
   }
+  try{localStorage.setItem(cacheKey,JSON.stringify(saved))}catch{}
+  pubs=pubs.map(p=>{
+    const id=String(p.source_id||'').match(/S\d+$/)?.[0];
+    const indicator=sources.get(id);
+    return indicator&&p.impact_factor_kind!=='jcr'?{...p,...indicator}:p;
+  });
+  renderPublications(filteredPublications());renderUpdates();
 }
 
 // Apply a saved choice first. Otherwise show the browser language immediately,
@@ -345,8 +373,9 @@ if(!savedWebsiteLanguage){
     if(ipLanguage&&!manualLanguageChosen&&ipLanguage!==activeLang)setLanguage(ipLanguage,{persist:false,rerender:true});
   });
 }
-refreshFromOpenAlex();
-
+refreshFromOpenAlex().catch(()=>{});
+// Even when the author API is temporarily offline, journal proxy values
+// can still be refreshed for the embedded curated publications.
 // ------------------------- MOTION -------------------------
 if(matchMedia('(pointer:fine)').matches){
   const center=$('.hero-center'),hero=$('#hero');

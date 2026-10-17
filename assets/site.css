@@ -728,3 +728,26 @@ html[data-language="ko"] .lab-name small{letter-spacing:.05em;line-height:1.25}
   .pub-row.has-visual .badges{grid-column:1/3;grid-row:5}
   .pub-row.has-visual .pub-arrow{grid-column:3;grid-row:3}
 }
+
+
+/* V40: compact academic timeline; preserve the original two-column portrait. */
+.people .person-copy{padding-top:clamp(56px,5.8vw,106px);padding-bottom:clamp(56px,5.8vw,106px)}
+.people .person-copy h2{margin:24px 0 21px}
+.people .keywords{margin:17px 0 20px}
+.education{max-width:700px;margin:0 0 29px}
+.education-heading{display:block;font:700 11px/1.4 var(--display);letter-spacing:.16em;color:var(--coral);margin:0 0 9px}
+.education-list{display:grid;gap:7px}
+.degree{display:grid;grid-template-columns:46px minmax(0,1fr) 55px;gap:13px;align-items:center;padding:9px 12px;border:1px solid rgba(20,47,61,.13);border-radius:10px;background:rgba(255,255,255,.23);transition:background .2s,border-color .2s}
+.degree:hover{background:rgba(255,255,255,.5);border-color:rgba(20,47,61,.32)}
+.university-mark{width:46px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,.8);overflow:hidden;padding:3px}
+.university-mark img{width:100%;height:100%;object-fit:contain}
+.degree-copy{display:flex;flex-direction:column;gap:2px;min-width:0}
+.degree-copy b{font-size:clamp(13px,.92vw,16px);line-height:1.22}
+.degree-copy small{font-size:clamp(11px,.76vw,13px);line-height:1.3;color:rgba(20,47,61,.75)}
+.degree time{font:700 13px/1 var(--display);text-align:right;color:var(--coral)}
+@media(max-width:1180px){.people .person-copy{padding:65px 6vw}.education{max-width:760px}}
+@media(max-width:720px){.people .person-copy{padding:65px 20px}.degree{grid-template-columns:40px minmax(0,1fr) 44px;gap:9px;padding:9px}.university-mark{width:40px;height:40px}.degree time{font-size:12px}.person-copy .keywords{margin:15px 0 18px}.education{margin-bottom:26px}}
+@media(max-width:375px){.degree-copy small{font-size:10px}.degree-copy b{font-size:12px}}
+
+.university-mark b{display:none;font:800 10px/1 var(--sans);color:var(--navy)}
+.university-mark:not(:has(img)) b{display:block}

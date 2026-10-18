@@ -224,6 +224,8 @@ function updateSearchStatus(totalMatches=null){
 function publicationMetricBadges(p={},includeCitations=false){
   const hasRank=Number.isFinite(Number(p.sjr))&&Number(p.sjr)>0&&normalizedQuartile(p.quartile);
   const qtile=hasRank?`SJR ${normalizedQuartile(p.quartile)}`:'SJR Q n/a';
+  // Pass the raw quartile into badgeClass: "SJR Q1" is a label, not a quartile value.
+  // This keeps colors correct as journal metrics are refreshed.
   const sjr=hasRank?`SJR ${Number(p.sjr).toFixed(3)}`:'SJR n/a';
 
   const sjrTitle=[p.sjr_source||'SCImago ranking snapshot',p.sjr_year,p.sjr_status==='audited'?'independent source checked':null].filter(Boolean).join(' · ');
@@ -238,7 +240,7 @@ function publicationMetricBadges(p={},includeCitations=false){
   const rankElement=(text,extra='')=>rankUrl&&hasRank?`<a class="badge ${extra}" href="${safeText(rankUrl)}" target="_blank" rel="noopener noreferrer" title="${safeText(sjrTitle)}">${safeText(text)}</a>`:`<span class="badge ${extra} na" title="Not confirmed">${safeText(text)}</span>`;
   const impactBadge=impactSource?`<a class="badge if" href="${safeText(impactSource)}" target="_blank" rel="noopener noreferrer" title="${safeText(impactTip)}">${safeText(iff)}</a>`:`<span class="badge na" title="${safeText(impactTip)}">${safeText(iff)}</span>`;
   // Each badge links to its own dated source; article click is a sibling.
-  return `<span class="metric-group" title="${safeText(sjrTitle)}">${rankElement(sjr,'sjr')}${rankElement(qtile,badgeClass(qtile))}${impactBadge}</span>${cite}`;
+  return `<span class="metric-group" title="${safeText(sjrTitle)}">${rankElement(sjr,'sjr')}${rankElement(qtile,badgeClass(p.quartile))}${impactBadge}</span>${cite}`;
 }
 function updatePublicationToggle(){
   const button=$('#pubToggle');if(!button)return;

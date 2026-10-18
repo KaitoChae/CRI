@@ -890,3 +890,36 @@ html[data-language="ko"] .lab-name small{letter-spacing:.05em;line-height:1.25}
 
 /* V46: Explanatory footnotes removed; keep the publication toggle neatly aligned. */
 .pub-note{justify-content:flex-end;align-items:center}
+
+
+/* V47 — SCImago quartile colors (Q1 green, Q2 yellow, Q3 orange, Q4 red).
+   Applies to both publication rows and latest-work cards, including live updates.
+   Source: https://www.scimagojr.com/journalsearch.php?q=20912&tip=sid
+   These styles change ONLY appearance, never an SJR or quartile value. */
+.badge.q1 {
+  background-color: #287d43;
+  border-color: #287d43;
+  color: #fff;
+}
+.badge.q2 {
+  background-color: #f3ce47;
+  border-color: #d3ad2d;
+  color: #142f3d;
+}
+.badge.q3 {
+  background-color: #eb8d32;
+  border-color: #d67925;
+  color: #142f3d;
+}
+.badge.q4 {
+  background-color: #bd3d42;
+  border-color: #bd3d42;
+  color: #fff;
+}
+/* Avoid muted grey styling on a valid quartile; only unknown values use .na. */
+.badge:is(.q1, .q2, .q3, .q4) { opacity: 1; font-weight: 800; }
+/* Preserve each quartile's color when hovering or focusing a source link. */
+.badge:is(.q1, .q2, .q3, .q4):is(:hover, :focus-visible) {
+  filter: brightness(.96);
+  text-decoration: none;
+}

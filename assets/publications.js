@@ -437,7 +437,9 @@ window.LAB_PUBLICATION_DATA={
       "oa_url": "https://doi.org/10.1038/s41598-024-69681-0",
       "publisher_landing_url": "https://doi.org/10.1038/s41598-024-69681-0",
       "pii": "",
-      "journal_url_checked_at": "2026-10-18T08:21:45.048Z"
+      "journal_url_checked_at": "2026-10-18T08:21:45.048Z",
+      "graphical_abstract": "assets/publications/publisher-10-1038-s41598-024-69681-0.png",
+      "graphical_abstract_kind": "publisher_preview"
     },
     {
       "year": 2024,

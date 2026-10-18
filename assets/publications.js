@@ -2,7 +2,7 @@ window.LAB_PUBLICATION_DATA={
   "last_updated": "2026-08-11T14:40:00+09:00",
   "source": "Curated from Google Scholar, Researchmap, publisher records, and OpenAlex ORCID data",
   "metrics": {
-    "publications": 18,
+    "publications": 17,
     "citations": 231,
     "h_index": 8,
     "i10_index": 6
@@ -25,7 +25,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
       "publisher": "Elsevier",
       "publisher_url": "https://www.elsevier.com/",
-      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
+      "publication_type": "Research article"
     },
     {
       "year": 2026,
@@ -44,7 +45,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
       "publisher": "Elsevier",
       "publisher_url": "https://www.elsevier.com/",
-      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
+      "publication_type": "Research article"
     },
     {
       "year": 2025,
@@ -63,7 +65,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
       "publisher": "Elsevier",
       "publisher_url": "https://www.elsevier.com/",
-      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
+      "publication_type": "Research article"
     },
     {
       "year": 2025,
@@ -80,7 +83,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
       "publisher": "Springer Nature",
       "publisher_url": "https://www.springernature.com/",
-      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
+      "publication_type": "Research article"
     },
     {
       "year": 2025,
@@ -97,7 +101,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
       "publisher": "ACS Publications",
       "publisher_url": "https://pubs.acs.org/",
-      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
+      "publication_type": "Research article"
     },
     {
       "year": 2025,
@@ -114,7 +119,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
       "publisher": "Elsevier",
       "publisher_url": "https://www.elsevier.com/",
-      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
+      "publication_type": "Review article"
     },
     {
       "year": 2025,
@@ -131,7 +137,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "Publisher journal homepage (verified)",
       "publisher": "Sage",
       "publisher_url": "https://journals.sagepub.com/",
-      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
+      "publication_type": "Research article"
     },
     {
       "year": 2025,
@@ -146,7 +153,8 @@ window.LAB_PUBLICATION_DATA={
       "title_translations": {},
       "publisher": "Springer Nature",
       "publisher_url": "https://www.springernature.com/",
-      "publisher_source": "DOI publishing group (initial; Crossref DOI verification scheduled)"
+      "publisher_source": "DOI publishing group (initial; Crossref DOI verification scheduled)",
+      "publication_type": "Book chapter"
     },
     {
       "year": 2024,
@@ -165,22 +173,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
       "publisher": "Elsevier",
       "publisher_url": "https://www.elsevier.com/",
-      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
-    },
-    {
-      "year": 2024,
-      "title": "Application of Biohydrometallurgy in Carbon Capture, Utilization, and Storage (CCUS): Carbonate Precipitation by Bacillus subtilis as a Biocatalyst Using Calcium-Enriched Pregnant Leach Solutions from Steel Slag Bioleaching",
-      "authors": "Siti Khodijah Chaerun, Adinda Cahaya Putri, Ronny Winarko, Raudhatul Islam Chaerun, Tsutomu Sato",
-      "journal": "Conference proceedings",
-      "details": "DOI 10.1007/978-3-031-67398-6_195",
-      "citations": 0,
-      "url": "https://doi.org/10.1007/978-3-031-67398-6_195",
-      "doi": "10.1007/978-3-031-67398-6_195",
-      "type": "Conference paper",
-      "title_translations": {},
-      "publisher": "Springer Nature",
-      "publisher_url": "https://www.springernature.com/",
-      "publisher_source": "DOI publishing group (initial; Crossref DOI verification scheduled)"
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
+      "publication_type": "Research article"
     },
     {
       "year": 2024,
@@ -197,7 +191,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
       "publisher": "Springer Nature",
       "publisher_url": "https://www.springernature.com/",
-      "publisher_source": "DOI publishing group (initial; Crossref DOI verification scheduled)"
+      "publisher_source": "DOI publishing group (initial; Crossref DOI verification scheduled)",
+      "publication_type": "Research article"
     },
     {
       "year": 2024,
@@ -214,7 +209,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
       "publisher": "Springer Nature",
       "publisher_url": "https://www.springernature.com/",
-      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
+      "publication_type": "Research article"
     },
     {
       "year": 2024,
@@ -233,7 +229,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
       "publisher": "MDPI",
       "publisher_url": "https://www.mdpi.com/",
-      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
+      "publication_type": "Research article"
     },
     {
       "year": 2023,
@@ -252,7 +249,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
       "publisher": "Elsevier",
       "publisher_url": "https://www.elsevier.com/",
-      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
+      "publication_type": "Research article"
     },
     {
       "year": 2023,
@@ -271,7 +269,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
       "publisher": "Elsevier",
       "publisher_url": "https://www.elsevier.com/",
-      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
+      "publication_type": "Research article"
     },
     {
       "year": 2022,
@@ -290,7 +289,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
       "publisher": "Elsevier",
       "publisher_url": "https://www.elsevier.com/",
-      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
+      "publication_type": "Research article"
     },
     {
       "year": 2022,
@@ -309,7 +309,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
       "publisher": "Elsevier",
       "publisher_url": "https://www.elsevier.com/",
-      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
+      "publication_type": "Research article"
     },
     {
       "year": 2020,
@@ -326,7 +327,8 @@ window.LAB_PUBLICATION_DATA={
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
       "publisher": "Taylor & Francis",
       "publisher_url": "https://www.tandfonline.com/",
-      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
+      "publication_type": "Research article"
     }
   ]
 };

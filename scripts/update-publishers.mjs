@@ -3,14 +3,25 @@
 // Refresh known entries roughly every 90 days; new publications on next run.
 import {PUBLICATIONS_FILE,normalizeDoi,readData,writeData,requestJson} from './common.mjs';
 import {fromCrossrefPublisher} from './publisher-data.mjs';
+import '../assets/publication-policy.js';
+import {getPublicationStats} from './sync-publications.mjs';
+const {isConferencePublication,publicationType}=globalThis.CRI_PUBLICATION_POLICY;
 const MAX_AGE_MS=90*86400*1000;
 
 export function applyPublisher(p,message,now=new Date().toISOString()){
  const doi=normalizeDoi(p.doi);
- if(!doi || normalizeDoi(message?.DOI)!==doi || !message?.publisher)return p;
- const metadata=fromCrossrefPublisher(message.publisher);
- if(!metadata)return p;
- return {...p,...metadata,publisher_checked_at:now};
+ if(!doi || normalizeDoi(message?.DOI)!==doi)return p;
+ const metadata=fromCrossrefPublisher(message.publisher)||{};
+ const crossrefType=String(message.type||'').trim();
+ const container=Array.isArray(message['container-title'])?message['container-title'][0]:message['container-title'];
+ const result={...p,...metadata};
+ if(crossrefType)result.crossref_type=crossrefType;
+ if(container&&/book|chapter|proceedings/i.test(crossrefType))result.book_title=container;
+ if(message.event?.name)result.event=message.event.name;
+ if(isConferencePublication(result))result.conference_proceedings=true;
+ result.publication_type=publicationType(result);
+ result.publisher_checked_at=now;
+ return result;
 }
 export async function updatePublishers(publications,{fetchRecord=requestJson,now=new Date().toISOString(),logger=console}={}){
  let fetched=0,updated=0,failed=0;
@@ -40,9 +51,11 @@ export async function updatePublishers(publications,{fetchRecord=requestJson,now
 async function main(){
  const current=await readData(PUBLICATIONS_FILE,'LAB_PUBLICATION_DATA');
  const result=await updatePublishers(current.publications||[]);
- if(JSON.stringify(result.publications)!==JSON.stringify(current.publications)){
-   await writeData(PUBLICATIONS_FILE,'LAB_PUBLICATION_DATA',{...current,publications:result.publications});
+ const publications=result.publications.filter(p=>!isConferencePublication(p));
+ const excluded=result.publications.length-publications.length;
+ if(JSON.stringify(publications)!==JSON.stringify(current.publications)){
+   await writeData(PUBLICATIONS_FILE,'LAB_PUBLICATION_DATA',{...current,publications,metrics:getPublicationStats(publications)});
  }
- console.log(`Publisher DOI checks: fetched ${result.fetched}, updated ${result.updated}, temporarily unavailable ${result.failed}. Older valid publishers retained.`);
+ console.log(`Publisher/type DOI checks: fetched ${result.fetched}, updated ${result.updated}, conference entries excluded ${excluded}, temporarily unavailable ${result.failed}.`);
 }
 if(import.meta.url===`file://${process.argv[1]}`)await main();

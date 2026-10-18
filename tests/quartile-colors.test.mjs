@@ -11,6 +11,7 @@ const render = runInNewContext(`${source}\n${badgeSource}\npublicationMetricBadg
   safeImageSrc: value => value || '',
   safeText: value => String(value || ''),
   t: () => 'citations',
+  publicationType: () => 'Research article',
 });
 
 test('All four SCImago badge colors render with correct CSS class for BOTH lists', () => {

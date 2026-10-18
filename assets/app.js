@@ -113,6 +113,9 @@ $$('.university-mark img').forEach(img=>{
 
 // ------------------------- PUBLICATIONS -------------------------
 const data=window.LAB_PUBLICATION_DATA||{metrics:{},publications:[],last_updated:null,source:'embedded snapshot'};
+const publicationPolicy=window.CRI_PUBLICATION_POLICY;
+const isConferencePublication=p=>publicationPolicy?.isConferencePublication(p)===true;
+const publicationType=p=>publicationPolicy?.publicationType(p)||'Publication';
 const embeddedJournalMetrics=window.CRI_JOURNAL_METRICS||{by_issn:{},by_journal:{},by_doi:{}};
 function journalMetricKey(v=''){return String(v).toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g,' ').trim()}
 function embeddedMetricFor(p={}){
@@ -159,7 +162,7 @@ function newestFirst(a={},b={}){
   return (b._newly_discovered?1:0)-(a._newly_discovered?1:0);
 }
 function sortPublications(list=[]){return [...list].sort(newestFirst)}
-let pubs=sortPublications((Array.isArray(data.publications)?data.publications:[]).map(p=>({...p,...embeddedMetricFor(p)})));
+let pubs=sortPublications((Array.isArray(data.publications)?data.publications:[]).filter(p=>!isConferencePublication(p)).map(p=>({...p,...embeddedMetricFor(p)})));
 if(embeddedJournalMetrics.updated_at&&Date.parse(embeddedJournalMetrics.updated_at)>Date.parse(data.last_updated||0))data.last_updated=embeddedJournalMetrics.updated_at;
 const PUBLICATION_PREVIEW_LIMIT=8;
 let showAllPublications=false;
@@ -225,6 +228,24 @@ function publisherLinkHtml(p={},className='pub-publisher'){
   return url?`<a class="${className}" href="${safeText(url)}" target="_blank" rel="noopener noreferrer" title="Visit publisher: ${name}">${label}<span class="publisher-name">${name}</span></a>`
     :`<span class="${className}">${label}<span class="publisher-name">${name}</span></span>`;
 }
+// Publication category is based on the indexed work/Crossref record, not on
+// the JIF or the publisher's name. Conference records are excluded upstream.
+function publicationTypeLabel(p={}){
+  const key=publicationType(p);
+  const names={
+    en:{'Research article':'Research article','Review article':'Review article','Book chapter':'Book chapter',Book:'Book',Preprint:'Preprint',Publication:'Publication'},
+    id:{'Research article':'Artikel penelitian','Review article':'Artikel ulasan','Book chapter':'Bab buku',Book:'Buku',Preprint:'Pracetak',Publication:'Publikasi'},
+    ja:{'Research article':'研究論文','Review article':'総説','Book chapter':'書籍の章',Book:'書籍',Preprint:'プレプリント',Publication:'出版物'},
+    'zh-CN':{'Research article':'研究论文','Review article':'综述论文','Book chapter':'书籍章节',Book:'书籍',Preprint:'预印本',Publication:'出版物'},
+    'zh-TW':{'Research article':'研究論文','Review article':'綜述論文','Book chapter':'書籍章節',Book:'書籍',Preprint:'預印本',Publication:'出版物'},
+    ko:{'Research article':'연구 논문','Review article':'리뷰 논문','Book chapter':'도서 장',Book:'도서',Preprint:'사전 인쇄본',Publication:'출판물'}
+  };
+  return names[activeLang]?.[key]||names.en[key]||key;
+}
+function typeTagHtml(p={}){
+  const type=publicationType(p);
+  return `<span class="publication-type publication-type-${safeText(type.toLowerCase().replace(/[^a-z]+/g,'-'))}">${safeText(publicationTypeLabel(p))}</span>`;
+}
 function publicationSourceHtml(p={}){
   return `<span class="pub-source">${journalLinkHtml(p)}${publisherLinkHtml(p)}</span>`;
 }
@@ -280,6 +301,7 @@ function publicationMetricBadges(p={},includeCitations=false){
   const impactTip=hasOfficial?[p.impact_factor_source,p.impact_factor_year,p.impact_factor_kind==='reported_jif'?'Third-party report; official publisher/JCR verification pending':null].filter(Boolean).join(' · '):'No independently year-checked Journal Impact Factor. OpenAlex is not the JIF.';
   const impactSource=hasOfficial?safeImageSrc(p.impact_factor_source_url):'';
   const cite=includeCitations&&Number.isFinite(+p.citations)?`<b class="badge citation-badge">${+p.citations} ${safeText(t('cited'))}</b>`:'';
+  if(!['Research article','Review article'].includes(publicationType(p)))return cite;
   const rankElement=(text,extra='')=>rankUrl&&hasRank?`<a class="badge ${extra}" href="${safeText(rankUrl)}" target="_blank" rel="noopener noreferrer" title="${safeText(sjrTitle)}">${safeText(text)}</a>`:`<span class="badge ${extra} na" title="Not confirmed">${safeText(text)}</span>`;
   const impactBadge=impactSource?`<a class="badge if" href="${safeText(impactSource)}" target="_blank" rel="noopener noreferrer" title="${safeText(impactTip)}">${safeText(iff)}</a>`:`<span class="badge na" title="${safeText(impactTip)}">${safeText(iff)}</span>`;
   // Keep the public bibliometric display compact: SJR, quartile, JIF, citations.
@@ -306,7 +328,7 @@ function renderPublications(list){
     const media=v.src?`<span class="pub-thumb ${v.isGA?'has-ga':'publisher-preview'}"><img src="${v.src}" data-publication-visual loading="lazy" decoding="async" alt="${safeText(alt)}, ${safeText(original||'publication')}">${v.isGA?`<em>${safeText(t('graphical_abstract'))}</em>`:''}</span>`:'<span class="pub-thumb-placeholder" aria-hidden="true"></span>';
     const originalLine=showOriginal?`<small class="pub-original"><b>${safeText(t('pub_original_title'))}:</b> ${safeText(original)}</small>`:'';
     const authors=p.authors?`<small class="pub-authors">${authorListHtml(p.authors)}</small>`:'';
-    return `<div class="pub-row ${v.src?'has-visual':'no-visual'}"><a class="pub-row-link" href="${safeUrl(p.url||'#')}" aria-label="${safeText(title)} — publication" target="_blank" rel="noopener noreferrer"></a><span class="pub-year">${safeText(p.year||'n.d.')}</span>${media}<span class="pub-title">${safeText(title)}${authors}${originalLine}</span>${publicationSourceHtml(p)}<span class="badges">${publicationMetricBadges(p,true)}</span></div>`
+    return `<div class="pub-row ${v.src?'has-visual':'no-visual'}"><a class="pub-row-link" href="${safeUrl(p.url||'#')}" aria-label="${safeText(title)} — publication" target="_blank" rel="noopener noreferrer"></a><span class="pub-year">${safeText(p.year||'n.d.')}</span>${media}<span class="pub-title">${safeText(title)}${authors}${originalLine}${typeTagHtml(p)}</span>${publicationSourceHtml(p)}<span class="badges">${publicationMetricBadges(p,true)}</span></div>`
   }).join('');
   installImageFallbacks(host);
 }
@@ -318,7 +340,7 @@ function renderUpdates(){
     const v=visualFor(p);const alt=v.isGA?t('graphical_abstract_alt'):t('publisher_visual_alt');const title=translatedTitle(p);
     const media=v.src?`<a class="update-visual ${v.isGA?'has-ga':'publisher-preview'}" href="${safeUrl(p.url||'#')}" target="_blank" rel="noopener"><img src="${v.src}" data-publication-visual loading="lazy" decoding="async" alt="${safeText(alt)}, ${safeText(originalTitle(p)||'publication')}">${v.isGA?`<em>${safeText(t('graphical_abstract'))}</em>`:''}</a>`:'';
     const authors=p.authors?`<p class="update-authors">${authorListHtml(p.authors)}</p>`:'';
-    return `<article class="update-card ${v.src?'has-visual':'no-visual'} reveal visible">${media}<div class="update-body"><span class="date">${safeText(p.year||'')}, ${safeText(t('pub_new'))}</span><h3>${safeText(title)}</h3>${authors}<p class="update-journal-meta">${journalLinkHtml(p,'update-journal-link')}${p.details?`, ${safeText(p.details)}`:''}</p>${publisherLinkHtml(p,'update-publisher-link')}<span class="badges update-metrics" aria-label="Journal metrics">${publicationMetricBadges(p,false)}</span><a class="update-link" href="${safeUrl(p.url||'#')}" target="_blank" rel="noopener">${safeText(t('pub_read'))}</a></div></article>`
+    return `<article class="update-card ${v.src?'has-visual':'no-visual'} reveal visible">${media}<div class="update-body"><span class="date">${safeText(p.year||'')} · ${safeText(publicationTypeLabel(p))}</span><h3>${safeText(title)}</h3>${authors}<p class="update-journal-meta">${journalLinkHtml(p,'update-journal-link')}${p.details?`, ${safeText(p.details)}`:''}</p>${publisherLinkHtml(p,'update-publisher-link')}<span class="badges update-metrics" aria-label="Journal metrics">${publicationMetricBadges(p,false)}</span><a class="update-link" href="${safeUrl(p.url||'#')}" target="_blank" rel="noopener">${safeText(t('pub_read'))}</a></div></article>`
   }).join('');
   installImageFallbacks(host);
 }
@@ -346,7 +368,7 @@ async function refreshFromOpenAlex(){
     const works=(await worksResponse.json()).results||[];
     const fallbackByDoi=new Map(pubs.filter(p=>p.doi).map(p=>[String(p.doi).toLowerCase(),p]));
     const fallbackByTitle=new Map(pubs.map(p=>[cleanDisplayTitle(p.title).toLowerCase(),p]));
-    const fresh=works.filter(work=>work.title&&!/(?:論文内容及び審査の要旨|全文の要約)/u.test(work.title)).map(work=>{
+    const fresh=works.filter(work=>work.title&&!/(?:論文内容及び審査の要旨|全文の要約)/u.test(work.title)&&!isConferencePublication({...work,source_type:work.primary_location?.source?.type})).map(work=>{
       const doi=String(work.doi||'').replace(/^https?:\/\/(?:dx\.)?doi\.org\//i,'');
       const title=cleanDisplayTitle(work.title);
       const fallback=fallbackByDoi.get(doi.toLowerCase())||fallbackByTitle.get(title.toLowerCase())||{};
@@ -362,16 +384,18 @@ async function refreshFromOpenAlex(){
         journal:source,details:work.biblio?.volume?[work.biblio.volume,work.biblio.issue].filter(Boolean).join('(')+(work.biblio.issue?')':''):(fallback.details||''),
         citations:Number.isFinite(+work.cited_by_count)?+work.cited_by_count:(fallback.citations||0),
         url:work.doi||work.primary_location?.landing_page_url||fallback.url||'https://scholar.google.com/citations?user=do1Jx1wAAAAJ&hl=en',
-        doi,issn,source_id:sourceObject.id||fallback.source_id||'',journal_url:journalMetricKey(source)===journalMetricKey(fallback.journal)?(sourceObject.homepage_url||fallback.journal_url||''):(sourceObject.homepage_url||''),type:work.type_crossref||work.type||fallback.type||'Journal',title_translations:fallback.title_translations||{}
+        doi,issn,source_type:sourceObject.type||fallback.source_type||'',source_id:sourceObject.id||fallback.source_id||'',journal_url:journalMetricKey(source)===journalMetricKey(fallback.journal)?(sourceObject.homepage_url||fallback.journal_url||''):(sourceObject.homepage_url||''),type:work.type_crossref||work.type||fallback.type||'Journal',title_translations:fallback.title_translations||{}
       };
+      publication.publication_type=publicationType(publication);
       return {...publication,...embeddedMetricFor(publication)};
-    });
+    }).filter(p=>!isConferencePublication(p));
     if(!fresh.length)return;
     const liveKeys=new Set(fresh.flatMap(p=>[
       p.doi?`doi:${String(p.doi).toLowerCase()}`:'',
       `title:${cleanDisplayTitle(p.title).toLowerCase()}`
     ]).filter(Boolean));
     const curatedOnly=pubs.filter(p=>{
+      if(isConferencePublication(p))return false;
       const doiKey=p.doi?`doi:${String(p.doi).toLowerCase()}`:'';
       const titleKey=`title:${cleanDisplayTitle(p.title).toLowerCase()}`;
       return !(doiKey&&liveKeys.has(doiKey))&&!liveKeys.has(titleKey);

@@ -1,6 +1,8 @@
 // Run by GitHub Actions every six hours. Retains curated titles/translations
 // and local graphical abstracts, while discovering new indexed works.
 import {PUBLICATIONS_FILE,AUTHOR_ORCID,normalizeDoi,normalizeIssn,titleKey,readData,writeData,requestJson} from './common.mjs';
+import '../assets/publication-policy.js';
+const {isConferencePublication,publicationType}=globalThis.CRI_PUBLICATION_POLICY;
 
 export function mergeWork(work,old={}){
   const doi=normalizeDoi(work.doi);const source=work.primary_location?.source||work.best_oa_location?.source||{};
@@ -27,28 +29,36 @@ export function mergeWork(work,old={}){
     source_id:source.id||old.source_id||'',
     journal_url:source.homepage_url||((String(source.display_name||old.journal||'').toLowerCase()===String(old.journal||'').toLowerCase())?old.journal_url||'':''),
     type:work.type_crossref||work.type||old.type||'Journal article',
+    crossref_type:doi&&normalizeDoi(old.doi)===doi ? (old.crossref_type||'') : '',
+    source_type:source.type||old.source_type||'',
+    book_title:old.book_title||'',
+    conference_proceedings:doi&&normalizeDoi(old.doi)===doi ? old.conference_proceedings===true : false,
     open_access:work.open_access?.is_oa===true,
     oa_url:work.best_oa_location?.landing_page_url||work.open_access?.oa_url||old.oa_url||'',
     title_translations:old.title_translations||{},
   };
+  publication.publication_type=publicationType(publication);
   return publication;
 }
 export function mergePublicationSets(existing,works){
+  existing=existing.filter(p=>!isConferencePublication(p));
   const byDoi=new Map(existing.filter(p=>normalizeDoi(p.doi)).map(p=>[normalizeDoi(p.doi),p]));
   const byTitle=new Map(existing.filter(p=>p.title).map(p=>[titleKey(p.title),p]));
   const merged=[];const covered=new Set();
   for(const work of works){
+    if(isConferencePublication({...work,source_type:work.primary_location?.source?.type}))continue;
     if(!work.title||/(?:論文内容及び審査の要旨|全文の要約)/u.test(work.title))continue;
     const key=normalizeDoi(work.doi);
     const older=(key&&byDoi.get(key))||byTitle.get(titleKey(work.title))||{};
     const result=mergeWork(work,older);
+    if(isConferencePublication(result))continue;
     const id=result.doi?`d:${normalizeDoi(result.doi)}`:`t:${titleKey(result.title)}`;
     if(covered.has(id))continue;covered.add(id);merged.push(result);
   }
   for(const old of existing){
     const id=old.doi?`d:${normalizeDoi(old.doi)}`:`t:${titleKey(old.title)}`;
     const titleCovered=merged.some(p=>titleKey(p.title)===titleKey(old.title));
-    if(!covered.has(id)&&!titleCovered){covered.add(id);merged.push(old)}
+    if(!isConferencePublication(old)&&!covered.has(id)&&!titleCovered){covered.add(id);merged.push({...old,publication_type:publicationType(old)})}
   }
   merged.sort((a,b)=>{
     const dateA=Date.parse(a.publication_date||'')||Date.UTC(Number(a.year)||0,0,1);

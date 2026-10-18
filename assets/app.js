@@ -268,15 +268,9 @@ function publicationMetricBadges(p={},includeCitations=false){
   const cite=includeCitations&&Number.isFinite(+p.citations)?`<b class="badge citation-badge">${+p.citations} ${safeText(t('cited'))}</b>`:'';
   const rankElement=(text,extra='')=>rankUrl&&hasRank?`<a class="badge ${extra}" href="${safeText(rankUrl)}" target="_blank" rel="noopener noreferrer" title="${safeText(sjrTitle)}">${safeText(text)}</a>`:`<span class="badge ${extra} na" title="Not confirmed">${safeText(text)}</span>`;
   const impactBadge=impactSource?`<a class="badge if" href="${safeText(impactSource)}" target="_blank" rel="noopener noreferrer" title="${safeText(impactTip)}">${safeText(iff)}</a>`:`<span class="badge na" title="${safeText(impactTip)}">${safeText(iff)}</span>`;
-  const indexingBadge=(kind,label)=>{
-    const verified=p.indexing?.[kind];
-    const link=verified?.status==='indexed'&&verified?.url?safeImageSrc(verified.url):'';
-    const checked=verified?.checked_at?`Verified ${verified.checked_at.slice(0,10)} by ${kind==='scopus'?'Elsevier':'Clarivate'}`:'Not verified at article level. Requires the provider API and its permissions; n/a is not evidence of non-indexing.';
-    return link?`<a class="badge index-badge indexed" href="${safeText(link)}" target="_blank" rel="noopener noreferrer" title="${safeText(checked)}">${label}</a>`
-      :`<span class="badge index-badge na" title="${safeText(checked)}">${label} · n/a</span>`;
-  };
-  // Journal rank is distinct from article-level Scopus and Web of Science indexing.
-  return `<span class="metric-group" title="${safeText(sjrTitle)}">${rankElement(sjr,'sjr')}${rankElement(qtile,badgeClass(p.quartile))}${impactBadge}</span><span class="indexing-group">${indexingBadge('scopus','Scopus')}${indexingBadge('wos','WoS')}</span>${cite}`;
+  // Keep the public bibliometric display compact: SJR, quartile, JIF, citations.
+  // Scopus / WoS index verification is no longer shown in the interface.
+  return `<span class="metric-group" title="${safeText(sjrTitle)}">${rankElement(sjr,'sjr')}${rankElement(qtile,badgeClass(p.quartile))}${impactBadge}</span>${cite}`;
 }
 function updatePublicationToggle(){
   const button=$('#pubToggle');if(!button)return;
@@ -295,7 +289,7 @@ function renderPublications(list){
     const v=visualFor(p);const title=translatedTitle(p);const original=originalTitle(p);
     const showOriginal=activeLang!=='en'&&title&&original&&title!==original;
     const alt=v.isGA?t('graphical_abstract_alt'):t('publisher_visual_alt');
-    const media=v.src?`<span class="pub-thumb ${v.isGA?'has-ga':'publisher-preview'}"><img src="${v.src}" data-publication-visual loading="lazy" decoding="async" alt="${safeText(alt)}, ${safeText(original||'publication')}">${v.isGA?`<em>${safeText(t('graphical_abstract'))}</em>`:''}</span>`:'';
+    const media=v.src?`<span class="pub-thumb ${v.isGA?'has-ga':'publisher-preview'}"><img src="${v.src}" data-publication-visual loading="lazy" decoding="async" alt="${safeText(alt)}, ${safeText(original||'publication')}">${v.isGA?`<em>${safeText(t('graphical_abstract'))}</em>`:''}</span>`:'<span class="pub-thumb-placeholder" aria-hidden="true"></span>';
     const originalLine=showOriginal?`<small class="pub-original"><b>${safeText(t('pub_original_title'))}:</b> ${safeText(original)}</small>`:'';
     const authors=p.authors?`<small class="pub-authors">${authorListHtml(p.authors)}</small>`:'';
     return `<div class="pub-row ${v.src?'has-visual':'no-visual'}"><a class="pub-row-link" href="${safeUrl(p.url||'#')}" aria-label="${safeText(title)} — publication" target="_blank" rel="noopener noreferrer"></a><span class="pub-year">${safeText(p.year||'n.d.')}</span>${media}<span class="pub-title">${safeText(title)}${authors}${originalLine}</span>${journalLinkHtml(p)}<span class="badges">${publicationMetricBadges(p,true)}</span></div>`

@@ -28,10 +28,11 @@ test('OpenAlex keeps full author list beyond seventh coauthor',()=>{
   const p=mergeWork({title:'Test',authorships:namesArray.map(name=>({author:{display_name:name}}))});
   assert.match(p.authors,/G, Raudhatul Islam Chaerun$/);
 });
-test('Quarter badges are just Q1–Q4 and verified index badge links are independent',()=>{
+test('Quartile badges show only Q1–Q4 and Scopus/WoS indicators are removed',()=>{
   assert.match(app,/const qtile=hasRank\?normalizedQuartile/);
   assert.doesNotMatch(app,/const qtile=hasRank\?`SJR \$\{normalizedQuartile/);
-  assert.match(app,/indexing\?\.\[kind\]/);
+  assert.doesNotMatch(app,/indexingBadge\(/);
+  assert.doesNotMatch(app,/indexing-group.*indexingBadge/);
 });
 test('All 3 viewport layouts have explicit image/title/metrics tracks',()=>{
   assert.match(css,/v48 — Collision-free publication rows/);

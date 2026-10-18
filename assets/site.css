@@ -1195,3 +1195,94 @@ html[data-language="ko"] .lab-name small{letter-spacing:.05em;line-height:1.25}
   #pubList .pub-row.has-visual .badges{grid-column:1!important;grid-row:5!important;}
   #pubList .pub-row.no-visual .badges{grid-column:1!important;grid-row:4!important;}
 }
+
+/* v51 – journal name is an independent RIGHT-HAND COLUMN.
+   Retain the same title start for papers with or without a graphical abstract.
+   At narrow screen widths, maintain readability without clipping or collisions. */
+#pubList .pub-row.has-visual,#pubList .pub-row.no-visual {
+  display:grid!important;
+  grid-template-rows:auto!important;
+  align-items:start!important;
+  column-gap:clamp(10px,1.2vw,18px)!important;
+  row-gap:8px!important;
+}
+#pubList .pub-row .pub-year {
+  grid-column:1!important;grid-row:1!important;
+  margin-top:4px;min-width:0;
+}
+#pubList .pub-row .pub-thumb,
+#pubList .pub-row .pub-thumb-placeholder {
+  grid-column:2!important;grid-row:1!important;
+  min-width:0;max-width:100%;
+}
+#pubList .pub-row .pub-thumb-placeholder{display:block;visibility:hidden;pointer-events:none;}
+#pubList .pub-row .pub-title{grid-column:3!important;grid-row:1!important;min-width:0;}
+#pubList .pub-row .pub-journal{grid-column:4!important;grid-row:1!important;min-width:0;margin-top:4px;}
+#pubList .pub-row .badges{grid-column:5!important;grid-row:1!important;min-width:0;}
+#pubList .pub-row .metric-group{flex-wrap:wrap!important;white-space:normal!important;}
+#pubList .pub-row .badges .badge{max-width:100%;}
+#pubList .pub-row .pub-journal {hyphens:auto;overflow-wrap:anywhere;}
+/* Plenty of room: all five tracks display next to each other. */
+@media(min-width:1101px){
+  #pubList .pub-row.has-visual,#pubList .pub-row.no-visual {
+    grid-template-columns:48px 132px minmax(0,1fr) minmax(135px,185px) minmax(210px,255px)!important;
+  }
+}
+/* Medium desktops: keep journal on the right, never put it below the title. */
+@media(min-width:801px) and (max-width:1100px){
+  #pubList .pub-row.has-visual,#pubList .pub-row.no-visual {
+    grid-template-columns:42px 102px minmax(0,1fr) minmax(118px,150px) minmax(165px,192px)!important;
+  }
+  #pubList .pub-row .pub-thumb{width:100%!important;}
+}
+/* Narrow tablets: journal stays at the right of the title; metrics get their
+   own line below the right side instead of shrinking the title to nothing. */
+@media(min-width:601px) and (max-width:800px){
+  #pubList .pub-row.has-visual,#pubList .pub-row.no-visual {
+    grid-template-columns:40px 92px minmax(0,1fr) minmax(118px,158px)!important;
+  }
+  #pubList .pub-row .pub-year {grid-column:1!important;grid-row:1!important;}
+  #pubList .pub-row .pub-thumb,#pubList .pub-row .pub-thumb-placeholder{grid-column:2!important;grid-row:1 / span 2!important;}
+  #pubList .pub-row .pub-title{grid-column:3!important;grid-row:1!important;}
+  #pubList .pub-row .pub-journal{grid-column:4!important;grid-row:1!important;}
+  #pubList .pub-row .badges{grid-column:3 / 5!important;grid-row:2!important;margin-top:2px;}
+}
+/* Smartphones: use one clean reading column; separate journal link remains
+   distinct and tappable, without crushing the title or metrics. */
+@media(max-width:600px){
+  #pubList .pub-row.has-visual,#pubList .pub-row.no-visual {
+    grid-template-columns:minmax(0,1fr)!important;
+    row-gap:10px!important;
+  }
+  #pubList .pub-row .pub-year{grid-column:1!important;grid-row:1!important;margin:0;}
+  #pubList .pub-row.has-visual .pub-thumb{grid-column:1!important;grid-row:2!important;width:min(100%,260px)!important;max-width:260px!important;}
+  #pubList .pub-row.no-visual .pub-thumb-placeholder{display:none;}
+  #pubList .pub-row.has-visual .pub-title{grid-column:1!important;grid-row:3!important;}
+  #pubList .pub-row.no-visual .pub-title{grid-column:1!important;grid-row:2!important;}
+  #pubList .pub-row.has-visual .pub-journal{grid-column:1!important;grid-row:4!important;}
+  #pubList .pub-row.no-visual .pub-journal{grid-column:1!important;grid-row:3!important;}
+  #pubList .pub-row.has-visual .badges{grid-column:1!important;grid-row:5!important;}
+  #pubList .pub-row.no-visual .badges{grid-column:1!important;grid-row:4!important;}
+}
+/* v51 – Latest Work metrics also reflow instead of overlapping on small cards. */
+#updateGrid .update-metrics {
+  display:flex!important;
+  flex-wrap:wrap!important;
+  overflow:visible!important;
+  align-items:flex-start;
+  gap:7px!important;
+  max-width:100%;
+}
+#updateGrid .update-metrics .metric-group {
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center;
+  gap:6px!important;
+  max-width:100%;
+  white-space:normal;
+}
+#updateGrid .update-metrics a.badge {
+  margin:0!important;
+  padding:8px 10px!important;
+  align-self:auto!important;
+}

@@ -1103,3 +1103,95 @@ html[data-language="ko"] .lab-name small{letter-spacing:.05em;line-height:1.25}
 @media (hover:hover) and (pointer:fine) {
   .pub-row:hover {background-color:rgba(20,47,61,.035);}
 }
+
+/* v50 — layout that reflows cleanly as the browser is resized.
+   Publication items with or without a graphical abstract always reserve
+   the same thumbnail track; journal names are always visible and clickable. */
+#pubList .pub-row,
+#pubList .pub-row.has-visual,
+#pubList .pub-row.no-visual {
+  display:grid!important;
+  align-items:start!important;
+  column-gap:16px!important;
+  row-gap:9px!important;
+  min-width:0;
+  overflow:visible;
+}
+#pubList .pub-row .pub-title,
+#pubList .pub-row .pub-journal,
+#pubList .pub-row .badges {min-width:0;}
+#pubList .pub-row .pub-title {overflow-wrap:anywhere;hyphens:auto;}
+#pubList .pub-row .pub-journal,
+#pubList .pub-row a.pub-journal {
+  display:block!important;
+  color:var(--ink);
+  opacity:.78;
+  text-decoration:none;
+  font-weight:500;
+  overflow-wrap:anywhere;
+}
+#pubList .pub-row a.pub-journal {
+  pointer-events:auto!important;
+  position:relative;
+  z-index:5!important;
+  width:fit-content;
+  max-width:100%;
+  border-bottom:1px solid rgba(20,47,61,.26);
+}
+#pubList .pub-row a.pub-journal:hover,
+#pubList .pub-row a.pub-journal:focus-visible,
+.update-journal-link:hover,.update-journal-link:focus-visible {
+  color:#176081;
+  opacity:1;
+  border-bottom-color:currentColor;
+}
+#pubList .pub-row a.pub-journal:focus-visible,.update-journal-link:focus-visible {outline:2px solid #176081;outline-offset:3px;}
+.update-journal-link {color:inherit;text-decoration:none;border-bottom:1px solid rgba(20,47,61,.25);pointer-events:auto;}
+#pubList .pub-row .badges {display:flex!important;flex-direction:column;justify-content:flex-start;align-items:flex-start!important;justify-self:stretch!important;align-self:start!important;overflow:visible!important;}
+#pubList .pub-row .metric-group,#pubList .pub-row .indexing-group {display:flex;flex-wrap:wrap!important;white-space:normal!important;width:auto!important;max-width:100%;gap:6px;justify-content:flex-start!important;}
+#pubList .pub-row .pub-thumb {width:100%!important;max-width:132px;height:auto!important;aspect-ratio:1.29;align-self:start;}
+#pubList .pub-row .pub-year {justify-self:start;align-self:start;}
+
+/* Wide desktop: journal below its paper title, bibliometrics in a separate
+   right column.  This eliminates narrow four-column text collisions. */
+@media(min-width:1151px) {
+  #pubList .pub-row.has-visual,#pubList .pub-row.no-visual {
+    grid-template-columns:48px 132px minmax(0,1fr) minmax(230px,290px)!important;
+    grid-template-rows:auto auto;
+    column-gap:clamp(12px,1.5vw,22px)!important;
+  }
+  #pubList .pub-row .pub-year{grid-column:1!important;grid-row:1!important;}
+  #pubList .pub-row.has-visual .pub-thumb{grid-column:2!important;grid-row:1 / span 2!important;}
+  #pubList .pub-row .pub-title{grid-column:3!important;grid-row:1!important;}
+  #pubList .pub-row .pub-journal{grid-column:3!important;grid-row:2!important;}
+  #pubList .pub-row .badges{grid-column:4!important;grid-row:1 / span 2!important;}
+}
+/* Intermediate window widths: stack journal + metric badges below the title,
+   but retain a tidy shared title starting position. */
+@media(min-width:761px) and (max-width:1150px) {
+  #pubList .pub-row.has-visual,#pubList .pub-row.no-visual {
+    grid-template-columns:45px 112px minmax(0,1fr)!important;
+    grid-template-rows:auto auto auto;
+  }
+  #pubList .pub-row .pub-year{grid-column:1!important;grid-row:1!important;}
+  #pubList .pub-row.has-visual .pub-thumb{grid-column:2!important;grid-row:1 / span 3!important;}
+  #pubList .pub-row .pub-title{grid-column:3!important;grid-row:1!important;}
+  #pubList .pub-row .pub-journal{grid-column:3!important;grid-row:2!important;}
+  #pubList .pub-row .badges{grid-column:3!important;grid-row:3!important;}
+}
+/* Small windows / smartphones: straightforward single-column reading order. */
+@media(max-width:760px) {
+  #pubList .pub-row.has-visual,#pubList .pub-row.no-visual {
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto;
+    row-gap:11px!important;
+  }
+  #pubList .pub-row .pub-year{grid-column:1!important;grid-row:1!important;}
+  #pubList .pub-row.has-visual .pub-thumb{grid-column:1!important;grid-row:2!important;width:min(100%,270px)!important;max-width:270px;height:auto!important;aspect-ratio:1.5;}
+  #pubList .pub-row.has-visual .pub-title{grid-column:1!important;grid-row:3!important;}
+  #pubList .pub-row.no-visual .pub-title{grid-column:1!important;grid-row:2!important;}
+  #pubList .pub-row.has-visual .pub-journal{grid-column:1!important;grid-row:4!important;}
+  #pubList .pub-row.no-visual .pub-journal{grid-column:1!important;grid-row:3!important;}
+  #pubList .pub-row.has-visual .badges{grid-column:1!important;grid-row:5!important;}
+  #pubList .pub-row.no-visual .badges{grid-column:1!important;grid-row:4!important;}
+}

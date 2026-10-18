@@ -189,7 +189,7 @@ function safeText(v=''){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<'
 // Prefer authorships from OpenAlex in full, rather than a truncated 7-name list.
 function isWebsiteAuthorName(name=''){
   const clean=String(name).normalize('NFKC').replace(/\s+/g,' ').trim().replace(/\.$/,'');
-  return /^(?:Raudhatul Islam Chaerun|Chaerun Raudhatul Islam|R\.?\s*I\.?\s*Chaerun|Chaerun,?\s*R\.?\s*I\.?|Ronny Winarko)$/iu.test(clean);
+  return /^(?:Raudhatul Islam Chaerun|Chaerun Raudhatul Islam|R\.?\s*I\.?\s*Chaerun|Chaerun,?\s*R\.?\s*I\.?)$/iu.test(clean);
 }
 function authorListHtml(authors=''){
   // Fully escape each name before rendering, do not inject unsanitized HTML.
@@ -202,6 +202,18 @@ function authorListHtml(authors=''){
 }
 
 function safeUrl(v=''){try{const u=new URL(v,location.href);return ['http:','https:'].includes(u.protocol)?u.href:'#'}catch{return '#'}}
+// The OpenAlex source.homepage_url is the journal publisher's home page.
+// Never confuse an article DOI link with a journal home page.
+function publisherJournalUrl(p={}){
+  if(!p.journal_url || !p.journal || p.journal==='Research publication')return '';
+  return safeImageSrc(p.journal_url);
+}
+function journalLinkHtml(p={},className='pub-journal'){
+  const title=safeText(p.journal||'');
+  const url=publisherJournalUrl(p);
+  return url?`<a class="${className}" href="${safeText(url)}" target="_blank" rel="noopener noreferrer" title="Visit journal homepage: ${title}">${title}</a>`
+    :`<span class="${className}">${title}</span>`;
+}
 function safeImageSrc(v=''){
   const s=String(v||'').trim();if(!s)return '';
   if(/^(?:assets\/)[A-Za-z0-9._\/-]+$/.test(s) && !s.includes('..')) return s;
@@ -259,9 +271,9 @@ function publicationMetricBadges(p={},includeCitations=false){
   const indexingBadge=(kind,label)=>{
     const verified=p.indexing?.[kind];
     const link=verified?.status==='indexed'&&verified?.url?safeImageSrc(verified.url):'';
-    const checked=verified?.checked_at?`Verified ${verified.checked_at.slice(0,10)} by ${kind==='scopus'?'Elsevier':'Clarivate'}`:'Not yet independently verified';
+    const checked=verified?.checked_at?`Verified ${verified.checked_at.slice(0,10)} by ${kind==='scopus'?'Elsevier':'Clarivate'}`:'Not verified at article level. Requires the provider API and its permissions; n/a is not evidence of non-indexing.';
     return link?`<a class="badge index-badge indexed" href="${safeText(link)}" target="_blank" rel="noopener noreferrer" title="${safeText(checked)}">${label}</a>`
-      :`<span class="badge index-badge na" title="${safeText(checked)}">${label} n/a</span>`;
+      :`<span class="badge index-badge na" title="${safeText(checked)}">${label} · n/a</span>`;
   };
   // Journal rank is distinct from article-level Scopus and Web of Science indexing.
   return `<span class="metric-group" title="${safeText(sjrTitle)}">${rankElement(sjr,'sjr')}${rankElement(qtile,badgeClass(p.quartile))}${impactBadge}</span><span class="indexing-group">${indexingBadge('scopus','Scopus')}${indexingBadge('wos','WoS')}</span>${cite}`;
@@ -286,7 +298,7 @@ function renderPublications(list){
     const media=v.src?`<span class="pub-thumb ${v.isGA?'has-ga':'publisher-preview'}"><img src="${v.src}" data-publication-visual loading="lazy" decoding="async" alt="${safeText(alt)}, ${safeText(original||'publication')}">${v.isGA?`<em>${safeText(t('graphical_abstract'))}</em>`:''}</span>`:'';
     const originalLine=showOriginal?`<small class="pub-original"><b>${safeText(t('pub_original_title'))}:</b> ${safeText(original)}</small>`:'';
     const authors=p.authors?`<small class="pub-authors">${authorListHtml(p.authors)}</small>`:'';
-    return `<div class="pub-row ${v.src?'has-visual':'no-visual'}"><a class="pub-row-link" href="${safeUrl(p.url||'#')}" aria-label="${safeText(title)} — publication" target="_blank" rel="noopener noreferrer"></a><span class="pub-year">${safeText(p.year||'n.d.')}</span>${media}<span class="pub-title">${safeText(title)}${authors}${originalLine}</span><span class="pub-journal">${safeText(p.journal||'')}</span><span class="badges">${publicationMetricBadges(p,true)}</span></div>`
+    return `<div class="pub-row ${v.src?'has-visual':'no-visual'}"><a class="pub-row-link" href="${safeUrl(p.url||'#')}" aria-label="${safeText(title)} — publication" target="_blank" rel="noopener noreferrer"></a><span class="pub-year">${safeText(p.year||'n.d.')}</span>${media}<span class="pub-title">${safeText(title)}${authors}${originalLine}</span>${journalLinkHtml(p)}<span class="badges">${publicationMetricBadges(p,true)}</span></div>`
   }).join('');
   installImageFallbacks(host);
 }
@@ -298,7 +310,7 @@ function renderUpdates(){
     const v=visualFor(p);const alt=v.isGA?t('graphical_abstract_alt'):t('publisher_visual_alt');const title=translatedTitle(p);
     const media=v.src?`<a class="update-visual ${v.isGA?'has-ga':'publisher-preview'}" href="${safeUrl(p.url||'#')}" target="_blank" rel="noopener"><img src="${v.src}" data-publication-visual loading="lazy" decoding="async" alt="${safeText(alt)}, ${safeText(originalTitle(p)||'publication')}">${v.isGA?`<em>${safeText(t('graphical_abstract'))}</em>`:''}</a>`:'';
     const authors=p.authors?`<p class="update-authors">${authorListHtml(p.authors)}</p>`:'';
-    return `<article class="update-card ${v.src?'has-visual':'no-visual'} reveal visible">${media}<div class="update-body"><span class="date">${safeText(p.year||'')}, ${safeText(t('pub_new'))}</span><h3>${safeText(title)}</h3>${authors}<p>${safeText(p.journal||'')}${p.details?`, ${safeText(p.details)}`:''}</p><span class="badges update-metrics" aria-label="Journal metrics">${publicationMetricBadges(p,false)}</span><a class="update-link" href="${safeUrl(p.url||'#')}" target="_blank" rel="noopener">${safeText(t('pub_read'))}</a></div></article>`
+    return `<article class="update-card ${v.src?'has-visual':'no-visual'} reveal visible">${media}<div class="update-body"><span class="date">${safeText(p.year||'')}, ${safeText(t('pub_new'))}</span><h3>${safeText(title)}</h3>${authors}<p>${journalLinkHtml(p,'update-journal-link')}${p.details?`, ${safeText(p.details)}`:''}</p><span class="badges update-metrics" aria-label="Journal metrics">${publicationMetricBadges(p,false)}</span><a class="update-link" href="${safeUrl(p.url||'#')}" target="_blank" rel="noopener">${safeText(t('pub_read'))}</a></div></article>`
   }).join('');
   installImageFallbacks(host);
 }
@@ -342,7 +354,7 @@ async function refreshFromOpenAlex(){
         journal:source,details:work.biblio?.volume?[work.biblio.volume,work.biblio.issue].filter(Boolean).join('(')+(work.biblio.issue?')':''):(fallback.details||''),
         citations:Number.isFinite(+work.cited_by_count)?+work.cited_by_count:(fallback.citations||0),
         url:work.doi||work.primary_location?.landing_page_url||fallback.url||'https://scholar.google.com/citations?user=do1Jx1wAAAAJ&hl=en',
-        doi,issn,source_id:sourceObject.id||fallback.source_id||'',type:work.type_crossref||work.type||fallback.type||'Journal',title_translations:fallback.title_translations||{}
+        doi,issn,source_id:sourceObject.id||fallback.source_id||'',journal_url:journalMetricKey(source)===journalMetricKey(fallback.journal)?(sourceObject.homepage_url||fallback.journal_url||''):(sourceObject.homepage_url||''),type:work.type_crossref||work.type||fallback.type||'Journal',title_translations:fallback.title_translations||{}
       };
       return {...publication,...embeddedMetricFor(publication)};
     });
@@ -377,7 +389,7 @@ async function refreshFromOpenAlex(){
 // Refresh newly discovered journals directly from OpenAlex. GitHub Actions
 // updates the embedded SJR data; there is no /api endpoint on GitHub Pages.
 async function refreshJournalMetrics(){
-  const cacheKey='criSourceIndicatorsV43';
+  const cacheKey='criSourceIndicatorsV50';
   let saved={};
   try{saved=JSON.parse(localStorage.getItem(cacheKey)||'{}')||{}}catch{}
   const cutoff=Date.now()-24*60*60*1000;
@@ -396,8 +408,9 @@ async function refreshJournalMetrics(){
         if(!response.ok)return;
         const source=await response.json();
         const score=source?.summary_stats?.['2yr_mean_citedness'];
-        if(source.type!=='journal'||score==null||!Number.isFinite(Number(score)))return;
-        const metric={impact_factor:Number(Number(score).toFixed(3)),impact_factor_kind:'openalex',impact_factor_source:'OpenAlex 2-year mean citedness (not Clarivate JIF)',impact_factor_year:new Date().getUTCFullYear()-1,impact_factor_journal:source.display_name||''};
+        if(source.type!=='journal')return;
+        const metric={journal_url:source.homepage_url||'',impact_factor_journal:source.display_name||''};
+        if(score!=null&&Number.isFinite(Number(score)))Object.assign(metric,{impact_factor:Number(Number(score).toFixed(3)),impact_factor_kind:'openalex',impact_factor_source:'OpenAlex 2-year mean citedness (not Clarivate JIF)',impact_factor_year:new Date().getUTCFullYear()-1});
         sources.set(id,metric);saved[id]={at:Date.now(),metric};
       }catch{ /* Offline visitors keep the embedded journal snapshot. */ }
     }));
@@ -406,7 +419,10 @@ async function refreshJournalMetrics(){
   pubs=pubs.map(p=>{
     const id=String(p.source_id||'').match(/S\d+$/)?.[0];
     const indicator=sources.get(id);
-    return indicator&&journalMetricKey(indicator.impact_factor_journal)===journalMetricKey(p.journal)&&!['jcr','reported_jif'].includes(p.impact_factor_kind)?{...p,...indicator}:p;
+    if(!indicator||journalMetricKey(indicator.impact_factor_journal)!==journalMetricKey(p.journal))return p;
+    const home=(!p.journal_url&&indicator.journal_url)?{journal_url:indicator.journal_url}:{};
+    const {journal_url, ...proxy}=indicator;
+    return !['jcr','reported_jif'].includes(p.impact_factor_kind)?{...p,...proxy,...home}:{...p,...home};
   });
   renderPublications(filteredPublications());renderUpdates();
 }

@@ -43,6 +43,8 @@ jobs:
           else
             node assets/update-journal-metrics.mjs
           fi
+      - name: Refresh journal homepages from verified OpenAlex sources
+        run: node scripts/update-journal-links.mjs
       - name: Verify article-level Scopus and WoS indexing by DOI
         env:
           ELSEVIER_API_KEY: ${{ secrets.ELSEVIER_API_KEY }}

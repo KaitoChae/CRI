@@ -20,6 +20,7 @@ export function mergeWork(work,old={}){
     url:work.doi||work.primary_location?.landing_page_url||old.url||'',
     issn:normalizeIssn(source.issn_l||source.issn?.[0]||old.issn||''),
     source_id:source.id||old.source_id||'',
+    journal_url:source.homepage_url||((String(source.display_name||old.journal||'').toLowerCase()===String(old.journal||'').toLowerCase())?old.journal_url||'':''),
     type:work.type_crossref||work.type||old.type||'Journal article',
     open_access:work.open_access?.is_oa===true,
     oa_url:work.best_oa_location?.landing_page_url||work.open_access?.oa_url||old.oa_url||'',

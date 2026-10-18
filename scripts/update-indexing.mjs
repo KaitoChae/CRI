@@ -43,6 +43,7 @@ async function checkWos(doi,key,fetchRecord){
 }
 export async function updateIndexing(publications,{scopusKey=process.env.ELSEVIER_API_KEY,wosKey=process.env.CLARIVATE_WOS_API_KEY,fetchRecord=requestJson,now=new Date(),logger=console}={}){
   const results=[];let verified=0,attempted=0;
+  // One week between attempts avoids exhausting Starter API quotas with repeat misses.
   const nowString=now.toISOString(),cutoff=now.getTime()-7*24*60*60*1000;
   for(const source of publications){
     const p={...source},doi=normalized(p.doi),indexing={...(p.indexing||{})};
@@ -50,13 +51,18 @@ export async function updateIndexing(publications,{scopusKey=process.env.ELSEVIE
       for(const [kind,key,check] of [['scopus',scopusKey,checkScopus],['wos',wosKey,checkWos]]){
         if(!key)continue;
         const old=indexing[kind];
-        if(old?.status==='indexed'&&Date.parse(old.checked_at||0)>cutoff)continue;
+        if((old?.status==='indexed'||old?.status==='not_verified')&&Date.parse(old.checked_at||0)>cutoff)continue;
         attempted++;
         try{
           const match=await check(doi,key,fetchRecord);
           if(match){indexing[kind]={...match,doi,checked_at:nowString};verified++}
-          // Zero search results are NOT proof of exclusion; keep prior verified
-          // metadata or show an honest 'n/a'.
+          else if(old?.status!=='indexed'){
+            // An empty response is not proof of non-indexing, and might reflect
+            // provider limits, coverage delay or a recently published article.
+            indexing[kind]={status:'not_verified',doi,checked_at:nowString};
+          }
+          // Preserve an existing confirmed indexed record if the latest
+          // provider lookup has no result or the API is temporarily offline.
         }catch(error){logger.warn(`${kind} lookup unavailable for ${doi}: ${error.message}`)}
       }
     }

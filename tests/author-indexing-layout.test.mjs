@@ -12,7 +12,8 @@ const names=vm.runInNewContext(`${authors}\n({authorListHtml,isWebsiteAuthorName
 test('Owner names are bold on both publication and Latest Work; coauthors remain plain',()=>{
   const rendered=names.authorListHtml('Siti Khodijah Chaerun, Raudhatul Islam Chaerun, Ronny Winarko, Chaerun Raudhatul Islam, Another author');
   assert.match(rendered,/<strong class="publication-self-author">Raudhatul Islam Chaerun<\/strong>/);
-  assert.match(rendered,/<strong class="publication-self-author">Ronny Winarko<\/strong>/);
+  assert.doesNotMatch(rendered,/<strong class="publication-self-author">Ronny Winarko<\/strong>/);
+  assert.match(rendered,/Raudhatul Islam Chaerun/);
   assert.match(rendered,/<strong class="publication-self-author">Chaerun Raudhatul Islam<\/strong>/);
   assert.doesNotMatch(rendered,/<strong[^>]*>Siti Khodijah Chaerun/);
   assert.equal((app.match(/authorListHtml\(p.authors\)/g)||[]).length,2);

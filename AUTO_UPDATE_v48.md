@@ -3,7 +3,7 @@
 Publication figures, year-scoped journal rankings and the complete website from v47 remain intact.
 
 ## Automatically bold author on every paper
-The author list is taken **in full** from OpenAlex for newly fetched works, not truncated after seven names. UI re-renders for publication list, search results, latest-work cards and language changes. Only the configured complete name forms (Raudhatul Islam Chaerun; Chaerun Raudhatul Islam; Ronny Winarko; R. I. Chaerun) are highlighted. Other authors sharing the surname Chaerun are *not* highlighted. If the author's name is absent, it is not silently added.
+The author list is taken **in full** from OpenAlex for newly fetched works, not truncated after seven names. UI re-renders for publication list, search results, latest-work cards and language changes. Only the configured complete name forms (Raudhatul Islam Chaerun; Chaerun Raudhatul Islam; R. I. Chaerun (never Ronny Winarko)) are highlighted. Other authors sharing the surname Chaerun are *not* highlighted. If the author's name is absent, it is not silently added.
 
 ## Scopus and Web of Science document indexing
 **Configure these repository Actions secrets** (Settings → Secrets and variables → Actions):

@@ -14,7 +14,7 @@ test('v49 increases small text sizes without changing publication data',()=>{
   assert.match(v49,/\.pub-row \.pub-authors \{font-size: clamp\(13px/);
   assert.match(v49,/\.pub-row \.badge \{font-size:12px!important/);
   assert.match(v49,/\.pub-row \.pub-title \{[\s\S]*?font-size: clamp\(21px/);
-  assert.match(html,/assets\/site\.css\?v=49/);
+  assert.match(html,/assets\/site\.css\?v=50/);
 });
 test('v49 removes the old overflowing hover overlay',()=>{
   assert.match(v49,/\.pub-row::before \{content:none!important;\}/);

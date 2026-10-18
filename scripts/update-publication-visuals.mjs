@@ -27,9 +27,16 @@ export function metaImages(html,base){
   // Various publisher pages expose the GA through asset URL in full-text markup.
   const urlRegex=/(?:https?:\/\/[^\s"'<>]+|\/[^\s"'<>]+)(?:graphical[_-]?abstract|\bga1\b)[^\s"'<>]*?\.(?:jpg|jpeg|png|webp)(?:\?[^\s"'<>]*)?/ig;
   for(const match of html.matchAll(urlRegex))normalize(match[0],'graphical_abstract');
-  for(const img of html.match(/<img\b[^>]*>/gi)||[]){
-    if(!/(graphical[-_ ]?abstract|graphicalabstract)/i.test(img))continue;
-    const src=img.match(/\b(?:data-src|src)=['"]([^'"]+)['"]/i)?.[1];
+  for(const img of html.match(/<(?:img|source)\b[^>]*>/gi)||[]){
+    if(!/(graphical[-_ ]?abstract|graphicalabstract|\bga[-_]?[0-9]\b)/i.test(img))continue;
+    const src=img.match(/\b(?:data-src|data-original|src)=['"]([^'"]+)['"]/i)?.[1]
+      ||img.match(/\b(?:data-srcset|srcset)=['"]([^'",\s]+)/i)?.[1];
+    normalize(src,'graphical_abstract');
+  }
+  // Some publisher templates put a GA figure inside a labelled figure tag.
+  for(const figure of html.match(/<figure\b[^>]*graphical[-_\s]?abstract[^>]*>[\s\S]{0,6000}?<\/figure>/gi)||[]){
+    const tag=figure.match(/<img\b[^>]*>/i)?.[0]||'';
+    const src=tag.match(/\b(?:data-src|data-original|src)=['"]([^'"]+)['"]/i)?.[1];
     normalize(src,'graphical_abstract');
   }
   return [...list.filter(x=>x.kind==='graphical_abstract'),...list.filter(x=>x.kind!=='graphical_abstract')];
@@ -51,8 +58,12 @@ async function saveImage(url,doi){
   return filename;
 }
 async function candidatesFor(pub){
-  const pages=[pub.url,pub.oa_url,pub.doi?`https://doi.org/${normalizeDoi(pub.doi)}`:null].filter(Boolean);
+  const pages=[pub.publisher_landing_url,pub.url,pub.oa_url,pub.doi?`https://doi.org/${normalizeDoi(pub.doi)}`:null].filter(Boolean);
   const seen=new Set();let results=[];
+  // Elsevier identifiers from a verified publisher article URL or metadata.
+  // This is only a CANDIDATE: saveImage verifies actual raster bytes/response.
+  const matchPii=String(pub.pii||pub.publisher_landing_url||'').match(/S\d{15,17}/i);
+  if(matchPii&&/^10\.1016\//.test(normalizeDoi(pub.doi)))results.push({url:`https://ars.els-cdn.com/content/image/1-s2.0-${matchPii[0]}-ga1.jpg`,kind:'graphical_abstract'});
   for(const page of pages){
     if(seen.has(page))continue;seen.add(page);
     try{
@@ -68,10 +79,10 @@ async function candidatesFor(pub){
       if(pii&&/(?:elsevier|sciencedirect|els-cdn)/i.test(response.url)){
         results.unshift({url:`https://ars.els-cdn.com/content/image/1-s2.0-${pii}-ga1.jpg`,kind:'graphical_abstract'});
       }
-      if(results.some(x=>x.kind==='graphical_abstract'))break;
+      // Do not stop on the first *candidate*: it may return 404 when saved.
     }catch(error){console.warn('Publisher page unavailable:',normalizeDoi(pub.doi),error.message)}
   }
-  return [...results.filter(x=>x.kind==='graphical_abstract'),...results.filter(x=>x.kind!=='graphical_abstract')];
+  return [...new Map([...results.filter(x=>x.kind==='graphical_abstract'),...results.filter(x=>x.kind!=='graphical_abstract')].map(x=>[x.url,x])).values()];
 }
 async function main(){
   const data=await readData(PUBLICATIONS_FILE,'LAB_PUBLICATION_DATA');

@@ -32,7 +32,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Discover eligible publications (exclude conference proceedings) and citations
+      - name: Discover publications (include published conference papers) and citations
         run: node scripts/sync-publications.mjs
       - name: Recheck explicitly dated journal Impact Factors
         run: node scripts/refresh-verified-jif.mjs
@@ -45,7 +45,7 @@ jobs:
           fi
       - name: Refresh journal homepages from verified OpenAlex sources
         run: node scripts/update-journal-links.mjs
-      - name: Check Crossref publisher, categorize publications, and remove conference papers
+      - name: Enrich Crossref publishers and publication categories
         run: node scripts/update-publishers.mjs
       - name: Look for missing or newly released publisher graphics
         run: node scripts/update-publication-visuals.mjs

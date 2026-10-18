@@ -16,9 +16,12 @@ export function applyPublisher(p,message,now=new Date().toISOString()){
  const container=Array.isArray(message['container-title'])?message['container-title'][0]:message['container-title'];
  const result={...p,...metadata};
  if(crossrefType)result.crossref_type=crossrefType;
- if(container&&/book|chapter|proceedings/i.test(crossrefType))result.book_title=container;
+ if(container&&/book|chapter|proceedings/i.test(crossrefType)){
+   result.book_title=container;
+   if(!p.journal||/^(?:Elsevier eBooks|Research publication)$/i.test(p.journal))result.journal=container;
+ }
  if(message.event?.name)result.event=message.event.name;
- if(isConferencePublication(result))result.conference_proceedings=true;
+ if(/^(?:proceedings-article|conference-paper)$/i.test(crossrefType)||(/book|chapter|proceedings/i.test(crossrefType)&&/proceedings of.*(?:conference|congress|symposium)/i.test(container||'')))result.conference_proceedings=true;
  result.publication_type=publicationType(result);
  result.publisher_checked_at=now;
  return result;
@@ -56,6 +59,6 @@ async function main(){
  if(JSON.stringify(publications)!==JSON.stringify(current.publications)){
    await writeData(PUBLICATIONS_FILE,'LAB_PUBLICATION_DATA',{...current,publications,metrics:getPublicationStats(publications)});
  }
- console.log(`Publisher/type DOI checks: fetched ${result.fetched}, updated ${result.updated}, conference entries excluded ${excluded}, temporarily unavailable ${result.failed}.`);
+ console.log(`Publisher/type DOI checks: fetched ${result.fetched}, updated ${result.updated}, conference-only items excluded ${excluded}, temporarily unavailable ${result.failed}.`);
 }
 if(import.meta.url===`file://${process.argv[1]}`)await main();

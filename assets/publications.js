@@ -2,8 +2,8 @@ window.LAB_PUBLICATION_DATA={
   "last_updated": "2026-08-11T14:40:00+09:00",
   "source": "Curated from Google Scholar, Researchmap, publisher records, and OpenAlex ORCID data",
   "metrics": {
-    "publications": 17,
-    "citations": 231,
+    "publications": 22,
+    "citations": 233,
     "h_index": 8,
     "i10_index": 6
   },
@@ -47,6 +47,51 @@ window.LAB_PUBLICATION_DATA={
       "publisher_url": "https://www.elsevier.com/",
       "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
       "publication_type": "Research article"
+    },
+    {
+      "year": 2026,
+      "title": "A thorough examination of graphene-based materials for CO₂ mitigation from storage to conversion: review",
+      "authors": "Noto Susanto Gultom, Kirana Qulsum, Canggih Setya Budi, Januar Widakdo, Celca Rahmatunnisa, Raudhatul Islam Chaerun, Mochamad Januar, Misganaw Alemu Zeleke, Sahrul Hidayat",
+      "journal": "Sustainable Chemistry for Climate Action",
+      "details": "100242",
+      "citations": 0,
+      "doi": "10.1016/j.scca.2026.100242",
+      "url": "https://doi.org/10.1016/j.scca.2026.100242",
+      "publisher_landing_url": "https://www.sciencedirect.com/science/article/pii/S277282692600060X",
+      "pii": "S277282692600060X",
+      "type": "Review article",
+      "publication_type": "Review article",
+      "open_access": true,
+      "publisher": "Elsevier",
+      "publisher_url": "https://www.elsevier.com/",
+      "journal_url": "https://www.sciencedirect.com/journal/sustainable-chemistry-for-climate-action"
+    },
+    {
+      "year": 2026,
+      "title": "Transforming E-Waste Plastics into Bioconcrete: Pathways to Sustainable Construction Materials",
+      "authors": "Raudhatul Islam Chaerun, Siti Khodijah Chaerun, Ronny Winarko, Habibie Anwar",
+      "journal": "The Handbook of Environmental Chemistry",
+      "type": "Book chapter",
+      "publication_type": "Book chapter",
+      "citations": 0,
+      "publisher": "Springer Nature",
+      "publisher_url": "https://www.springernature.com/",
+      "url": "https://jglobal.jst.go.jp/en/detail?JGLOBAL_ID=202401007408978734",
+      "details": "",
+      "publisher_source": "J-GLOBAL bibliography, Springer Nature series"
+    },
+    {
+      "year": 2026,
+      "title": "Coal waste and tailings management strategies",
+      "authors": "Raudhatul Islam Chaerun, Ronny Winarko, Siti Khodijah Chaerun",
+      "journal": "Elsevier eBooks",
+      "type": "Book chapter",
+      "publication_type": "Book chapter",
+      "citations": 0,
+      "publisher": "Elsevier",
+      "publisher_url": "https://www.elsevier.com/",
+      "details": "",
+      "publisher_source": "Displayed Elsevier eBooks source; DOI not yet resolved"
     },
     {
       "year": 2025,
@@ -233,6 +278,25 @@ window.LAB_PUBLICATION_DATA={
       "publication_type": "Research article"
     },
     {
+      "year": 2024,
+      "title": "Application of Biohydrometallurgy in Carbon Capture, Utilization, and Storage (CCUS): Carbonate Precipitation by Bacillus subtilis as a Biocatalyst Using Calcium-Enriched Pregnant Leach Solutions from Steel Slag Bioleaching",
+      "authors": "Siti Khodijah Chaerun, Adinda Cahaya Putri, Ronny Winarko, Raudhatul Islam Chaerun, Tsutomu Sato",
+      "journal": "Proceedings of the 63rd Conference of Metallurgists, COM 2024",
+      "details": "DOI 10.1007/978-3-031-67398-6_195",
+      "citations": 0,
+      "url": "https://doi.org/10.1007/978-3-031-67398-6_195",
+      "doi": "10.1007/978-3-031-67398-6_195",
+      "type": "Conference paper",
+      "title_translations": {},
+      "publisher": "Springer Nature",
+      "publisher_url": "https://www.springernature.com/",
+      "publisher_source": "DOI publishing group (initial; Crossref DOI verification scheduled)",
+      "publication_type": "Conference paper",
+      "conference_proceedings": true,
+      "book_title": "Proceedings of the 63rd Conference of Metallurgists, COM 2024",
+      "journal_url": "https://link.springer.com/book/10.1007/978-3-031-67398-6"
+    },
+    {
       "year": 2023,
       "title": "Coal mine wastes: Effective mitigation of coal waste slurry and acid mine drainage through bioflocculation using mixotrophic bacteria as bioflocculants",
       "authors": "Siti Khodijah Chaerun, Erian Jeremy, Raudhatul Islam Chaerun, Riri Lidya Fathira, Muhammad Iqbal Toynbee, Supandi, Tsutomu Sato",
@@ -311,6 +375,22 @@ window.LAB_PUBLICATION_DATA={
       "publisher_url": "https://www.elsevier.com/",
       "publisher_source": "curated official publisher link (refreshes via Crossref DOI)",
       "publication_type": "Research article"
+    },
+    {
+      "year": 2022,
+      "title": "Applicability of Geopolymers as a Solidification Matrix for Wastes Containing Radioactive Cesium",
+      "authors": "Tsutomu Sato, Yusuke Oya, Raudhatul Islam Chaerun, Kazuma Kuroda, Ryo Nakabayashi, Isamu Kudo, Kazushige Kato, Masahiro Taniguchi",
+      "journal": "Material Cycles and Waste Management Research",
+      "details": "33(6), 448–455",
+      "doi": "10.3985/mcwmr.33.448",
+      "url": "https://doi.org/10.3985/mcwmr.33.448",
+      "type": "Review article",
+      "publication_type": "Review article",
+      "citations": 2,
+      "publisher": "Japan Society of Material Cycles and Waste Management",
+      "publisher_url": "https://jsmcwm.or.jp/",
+      "journal_url": "https://www.jstage.jst.go.jp/browse/mcwmr",
+      "publisher_source": "CiNii / J-STAGE bibliographic record"
     },
     {
       "year": 2020,

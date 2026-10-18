@@ -233,12 +233,12 @@ function publisherLinkHtml(p={},className='pub-publisher'){
 function publicationTypeLabel(p={}){
   const key=publicationType(p);
   const names={
-    en:{'Research article':'Research article','Review article':'Review article','Book chapter':'Book chapter',Book:'Book',Preprint:'Preprint',Publication:'Publication'},
-    id:{'Research article':'Artikel penelitian','Review article':'Artikel ulasan','Book chapter':'Bab buku',Book:'Buku',Preprint:'Pracetak',Publication:'Publikasi'},
-    ja:{'Research article':'研究論文','Review article':'総説','Book chapter':'書籍の章',Book:'書籍',Preprint:'プレプリント',Publication:'出版物'},
-    'zh-CN':{'Research article':'研究论文','Review article':'综述论文','Book chapter':'书籍章节',Book:'书籍',Preprint:'预印本',Publication:'出版物'},
-    'zh-TW':{'Research article':'研究論文','Review article':'綜述論文','Book chapter':'書籍章節',Book:'書籍',Preprint:'預印本',Publication:'出版物'},
-    ko:{'Research article':'연구 논문','Review article':'리뷰 논문','Book chapter':'도서 장',Book:'도서',Preprint:'사전 인쇄본',Publication:'출판물'}
+    en:{'Research article':'Research article','Review article':'Review article','Book chapter':'Book chapter','Conference paper':'Conference paper',Book:'Book',Preprint:'Preprint',Publication:'Publication'},
+    id:{'Research article':'Artikel penelitian','Review article':'Artikel ulasan','Book chapter':'Bab buku','Conference paper':'Makalah prosiding',Book:'Buku',Preprint:'Pracetak',Publication:'Publikasi'},
+    ja:{'Research article':'研究論文','Review article':'総説','Book chapter':'書籍の章','Conference paper':'会議論文',Book:'書籍',Preprint:'プレプリント',Publication:'出版物'},
+    'zh-CN':{'Research article':'研究论文','Review article':'综述论文','Book chapter':'书籍章节','Conference paper':'会议论文',Book:'书籍',Preprint:'预印本',Publication:'出版物'},
+    'zh-TW':{'Research article':'研究論文','Review article':'綜述論文','Book chapter':'書籍章節','Conference paper':'會議論文',Book:'書籍',Preprint:'預印本',Publication:'出版物'},
+    ko:{'Research article':'연구 논문','Review article':'리뷰 논문','Book chapter':'도서 장','Conference paper':'학술대회 논문',Book:'도서',Preprint:'사전 인쇄본',Publication:'출판물'}
   };
   return names[activeLang]?.[key]||names.en[key]||key;
 }
@@ -257,7 +257,7 @@ function safeImageSrc(v=''){
 function visualFor(p={}){
   const raw=p.graphical_abstract||p.graphical_abstract_url||'';
   const src=safeImageSrc(raw);const kind=(p.graphical_abstract_kind||'').toLowerCase();
-  return {src,kind,isGA:!!src&&kind!=='publisher_preview',isPreview:!!src&&kind==='publisher_preview'};
+  return {src,kind,isGA:!!src&&kind==='graphical_abstract',isPreview:!!src&&kind==='publisher_preview'};
 }
 function removeBrokenVisual(img){
   const media=img.closest('.pub-thumb,.update-visual');const parent=img.closest('.pub-row,.update-card');
@@ -357,6 +357,46 @@ const pubToggle=$('#pubToggle');if(pubToggle)pubToggle.addEventListener('click',
   if(!showAllPublications)$('#publications')?.scrollIntoView({behavior:'smooth',block:'start'});
 });
 
+// Crossref metadata enrichment in the browser for newly discovered works. The
+// GitHub workflow stores the same information permanently on subsequent runs.
+const CROSSREF_PUBLISHER_LIST=[
+  [/elsevier/i,'Elsevier','https://www.elsevier.com/'],
+  [/american chemical society|^acs publications$/i,'ACS Publications','https://pubs.acs.org/'],
+  [/springer|nature publishing|biomed central/i,'Springer Nature','https://www.springernature.com/'],
+  [/wiley/i,'Wiley','https://www.wiley.com/'],
+  [/mdpi/i,'MDPI','https://www.mdpi.com/'],
+  [/sage/i,'Sage','https://journals.sagepub.com/'],
+  [/taylor.{0,5}francis|informa uk|routledge/i,'Taylor & Francis','https://www.tandfonline.com/'],
+  [/japan society of material cycles and waste management/i,'Japan Society of Material Cycles and Waste Management','https://jsmcwm.or.jp/'],
+];
+async function hydrateCrossrefMetadata(){
+  const pending=pubs.filter(p=>p.doi&&(!p.publisher||!p.publisher_url||!p.journal_url||p.journal==='Elsevier eBooks'));
+  const max=25;
+  for(let index=0;index<Math.min(max,pending.length);index+=4){
+    await Promise.all(pending.slice(index,index+4).map(async p=>{
+      const doi=String(p.doi).replace(/^https?:\/\/(?:dx\.)?doi\.org\//i,'').toLowerCase();
+      let meta=null;const storageKey='criCrossrefBibliographyV54:'+doi;
+      try{const cached=JSON.parse(sessionStorage.getItem(storageKey)||'null');if(cached?.at>Date.now()-7*86400000)meta=cached.message;}catch{}
+      if(!meta){
+        try{
+          const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),8000);
+          try{const r=await fetch('https://api.crossref.org/works/'+encodeURIComponent(doi),{signal:controller.signal});if(!r.ok)return;meta=(await r.json()).message||null;}finally{clearTimeout(timer)}
+          if(meta)try{sessionStorage.setItem(storageKey,JSON.stringify({at:Date.now(),message:{publisher:meta.publisher,DOI:meta.DOI,type:meta.type,'container-title':meta['container-title']}}))}catch{}
+        }catch{return}
+      }
+      if(!meta||String(meta.DOI||'').toLowerCase()!==doi)return;
+      const name=String(meta.publisher||'').trim();const match=CROSSREF_PUBLISHER_LIST.find(([rx])=>rx.test(name));
+      if(name){p.publisher=match?.[1]||name;p.publisher_url=match?.[2]||p.publisher_url||'';}
+      const source=Array.isArray(meta['container-title'])?meta['container-title'][0]:meta['container-title'];
+      if(source&&/eBooks|Research publication/i.test(p.journal||''))p.journal=source;
+      if(meta.type)p.crossref_type=meta.type;
+      p.publication_type=publicationType(p);
+    }));
+  }
+  // A missing journal homepage remains plain text, never a guessed DOI link.
+  renderPublications(filteredPublications());renderUpdates();
+}
+
 async function refreshFromOpenAlex(){
   try{
     const authorResponse=await fetch('https://api.openalex.org/authors/https://orcid.org/0000-0002-1532-7343');
@@ -381,10 +421,10 @@ async function refreshFromOpenAlex(){
         ...fallback,
         year:work.publication_year||fallback.year||'',publication_date:work.publication_date||fallback.publication_date||'',_newly_discovered:newlyDiscovered,title,
         authors:authors.length?authors.join(', '):(fallback.authors||''),
-        journal:source,details:work.biblio?.volume?[work.biblio.volume,work.biblio.issue].filter(Boolean).join('(')+(work.biblio.issue?')':''):(fallback.details||''),
+        journal:((sourceObject.type==='journal'||!fallback.journal)?source:fallback.journal),details:work.biblio?.volume?[work.biblio.volume,work.biblio.issue].filter(Boolean).join('(')+(work.biblio.issue?')':''):(fallback.details||''),
         citations:Number.isFinite(+work.cited_by_count)?+work.cited_by_count:(fallback.citations||0),
         url:work.doi||work.primary_location?.landing_page_url||fallback.url||'https://scholar.google.com/citations?user=do1Jx1wAAAAJ&hl=en',
-        doi,issn,source_type:sourceObject.type||fallback.source_type||'',source_id:sourceObject.id||fallback.source_id||'',journal_url:journalMetricKey(source)===journalMetricKey(fallback.journal)?(sourceObject.homepage_url||fallback.journal_url||''):(sourceObject.homepage_url||''),type:work.type_crossref||work.type||fallback.type||'Journal',title_translations:fallback.title_translations||{}
+        doi,issn,publisher_landing_url:work.primary_location?.landing_page_url||fallback.publisher_landing_url||'',open_access:work.open_access?.is_oa===true,oa_url:work.best_oa_location?.landing_page_url||fallback.oa_url||'',source_type:sourceObject.type||fallback.source_type||'',source_id:sourceObject.id||fallback.source_id||'',journal_url:sourceObject.type==='journal'?(sourceObject.homepage_url||((journalMetricKey(source)===journalMetricKey(fallback.journal))?(fallback.journal_url||''):'')):(fallback.journal_url||''),type:work.type_crossref||work.type||fallback.type||'Journal',title_translations:fallback.title_translations||{}
       };
       publication.publication_type=publicationType(publication);
       return {...publication,...embeddedMetricFor(publication)};
@@ -412,6 +452,9 @@ async function refreshFromOpenAlex(){
     data.last_updated=new Date().toISOString();
     data.source='OpenAlex live index';
     renderPublications(filteredPublications());renderUpdates();updatePublicationMeta();
+    // Crossref exposes publisher-deposited metadata for newly found DOIs.
+    // Fetch after first render, without delaying or breaking the website.
+    void hydrateCrossrefMetadata();
   }catch{
     // The curated local snapshot remains fully usable if the live index is unavailable.
     await refreshJournalMetrics();

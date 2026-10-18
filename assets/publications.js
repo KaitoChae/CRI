@@ -22,7 +22,10 @@ window.LAB_PUBLICATION_DATA={
       "graphical_abstract_kind": "graphical_abstract",
       "title_translations": {},
       "journal_url": "https://www.sciencedirect.com/journal/applied-clay-science",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
+      "publisher": "Elsevier",
+      "publisher_url": "https://www.elsevier.com/",
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
     },
     {
       "year": 2026,
@@ -38,7 +41,10 @@ window.LAB_PUBLICATION_DATA={
       "graphical_abstract_kind": "graphical_abstract",
       "title_translations": {},
       "journal_url": "https://www.sciencedirect.com/journal/cement-and-concrete-research",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
+      "publisher": "Elsevier",
+      "publisher_url": "https://www.elsevier.com/",
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
     },
     {
       "year": 2025,
@@ -54,7 +60,10 @@ window.LAB_PUBLICATION_DATA={
       "graphical_abstract_kind": "graphical_abstract",
       "title_translations": {},
       "journal_url": "https://www.sciencedirect.com/journal/construction-and-building-materials",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
+      "publisher": "Elsevier",
+      "publisher_url": "https://www.elsevier.com/",
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
     },
     {
       "year": 2025,
@@ -68,7 +77,10 @@ window.LAB_PUBLICATION_DATA={
       "type": "Journal article",
       "title_translations": {},
       "journal_url": "https://link.springer.com/journal/40831",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
+      "publisher": "Springer Nature",
+      "publisher_url": "https://www.springernature.com/",
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
     },
     {
       "year": 2025,
@@ -82,7 +94,10 @@ window.LAB_PUBLICATION_DATA={
       "type": "Journal article",
       "title_translations": {},
       "journal_url": "https://pubs.acs.org/journal/asrmcd",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
+      "publisher": "ACS Publications",
+      "publisher_url": "https://pubs.acs.org/",
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
     },
     {
       "year": 2025,
@@ -96,7 +111,10 @@ window.LAB_PUBLICATION_DATA={
       "type": "Review article",
       "title_translations": {},
       "journal_url": "https://www.sciencedirect.com/journal/applied-surface-science-advances",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
+      "publisher": "Elsevier",
+      "publisher_url": "https://www.elsevier.com/",
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
     },
     {
       "year": 2025,
@@ -109,8 +127,11 @@ window.LAB_PUBLICATION_DATA={
       "doi": "10.1177/25726641251316396",
       "type": "Journal article",
       "title_translations": {},
-      "journal_url": "https://www.tandfonline.com/journals/ympm21",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url": "https://journals.sagepub.com/home/mpe",
+      "journal_url_source": "Publisher journal homepage (verified)",
+      "publisher": "Sage",
+      "publisher_url": "https://journals.sagepub.com/",
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
     },
     {
       "year": 2025,
@@ -122,7 +143,10 @@ window.LAB_PUBLICATION_DATA={
       "url": "https://doi.org/10.1007/978-981-96-1921-4_5",
       "doi": "10.1007/978-981-96-1921-4_5",
       "type": "Book chapter",
-      "title_translations": {}
+      "title_translations": {},
+      "publisher": "Springer Nature",
+      "publisher_url": "https://www.springernature.com/",
+      "publisher_source": "DOI publishing group (initial; Crossref DOI verification scheduled)"
     },
     {
       "year": 2024,
@@ -138,7 +162,10 @@ window.LAB_PUBLICATION_DATA={
       "graphical_abstract_kind": "graphical_abstract",
       "title_translations": {},
       "journal_url": "https://www.sciencedirect.com/journal/chemosphere",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
+      "publisher": "Elsevier",
+      "publisher_url": "https://www.elsevier.com/",
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
     },
     {
       "year": 2024,
@@ -150,7 +177,10 @@ window.LAB_PUBLICATION_DATA={
       "url": "https://doi.org/10.1007/978-3-031-67398-6_195",
       "doi": "10.1007/978-3-031-67398-6_195",
       "type": "Conference paper",
-      "title_translations": {}
+      "title_translations": {},
+      "publisher": "Springer Nature",
+      "publisher_url": "https://www.springernature.com/",
+      "publisher_source": "DOI publishing group (initial; Crossref DOI verification scheduled)"
     },
     {
       "year": 2024,
@@ -164,7 +194,10 @@ window.LAB_PUBLICATION_DATA={
       "type": "Journal article",
       "title_translations": {},
       "journal_url": "https://www.nature.com/srep/",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
+      "publisher": "Springer Nature",
+      "publisher_url": "https://www.springernature.com/",
+      "publisher_source": "DOI publishing group (initial; Crossref DOI verification scheduled)"
     },
     {
       "year": 2024,
@@ -178,7 +211,10 @@ window.LAB_PUBLICATION_DATA={
       "type": "Journal article",
       "title_translations": {},
       "journal_url": "https://link.springer.com/journal/44290",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
+      "publisher": "Springer Nature",
+      "publisher_url": "https://www.springernature.com/",
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
     },
     {
       "year": 2024,
@@ -194,7 +230,10 @@ window.LAB_PUBLICATION_DATA={
       "graphical_abstract_kind": "graphical_abstract",
       "title_translations": {},
       "journal_url": "https://www.mdpi.com/journal/minerals",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
+      "publisher": "MDPI",
+      "publisher_url": "https://www.mdpi.com/",
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
     },
     {
       "year": 2023,
@@ -210,7 +249,10 @@ window.LAB_PUBLICATION_DATA={
       "graphical_abstract_kind": "graphical_abstract",
       "title_translations": {},
       "journal_url": "https://www.sciencedirect.com/journal/international-journal-of-coal-geology",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
+      "publisher": "Elsevier",
+      "publisher_url": "https://www.elsevier.com/",
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
     },
     {
       "year": 2023,
@@ -226,7 +268,10 @@ window.LAB_PUBLICATION_DATA={
       "graphical_abstract_kind": "graphical_abstract",
       "title_translations": {},
       "journal_url": "https://www.sciencedirect.com/journal/separation-and-purification-technology",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
+      "publisher": "Elsevier",
+      "publisher_url": "https://www.elsevier.com/",
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
     },
     {
       "year": 2022,
@@ -242,7 +287,10 @@ window.LAB_PUBLICATION_DATA={
       "graphical_abstract_kind": "graphical_abstract",
       "title_translations": {},
       "journal_url": "https://www.sciencedirect.com/journal/journal-of-hazardous-materials",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
+      "publisher": "Elsevier",
+      "publisher_url": "https://www.elsevier.com/",
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
     },
     {
       "year": 2022,
@@ -258,7 +306,10 @@ window.LAB_PUBLICATION_DATA={
       "graphical_abstract_kind": "graphical_abstract",
       "title_translations": {},
       "journal_url": "https://www.sciencedirect.com/journal/journal-of-hazardous-materials",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
+      "publisher": "Elsevier",
+      "publisher_url": "https://www.elsevier.com/",
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
     },
     {
       "year": 2020,
@@ -272,7 +323,10 @@ window.LAB_PUBLICATION_DATA={
       "type": "Journal article",
       "title_translations": {},
       "journal_url": "https://www.tandfonline.com/journals/tnst20",
-      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)"
+      "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",
+      "publisher": "Taylor & Francis",
+      "publisher_url": "https://www.tandfonline.com/",
+      "publisher_source": "curated official publisher link (refreshes via Crossref DOI)"
     }
   ]
 };

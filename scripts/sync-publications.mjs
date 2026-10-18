@@ -9,6 +9,11 @@ export function mergeWork(work,old={}){
   const details=[b.volume,b.issue?`(${b.issue})`:'',b.first_page?[`, ${b.first_page}${b.last_page?'–'+b.last_page:''}`]:''].flat().join('').trim();
   const publication={
     ...old,
+    // A different DOI must not inherit the publisher of the previous work.
+    publisher:doi && normalizeDoi(old.doi)===doi ? (old.publisher||'') : '',
+    publisher_url:doi && normalizeDoi(old.doi)===doi ? (old.publisher_url||'') : '',
+    publisher_source:doi && normalizeDoi(old.doi)===doi ? (old.publisher_source||'') : '',
+    publisher_checked_at:doi && normalizeDoi(old.doi)===doi ? (old.publisher_checked_at||'') : '',
     year:work.publication_year||old.year||'',
     publication_date:work.publication_date||old.publication_date||'',
     title:work.title||old.title||'',

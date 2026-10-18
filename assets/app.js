@@ -214,6 +214,20 @@ function journalLinkHtml(p={},className='pub-journal'){
   return url?`<a class="${className}" href="${safeText(url)}" target="_blank" rel="noopener noreferrer" title="Visit journal homepage: ${title}">${title}</a>`
     :`<span class="${className}">${title}</span>`;
 }
+// Publisher is deliberately a DIFFERENT clickable element underneath the
+// journal. Publisher URLs never use journal homepages or article DOI URLs.
+function publisherLinkHtml(p={},className='pub-publisher'){
+  const name=safeText(p.publisher||'');
+  if(!name)return '';
+  const url=safeImageSrc(p.publisher_url);
+  const publisherLabels={en:'Publisher',id:'Penerbit',ja:'出版社','zh-CN':'出版商','zh-TW':'出版商',ko:'출판사',de:'Verlag',fr:'Éditeur',es:'Editorial',it:'Editore',pt:'Editora',tr:'Yayınevi'};
+  const label=`<span class="publisher-label">${safeText(publisherLabels[activeLang]||'Publisher')}</span>`;
+  return url?`<a class="${className}" href="${safeText(url)}" target="_blank" rel="noopener noreferrer" title="Visit publisher: ${name}">${label}<span class="publisher-name">${name}</span></a>`
+    :`<span class="${className}">${label}<span class="publisher-name">${name}</span></span>`;
+}
+function publicationSourceHtml(p={}){
+  return `<span class="pub-source">${journalLinkHtml(p)}${publisherLinkHtml(p)}</span>`;
+}
 function safeImageSrc(v=''){
   const s=String(v||'').trim();if(!s)return '';
   if(/^(?:assets\/)[A-Za-z0-9._\/-]+$/.test(s) && !s.includes('..')) return s;
@@ -237,7 +251,7 @@ function installImageFallbacks(root=document){
 function searchQuery(){return String($('#pubSearch')?.value||'').toLowerCase().trim()}
 function publicationHaystack(p={}){
   const tr=Object.values(p.title_translations||p.translations||{}).join(' ');
-  return `${p.title||''} ${tr} ${p.journal||''} ${p.authors||''} ${p.year||''} ${p.doi||''}`.toLowerCase();
+  return `${p.title||''} ${tr} ${p.journal||''} ${p.publisher||''} ${p.authors||''} ${p.year||''} ${p.doi||''}`.toLowerCase();
 }
 function filteredPublications(){
   const q=searchQuery();
@@ -292,7 +306,7 @@ function renderPublications(list){
     const media=v.src?`<span class="pub-thumb ${v.isGA?'has-ga':'publisher-preview'}"><img src="${v.src}" data-publication-visual loading="lazy" decoding="async" alt="${safeText(alt)}, ${safeText(original||'publication')}">${v.isGA?`<em>${safeText(t('graphical_abstract'))}</em>`:''}</span>`:'<span class="pub-thumb-placeholder" aria-hidden="true"></span>';
     const originalLine=showOriginal?`<small class="pub-original"><b>${safeText(t('pub_original_title'))}:</b> ${safeText(original)}</small>`:'';
     const authors=p.authors?`<small class="pub-authors">${authorListHtml(p.authors)}</small>`:'';
-    return `<div class="pub-row ${v.src?'has-visual':'no-visual'}"><a class="pub-row-link" href="${safeUrl(p.url||'#')}" aria-label="${safeText(title)} — publication" target="_blank" rel="noopener noreferrer"></a><span class="pub-year">${safeText(p.year||'n.d.')}</span>${media}<span class="pub-title">${safeText(title)}${authors}${originalLine}</span>${journalLinkHtml(p)}<span class="badges">${publicationMetricBadges(p,true)}</span></div>`
+    return `<div class="pub-row ${v.src?'has-visual':'no-visual'}"><a class="pub-row-link" href="${safeUrl(p.url||'#')}" aria-label="${safeText(title)} — publication" target="_blank" rel="noopener noreferrer"></a><span class="pub-year">${safeText(p.year||'n.d.')}</span>${media}<span class="pub-title">${safeText(title)}${authors}${originalLine}</span>${publicationSourceHtml(p)}<span class="badges">${publicationMetricBadges(p,true)}</span></div>`
   }).join('');
   installImageFallbacks(host);
 }
@@ -304,7 +318,7 @@ function renderUpdates(){
     const v=visualFor(p);const alt=v.isGA?t('graphical_abstract_alt'):t('publisher_visual_alt');const title=translatedTitle(p);
     const media=v.src?`<a class="update-visual ${v.isGA?'has-ga':'publisher-preview'}" href="${safeUrl(p.url||'#')}" target="_blank" rel="noopener"><img src="${v.src}" data-publication-visual loading="lazy" decoding="async" alt="${safeText(alt)}, ${safeText(originalTitle(p)||'publication')}">${v.isGA?`<em>${safeText(t('graphical_abstract'))}</em>`:''}</a>`:'';
     const authors=p.authors?`<p class="update-authors">${authorListHtml(p.authors)}</p>`:'';
-    return `<article class="update-card ${v.src?'has-visual':'no-visual'} reveal visible">${media}<div class="update-body"><span class="date">${safeText(p.year||'')}, ${safeText(t('pub_new'))}</span><h3>${safeText(title)}</h3>${authors}<p>${journalLinkHtml(p,'update-journal-link')}${p.details?`, ${safeText(p.details)}`:''}</p><span class="badges update-metrics" aria-label="Journal metrics">${publicationMetricBadges(p,false)}</span><a class="update-link" href="${safeUrl(p.url||'#')}" target="_blank" rel="noopener">${safeText(t('pub_read'))}</a></div></article>`
+    return `<article class="update-card ${v.src?'has-visual':'no-visual'} reveal visible">${media}<div class="update-body"><span class="date">${safeText(p.year||'')}, ${safeText(t('pub_new'))}</span><h3>${safeText(title)}</h3>${authors}<p class="update-journal-meta">${journalLinkHtml(p,'update-journal-link')}${p.details?`, ${safeText(p.details)}`:''}</p>${publisherLinkHtml(p,'update-publisher-link')}<span class="badges update-metrics" aria-label="Journal metrics">${publicationMetricBadges(p,false)}</span><a class="update-link" href="${safeUrl(p.url||'#')}" target="_blank" rel="noopener">${safeText(t('pub_read'))}</a></div></article>`
   }).join('');
   installImageFallbacks(host);
 }

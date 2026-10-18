@@ -45,6 +45,8 @@ jobs:
           fi
       - name: Refresh journal homepages from verified OpenAlex sources
         run: node scripts/update-journal-links.mjs
+      - name: Update publisher names and links from Crossref DOI metadata
+        run: node scripts/update-publishers.mjs
       - name: Look for missing or newly released publisher graphics
         run: node scripts/update-publication-visuals.mjs
       - name: Validate generated data

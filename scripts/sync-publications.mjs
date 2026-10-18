@@ -12,7 +12,7 @@ export function mergeWork(work,old={}){
     year:work.publication_year||old.year||'',
     publication_date:work.publication_date||old.publication_date||'',
     title:work.title||old.title||'',
-    authors:authors.length?`${authors.slice(0,7).join(', ')}${authors.length>7?' et al.':''}`:old.authors||'',
+    authors:authors.length?authors.join(', '):old.authors||'',
     journal:source.display_name||old.journal||'Research publication',
     details:details||old.details||'',
     citations:Number.isFinite(Number(work.cited_by_count))?Number(work.cited_by_count):old.citations||0,

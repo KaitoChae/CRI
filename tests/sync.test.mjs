@@ -151,7 +151,7 @@ test('University and publication label improvements: large font and single deskt
   assert.match(css,/V44: layout fix/);
   assert.match(css,/\.pub-row \.metric-group\{white-space:nowrap/);
   assert.match(css,/\.degree \.university-name\{font-size:14px!important/);
-  assert.match(js,/SJR \${normalizedQuartile\(p.quartile\)}/);
+  assert.match(js,/hasRank\?normalizedQuartile\(p.quartile\)/);
   assert.match(js,/const iff=hasOfficial\?`JIF /); // dagger was intentionally removed in v46
   assert.match(js,/const byName=embeddedJournalMetrics.by_journal/);
 });

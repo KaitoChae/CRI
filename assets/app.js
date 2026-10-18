@@ -184,6 +184,23 @@ function normalizedQuartile(q=''){
 function badgeClass(q=''){const value=normalizedQuartile(q);return value?value.toLowerCase():'na'}
 function normalizeIssn(v=''){const compact=String(v).toUpperCase().replace(/[^0-9X]/g,'');return compact.length===8?compact:''}
 function safeText(v=''){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+// Highlight only the owner's complete author names (not other authors with
+// the Chaerun surname). A missing name remains visibly unhighlighted.
+// Prefer authorships from OpenAlex in full, rather than a truncated 7-name list.
+function isWebsiteAuthorName(name=''){
+  const clean=String(name).normalize('NFKC').replace(/\s+/g,' ').trim().replace(/\.$/,'');
+  return /^(?:Raudhatul Islam Chaerun|Chaerun Raudhatul Islam|R\.?\s*I\.?\s*Chaerun|Chaerun,?\s*R\.?\s*I\.?|Ronny Winarko)$/iu.test(clean);
+}
+function authorListHtml(authors=''){
+  // Fully escape each name before rendering, do not inject unsanitized HTML.
+  // Sometimes a final 'et al.' follows a full author token.
+  return String(authors).split(/,\s*/u).map(entry=>{
+    const match=entry.match(/^(.*?)(\s+et al\.?)?$/iu);
+    const proper=(match?.[1]||entry).trim(), suffix=match?.[2]||'';
+    return (isWebsiteAuthorName(proper)?`<strong class="publication-self-author">${safeText(proper)}</strong>`:safeText(proper))+safeText(suffix);
+  }).join(', ');
+}
+
 function safeUrl(v=''){try{const u=new URL(v,location.href);return ['http:','https:'].includes(u.protocol)?u.href:'#'}catch{return '#'}}
 function safeImageSrc(v=''){
   const s=String(v||'').trim();if(!s)return '';
@@ -197,7 +214,7 @@ function visualFor(p={}){
 }
 function removeBrokenVisual(img){
   const media=img.closest('.pub-thumb,.update-visual');const parent=img.closest('.pub-row,.update-card');
-  if(parent)parent.classList.add('no-visual');if(media)media.remove();
+  if(parent){parent.classList.remove('has-visual');parent.classList.add('no-visual')}if(media)media.remove();
 }
 function installImageFallbacks(root=document){
   $$('img[data-publication-visual]',root).forEach(img=>{
@@ -223,7 +240,7 @@ function updateSearchStatus(totalMatches=null){
 }
 function publicationMetricBadges(p={},includeCitations=false){
   const hasRank=Number.isFinite(Number(p.sjr))&&Number(p.sjr)>0&&normalizedQuartile(p.quartile);
-  const qtile=hasRank?`SJR ${normalizedQuartile(p.quartile)}`:'SJR Q n/a';
+  const qtile=hasRank?normalizedQuartile(p.quartile):'Q n/a';
   // Pass the raw quartile into badgeClass: "SJR Q1" is a label, not a quartile value.
   // This keeps colors correct as journal metrics are refreshed.
   const sjr=hasRank?`SJR ${Number(p.sjr).toFixed(3)}`:'SJR n/a';
@@ -239,8 +256,15 @@ function publicationMetricBadges(p={},includeCitations=false){
   const cite=includeCitations&&Number.isFinite(+p.citations)?`<b class="badge citation-badge">${+p.citations} ${safeText(t('cited'))}</b>`:'';
   const rankElement=(text,extra='')=>rankUrl&&hasRank?`<a class="badge ${extra}" href="${safeText(rankUrl)}" target="_blank" rel="noopener noreferrer" title="${safeText(sjrTitle)}">${safeText(text)}</a>`:`<span class="badge ${extra} na" title="Not confirmed">${safeText(text)}</span>`;
   const impactBadge=impactSource?`<a class="badge if" href="${safeText(impactSource)}" target="_blank" rel="noopener noreferrer" title="${safeText(impactTip)}">${safeText(iff)}</a>`:`<span class="badge na" title="${safeText(impactTip)}">${safeText(iff)}</span>`;
-  // Each badge links to its own dated source; article click is a sibling.
-  return `<span class="metric-group" title="${safeText(sjrTitle)}">${rankElement(sjr,'sjr')}${rankElement(qtile,badgeClass(p.quartile))}${impactBadge}</span>${cite}`;
+  const indexingBadge=(kind,label)=>{
+    const verified=p.indexing?.[kind];
+    const link=verified?.status==='indexed'&&verified?.url?safeImageSrc(verified.url):'';
+    const checked=verified?.checked_at?`Verified ${verified.checked_at.slice(0,10)} by ${kind==='scopus'?'Elsevier':'Clarivate'}`:'Not yet independently verified';
+    return link?`<a class="badge index-badge indexed" href="${safeText(link)}" target="_blank" rel="noopener noreferrer" title="${safeText(checked)}">${label}</a>`
+      :`<span class="badge index-badge na" title="${safeText(checked)}">${label} n/a</span>`;
+  };
+  // Journal rank is distinct from article-level Scopus and Web of Science indexing.
+  return `<span class="metric-group" title="${safeText(sjrTitle)}">${rankElement(sjr,'sjr')}${rankElement(qtile,badgeClass(p.quartile))}${impactBadge}</span><span class="indexing-group">${indexingBadge('scopus','Scopus')}${indexingBadge('wos','WoS')}</span>${cite}`;
 }
 function updatePublicationToggle(){
   const button=$('#pubToggle');if(!button)return;
@@ -261,7 +285,7 @@ function renderPublications(list){
     const alt=v.isGA?t('graphical_abstract_alt'):t('publisher_visual_alt');
     const media=v.src?`<span class="pub-thumb ${v.isGA?'has-ga':'publisher-preview'}"><img src="${v.src}" data-publication-visual loading="lazy" decoding="async" alt="${safeText(alt)}, ${safeText(original||'publication')}">${v.isGA?`<em>${safeText(t('graphical_abstract'))}</em>`:''}</span>`:'';
     const originalLine=showOriginal?`<small class="pub-original"><b>${safeText(t('pub_original_title'))}:</b> ${safeText(original)}</small>`:'';
-    const authors=p.authors?`<small class="pub-authors">${safeText(p.authors)}</small>`:'';
+    const authors=p.authors?`<small class="pub-authors">${authorListHtml(p.authors)}</small>`:'';
     return `<div class="pub-row ${v.src?'has-visual':'no-visual'}"><a class="pub-row-link" href="${safeUrl(p.url||'#')}" aria-label="${safeText(title)} — publication" target="_blank" rel="noopener noreferrer"></a><span class="pub-year">${safeText(p.year||'n.d.')}</span>${media}<span class="pub-title">${safeText(title)}${authors}${originalLine}</span><span class="pub-journal">${safeText(p.journal||'')}</span><span class="badges">${publicationMetricBadges(p,true)}</span></div>`
   }).join('');
   installImageFallbacks(host);
@@ -273,7 +297,7 @@ function renderUpdates(){
   host.innerHTML=latest.map(p=>{
     const v=visualFor(p);const alt=v.isGA?t('graphical_abstract_alt'):t('publisher_visual_alt');const title=translatedTitle(p);
     const media=v.src?`<a class="update-visual ${v.isGA?'has-ga':'publisher-preview'}" href="${safeUrl(p.url||'#')}" target="_blank" rel="noopener"><img src="${v.src}" data-publication-visual loading="lazy" decoding="async" alt="${safeText(alt)}, ${safeText(originalTitle(p)||'publication')}">${v.isGA?`<em>${safeText(t('graphical_abstract'))}</em>`:''}</a>`:'';
-    const authors=p.authors?`<p class="update-authors">${safeText(p.authors)}</p>`:'';
+    const authors=p.authors?`<p class="update-authors">${authorListHtml(p.authors)}</p>`:'';
     return `<article class="update-card ${v.src?'has-visual':'no-visual'} reveal visible">${media}<div class="update-body"><span class="date">${safeText(p.year||'')}, ${safeText(t('pub_new'))}</span><h3>${safeText(title)}</h3>${authors}<p>${safeText(p.journal||'')}${p.details?`, ${safeText(p.details)}`:''}</p><span class="badges update-metrics" aria-label="Journal metrics">${publicationMetricBadges(p,false)}</span><a class="update-link" href="${safeUrl(p.url||'#')}" target="_blank" rel="noopener">${safeText(t('pub_read'))}</a></div></article>`
   }).join('');
   installImageFallbacks(host);
@@ -314,7 +338,7 @@ async function refreshFromOpenAlex(){
       const publication={
         ...fallback,
         year:work.publication_year||fallback.year||'',publication_date:work.publication_date||fallback.publication_date||'',_newly_discovered:newlyDiscovered,title,
-        authors:authors.length?`${authors.slice(0,7).join(', ')}${authors.length>7?' et al.':''}`:(fallback.authors||''),
+        authors:authors.length?authors.join(', '):(fallback.authors||''),
         journal:source,details:work.biblio?.volume?[work.biblio.volume,work.biblio.issue].filter(Boolean).join('(')+(work.biblio.issue?')':''):(fallback.details||''),
         citations:Number.isFinite(+work.cited_by_count)?+work.cited_by_count:(fallback.citations||0),
         url:work.doi||work.primary_location?.landing_page_url||fallback.url||'https://scholar.google.com/citations?user=do1Jx1wAAAAJ&hl=en',

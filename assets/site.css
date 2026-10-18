@@ -923,3 +923,65 @@ html[data-language="ko"] .lab-name small{letter-spacing:.05em;line-height:1.25}
   filter: brightness(.96);
   text-decoration: none;
 }
+
+
+/* v48 — Collision-free publication rows (also applies after live refresh).
+   Each piece occupies an explicit grid track. No graphical abstract overlaps
+   text, even with long titles, many authors or new indexing badges. */
+.pub-row, .pub-row.has-visual, .pub-row.no-visual {
+  display: grid !important;
+  align-items: start;
+  gap: 15px !important;
+  overflow: visible;
+}
+.pub-row .pub-year, .pub-row .pub-thumb, .pub-row .pub-title,
+.pub-row .pub-journal, .pub-row .badges {min-width: 0; max-width: 100%;}
+.pub-row .pub-title {overflow-wrap: anywhere; word-break: normal; hyphens: auto; font-size:clamp(18px,1.4vw,23px)}
+.pub-row .pub-authors, .pub-row .pub-original {display:block;overflow-wrap:anywhere;}
+.pub-row .pub-thumb {width:100%;height:100px;min-height:0;margin:0;align-self:start;}
+.pub-row .pub-thumb img {display:block;max-width:100%;height:100%;}
+.pub-row .badges {display:flex;flex-direction:column;gap:7px;align-items:flex-start;justify-content:flex-start;justify-self:stretch;}
+.pub-row .metric-group {display:flex;flex-wrap:wrap;white-space:normal;width:auto;justify-content:flex-start;gap:5px;}
+.pub-row .indexing-group {display:flex;flex-wrap:wrap;justify-content:flex-start;gap:6px;min-width:0;}
+.pub-row .citation-badge {align-self:flex-start;}
+.pub-row .badge {font-size:11px!important;padding:7px 9px!important;}
+.pub-row .pub-journal {display:block!important;overflow-wrap:anywhere;}
+.publication-self-author {font-weight:800;color:#102d3d;background:rgba(232,111,72,.12);border-radius:3px;padding:0 2px;}
+.update-authors .publication-self-author {font-weight:800;}
+.badge.index-badge.indexed {border-color:#356b80;background:rgba(53,107,128,.10);color:#163e53;}
+.badge.index-badge.na {background:transparent;color:#63727b;border-color:rgba(20,47,61,.24);opacity:.8;}
+@media (min-width:1201px) {
+  .pub-row.has-visual {grid-template-columns:45px 132px minmax(0,1fr) minmax(95px,.28fr) minmax(250px,.8fr)!important;}
+  .pub-row.no-visual {grid-template-columns:45px minmax(0,1fr) minmax(95px,.28fr) minmax(250px,.8fr)!important;}
+  .pub-row.has-visual .pub-year, .pub-row.no-visual .pub-year {grid-column:1!important;grid-row:1!important;}
+  .pub-row.has-visual .pub-thumb {grid-column:2!important;grid-row:1!important;}
+  .pub-row.has-visual .pub-title {grid-column:3!important;grid-row:1!important;}
+  .pub-row.has-visual .pub-journal {grid-column:4!important;grid-row:1!important;}
+  .pub-row.has-visual .badges {grid-column:5!important;grid-row:1!important;}
+  .pub-row.no-visual .pub-title {grid-column:2!important;grid-row:1!important;}
+  .pub-row.no-visual .pub-journal {grid-column:3!important;grid-row:1!important;}
+  .pub-row.no-visual .badges {grid-column:4!important;grid-row:1!important;}
+}
+@media (min-width:721px) and (max-width:1200px) {
+  .pub-row.has-visual {grid-template-columns:48px 132px minmax(0,1fr)!important;}
+  .pub-row.no-visual {grid-template-columns:48px minmax(0,1fr)!important;}
+  .pub-row.has-visual .pub-year, .pub-row.no-visual .pub-year {grid-column:1!important;grid-row:1!important;}
+  .pub-row.has-visual .pub-thumb {grid-column:2!important;grid-row:1!important;}
+  .pub-row.has-visual .pub-title {grid-column:3!important;grid-row:1!important;}
+  .pub-row.no-visual .pub-title {grid-column:2!important;grid-row:1!important;}
+  .pub-row .pub-journal {grid-column:2/-1!important;grid-row:2!important;}
+  .pub-row .badges {grid-column:2/-1!important;grid-row:3!important;}
+}
+@media (max-width:720px) {
+  .pub-row.has-visual,.pub-row.no-visual {grid-template-columns:1fr!important;gap:9px!important;}
+  .pub-row .pub-year {grid-column:1!important;grid-row:1!important;}
+  .pub-row.has-visual .pub-thumb {grid-column:1!important;grid-row:2!important;width:min(100%,260px);height:auto;aspect-ratio:16/9;}
+  .pub-row.has-visual .pub-title {grid-column:1!important;grid-row:3!important;}
+  .pub-row.no-visual .pub-title {grid-column:1!important;grid-row:2!important;}
+  .pub-row.has-visual .pub-journal {grid-column:1!important;grid-row:4!important;}
+  .pub-row.no-visual .pub-journal {grid-column:1!important;grid-row:3!important;}
+  .pub-row.has-visual .badges {grid-column:1!important;grid-row:5!important;}
+  .pub-row.no-visual .badges {grid-column:1!important;grid-row:4!important;}
+  .pub-row .pub-title {font-size:18px;}
+  .pub-row .pub-thumb {max-width:min(100%,260px);}
+}

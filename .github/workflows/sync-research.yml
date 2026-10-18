@@ -43,6 +43,11 @@ jobs:
           else
             node assets/update-journal-metrics.mjs
           fi
+      - name: Verify article-level Scopus and WoS indexing by DOI
+        env:
+          ELSEVIER_API_KEY: ${{ secrets.ELSEVIER_API_KEY }}
+          CLARIVATE_WOS_API_KEY: ${{ secrets.CLARIVATE_WOS_API_KEY }}
+        run: node scripts/update-indexing.mjs
       - name: Look for missing or newly released publisher graphics
         run: node scripts/update-publication-visuals.mjs
       - name: Validate generated data

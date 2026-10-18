@@ -18,16 +18,16 @@ test('All four SCImago badge colors render with correct CSS class for BOTH lists
   for (const [q, hex] of Object.entries(desired)) {
     const badge = render({quartile:q, sjr:1.234, sjr_source_url:'https://www.scimagojr.com/journalsearch.php?q=20912&tip=sid'}, true);
     assert.match(badge, new RegExp(`class="badge ${q.toLowerCase()}"`), `${q} not mapped to the correct class`);
-    assert.match(badge, new RegExp(`SJR ${q}`));
+    assert.match(badge, new RegExp(`${q}`));
     assert.match(css, new RegExp(`\\.badge\\.${q.toLowerCase()} \\{\\s*background-color: ${hex.replace('#','\\#')};`));
-    assert.doesNotMatch(badge, new RegExp(`class="badge na"[^>]*>SJR ${q}<`));
+    assert.doesNotMatch(badge, new RegExp(`class="badge na"[^>]*>${q}<`));
   }
 });
 
 test('Missing quartiles never display a misleading SCImago color', () => {
   for (const input of [{quartile:'Q1',sjr:0}, {quartile:null,sjr:1.0}, {quartile:'Q5',sjr:1.0}]) {
     const badges = render(input);
-    assert.match(badges, /SJR Q n\/a/);
+    assert.match(badges, /Q n\/a/);
     assert.doesNotMatch(badges,/class="badge q[1-4]"/);
   }
 });

@@ -1406,3 +1406,60 @@ html[data-language="ko"] .lab-name small{letter-spacing:.05em;line-height:1.25}
 .pub-row .publication-type-book {color:#63502b;border-color:#b6a888;}
 .pub-row .publication-type-review-article{color:#356350;border-color:#a1bbab;}
 @media(max-width:600px){.pub-row .publication-type{font-size:12px;}}
+
+
+/* v55 — FIX: legacy max-width:760px rules put the TITLE in the 40px YEAR
+   track at 601–760px. Use a true single column for tablets and phones.
+   Desktop (801px+) keeps journal/publisher in the right-side column. */
+@media (max-width:800px) {
+  #pubList .pub-row.has-visual,
+  #pubList .pub-row.no-visual {
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:none!important;
+    grid-auto-rows:auto!important;
+    row-gap:11px!important;
+    column-gap:0!important;
+    padding:22px 0!important;
+    min-width:0;
+  }
+  #pubList .pub-row .pub-year {
+    grid-column:1!important;grid-row:1!important;
+    margin:0!important;
+  }
+  #pubList .pub-row.no-visual .pub-thumb-placeholder {display:none!important;}
+  #pubList .pub-row.has-visual .pub-thumb {
+    grid-column:1!important;grid-row:2!important;
+    width:min(100%,270px)!important;
+    max-width:270px!important;height:auto!important;
+    aspect-ratio:1.5;
+  }
+  #pubList .pub-row.has-visual .pub-title {
+    grid-column:1!important;grid-row:3!important;
+  }
+  #pubList .pub-row.no-visual .pub-title {
+    grid-column:1!important;grid-row:2!important;
+  }
+  #pubList .pub-row .pub-title {
+    width:auto;min-width:0;max-width:100%;
+    overflow-wrap:break-word;word-break:normal;hyphens:auto;
+    font-size:clamp(20px,3.0vw,23px)!important;
+  }
+  #pubList .pub-row .pub-authors {font-size:14px!important;line-height:1.55;}
+  #pubList .pub-row.has-visual .pub-source {
+    grid-column:1!important;grid-row:4!important;
+  }
+  #pubList .pub-row.no-visual .pub-source {
+    grid-column:1!important;grid-row:3!important;
+  }
+  #pubList .pub-row .pub-source {margin-top:2px!important;max-width:100%;}
+  #pubList .pub-row.has-visual .badges {
+    grid-column:1!important;grid-row:5!important;
+  }
+  #pubList .pub-row.no-visual .badges {
+    grid-column:1!important;grid-row:4!important;
+  }
+  #pubList .pub-row .badges {width:100%;max-width:100%;min-width:0;}
+  #pubList .pub-row .metric-group {max-width:100%;flex-wrap:wrap!important;}
+  #pubList .pub-row .badge {white-space:nowrap;max-width:100%;}
+}

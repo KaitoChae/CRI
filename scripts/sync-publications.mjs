@@ -2,7 +2,9 @@
 // and local graphical abstracts, while discovering new indexed works.
 import {PUBLICATIONS_FILE,AUTHOR_ORCID,normalizeDoi,normalizeIssn,titleKey,readData,writeData,requestJson} from './common.mjs';
 import '../assets/publication-policy.js';
+import '../assets/publication-dedupe.js';
 const {isConferencePublication,publicationType}=globalThis.CRI_PUBLICATION_POLICY;
+const {deduplicatePublications,canonicalTitle}=globalThis.CRI_PUBLICATION_DEDUPE;
 
 export function mergeWork(work,old={}){
   const doi=normalizeDoi(work.doi);const source=work.primary_location?.source||work.best_oa_location?.source||{};
@@ -45,13 +47,13 @@ export function mergeWork(work,old={}){
 export function mergePublicationSets(existing,works){
   existing=existing.filter(p=>!isConferencePublication(p));
   const byDoi=new Map(existing.filter(p=>normalizeDoi(p.doi)).map(p=>[normalizeDoi(p.doi),p]));
-  const byTitle=new Map(existing.filter(p=>p.title).map(p=>[titleKey(p.title),p]));
+  const byTitle=new Map(existing.filter(p=>p.title).map(p=>[canonicalTitle(p.title),p]));
   const merged=[];const covered=new Set();
   for(const work of works){
     if(isConferencePublication({...work,source_type:work.primary_location?.source?.type}))continue;
     if(!work.title||/(?:論文内容及び審査の要旨|全文の要約)/u.test(work.title))continue;
     const key=normalizeDoi(work.doi);
-    const older=(key&&byDoi.get(key))||byTitle.get(titleKey(work.title))||{};
+    const older=(key&&byDoi.get(key))||byTitle.get(canonicalTitle(work.title))||{};
     const result=mergeWork(work,older);
     if(isConferencePublication(result))continue;
     const id=result.doi?`d:${normalizeDoi(result.doi)}`:`t:${titleKey(result.title)}`;
@@ -62,12 +64,13 @@ export function mergePublicationSets(existing,works){
     const titleCovered=merged.some(p=>titleKey(p.title)===titleKey(old.title));
     if(!isConferencePublication(old)&&!covered.has(id)&&!titleCovered){covered.add(id);merged.push({...old,publication_type:publicationType(old)})}
   }
-  merged.sort((a,b)=>{
+  const distinct=deduplicatePublications(merged);
+  distinct.sort((a,b)=>{
     const dateA=Date.parse(a.publication_date||'')||Date.UTC(Number(a.year)||0,0,1);
     const dateB=Date.parse(b.publication_date||'')||Date.UTC(Number(b.year)||0,0,1);
     return dateB-dateA;
   });
-  return merged;
+  return distinct;
 }
 export async function getAuthorWorks(){
   const author=await requestJson(`https://api.openalex.org/authors/https://orcid.org/${AUTHOR_ORCID}`);

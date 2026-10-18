@@ -114,6 +114,7 @@ $$('.university-mark img').forEach(img=>{
 // ------------------------- PUBLICATIONS -------------------------
 const data=window.LAB_PUBLICATION_DATA||{metrics:{},publications:[],last_updated:null,source:'embedded snapshot'};
 const publicationPolicy=window.CRI_PUBLICATION_POLICY;
+const {deduplicatePublications,isSamePublication}=window.CRI_PUBLICATION_DEDUPE;
 const isConferencePublication=p=>publicationPolicy?.isConferencePublication(p)===true;
 const publicationType=p=>publicationPolicy?.publicationType(p)||'Publication';
 const embeddedJournalMetrics=window.CRI_JOURNAL_METRICS||{by_issn:{},by_journal:{},by_doi:{}};
@@ -162,7 +163,7 @@ function newestFirst(a={},b={}){
   return (b._newly_discovered?1:0)-(a._newly_discovered?1:0);
 }
 function sortPublications(list=[]){return [...list].sort(newestFirst)}
-let pubs=sortPublications((Array.isArray(data.publications)?data.publications:[]).filter(p=>!isConferencePublication(p)).map(p=>({...p,...embeddedMetricFor(p)})));
+let pubs=sortPublications(deduplicatePublications((Array.isArray(data.publications)?data.publications:[]).filter(p=>!isConferencePublication(p)).map(p=>({...p,...embeddedMetricFor(p)}))));
 if(embeddedJournalMetrics.updated_at&&Date.parse(embeddedJournalMetrics.updated_at)>Date.parse(data.last_updated||0))data.last_updated=embeddedJournalMetrics.updated_at;
 const PUBLICATION_PREVIEW_LIMIT=8;
 let showAllPublications=false;
@@ -407,11 +408,11 @@ async function refreshFromOpenAlex(){
     if(!worksResponse.ok)throw new Error('Works request failed');
     const works=(await worksResponse.json()).results||[];
     const fallbackByDoi=new Map(pubs.filter(p=>p.doi).map(p=>[String(p.doi).toLowerCase(),p]));
-    const fallbackByTitle=new Map(pubs.map(p=>[cleanDisplayTitle(p.title).toLowerCase(),p]));
+    const fallbackByTitle=new Map(pubs.map(p=>[window.CRI_PUBLICATION_DEDUPE.canonicalTitle(p.title),p]));
     const fresh=works.filter(work=>work.title&&!/(?:論文内容及び審査の要旨|全文の要約)/u.test(work.title)&&!isConferencePublication({...work,source_type:work.primary_location?.source?.type})).map(work=>{
       const doi=String(work.doi||'').replace(/^https?:\/\/(?:dx\.)?doi\.org\//i,'');
       const title=cleanDisplayTitle(work.title);
-      const fallback=fallbackByDoi.get(doi.toLowerCase())||fallbackByTitle.get(title.toLowerCase())||{};
+      const fallback=fallbackByDoi.get(doi.toLowerCase())||fallbackByTitle.get(window.CRI_PUBLICATION_DEDUPE.canonicalTitle(title))||{};
       const newlyDiscovered=!fallback.title&&!fallback.doi;
       const sourceObject=work.primary_location?.source||work.host_venue||{};
       const source=sourceObject.display_name||'Research publication';
@@ -430,17 +431,9 @@ async function refreshFromOpenAlex(){
       return {...publication,...embeddedMetricFor(publication)};
     }).filter(p=>!isConferencePublication(p));
     if(!fresh.length)return;
-    const liveKeys=new Set(fresh.flatMap(p=>[
-      p.doi?`doi:${String(p.doi).toLowerCase()}`:'',
-      `title:${cleanDisplayTitle(p.title).toLowerCase()}`
-    ]).filter(Boolean));
-    const curatedOnly=pubs.filter(p=>{
-      if(isConferencePublication(p))return false;
-      const doiKey=p.doi?`doi:${String(p.doi).toLowerCase()}`:'';
-      const titleKey=`title:${cleanDisplayTitle(p.title).toLowerCase()}`;
-      return !(doiKey&&liveKeys.has(doiKey))&&!liveKeys.has(titleKey);
-    });
-    pubs=sortPublications([...fresh,...curatedOnly]);
+    const curatedOnly=pubs.filter(p=>!isConferencePublication(p)&&!fresh.some(latest=>isSamePublication(latest,p)));
+    // Exact/near-duplicate OpenAlex works are merged once in the shared policy.
+    pubs=sortPublications(deduplicatePublications([...fresh,...curatedOnly]));
     await refreshJournalMetrics();
     const citationCounts=pubs.map(p=>Number.isFinite(+p.citations)?+p.citations:0).sort((a,b)=>b-a);
     data.metrics={

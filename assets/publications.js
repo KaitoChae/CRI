@@ -1,5 +1,5 @@
 window.LAB_PUBLICATION_DATA={
-  "last_updated": "2026-10-18T08:21:32.242Z",
+  "last_updated": "2026-10-22T11:49:47.138Z",
   "source": "OpenAlex (ORCID) with curated corrections",
   "metrics": {
     "publications": 22,
@@ -450,7 +450,7 @@ window.LAB_PUBLICATION_DATA={
       "citations": 3,
       "url": "https://doi.org/10.1007/s44290-024-00047-1",
       "doi": "10.1007/s44290-024-00047-1",
-      "type": "article",
+      "type": "book-chapter",
       "title_translations": {},
       "journal_url": "https://link.springer.com/journal/44290",
       "journal_url_source": "publisher website (initial reference; refreshed via OpenAlex)",

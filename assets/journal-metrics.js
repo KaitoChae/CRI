@@ -1,5 +1,5 @@
 window.CRI_JOURNAL_METRICS={
-  "updated_at": "2026-10-23T11:36:35.902Z",
+  "updated_at": "2026-10-23T17:05:00.815Z",
   "by_issn": {
     "13835866": {
       "impact_factor": 9.1,

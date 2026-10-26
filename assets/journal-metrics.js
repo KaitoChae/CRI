@@ -1,5 +1,5 @@
 window.CRI_JOURNAL_METRICS={
-  "updated_at": "2026-10-26T04:44:30.803Z",
+  "updated_at": "2026-10-26T09:23:50.906Z",
   "by_issn": {
     "13835866": {
       "impact_factor": 9.1,
@@ -626,6 +626,6 @@ window.CRI_JOURNAL_METRICS={
     "reference module in earth systems and environmental sciences": {}
   },
   "by_doi": {},
-  "sjr_last_checked_at": "2026-10-25T08:45:00.782Z",
+  "sjr_last_checked_at": "2026-10-26T09:23:50.906Z",
   "sjr_update_status": "SCImago unavailable — displaying dated, previously obtained data"
 };

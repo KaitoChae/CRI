@@ -344,7 +344,9 @@ window.LAB_PUBLICATION_DATA={
       "open_access": false,
       "oa_url": "",
       "publisher_landing_url": "https://doi.org/10.1007/978-981-96-1921-4_5",
-      "pii": ""
+      "pii": "",
+      "graphical_abstract": "assets/publications/publisher-10-1007-978-981-96-1921-4-5.jpg",
+      "graphical_abstract_kind": "publisher_preview"
     },
     {
       "year": 2024,

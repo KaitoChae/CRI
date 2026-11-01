@@ -68,7 +68,7 @@ window.LAB_PUBLICATION_DATA={
       "oa_url": "https://doi.org/10.1016/j.clay.2026.108330",
       "publisher_landing_url": "https://doi.org/10.1016/j.clay.2026.108330",
       "pii": "",
-      "journal_url_checked_at": "2026-10-18T08:21:45.048Z"
+      "journal_url_checked_at": "2026-11-01T10:49:28.167Z"
     },
     {
       "year": 2026,
@@ -101,7 +101,7 @@ window.LAB_PUBLICATION_DATA={
       "oa_url": "https://eprints.whiterose.ac.uk/id/eprint/238573/3/1.%20Draft%20-%20PGP%20for%20RALW%20and%20Cs%20FINAL%20CLEAN.pdf",
       "publisher_landing_url": "https://doi.org/10.1016/j.cemconres.2026.108169",
       "pii": "",
-      "journal_url_checked_at": "2026-10-18T08:21:45.048Z"
+      "journal_url_checked_at": "2026-11-01T10:49:28.167Z"
     },
     {
       "year": 2026,
@@ -192,7 +192,7 @@ window.LAB_PUBLICATION_DATA={
       "oa_url": "",
       "publisher_landing_url": "https://doi.org/10.1016/j.conbuildmat.2025.144270",
       "pii": "",
-      "journal_url_checked_at": "2026-10-18T08:21:45.048Z"
+      "journal_url_checked_at": "2026-11-01T10:49:28.167Z"
     },
     {
       "year": 2025,
@@ -223,7 +223,7 @@ window.LAB_PUBLICATION_DATA={
       "oa_url": "",
       "publisher_landing_url": "https://doi.org/10.1007/s40831-025-01320-y",
       "pii": "",
-      "journal_url_checked_at": "2026-10-18T08:21:45.048Z"
+      "journal_url_checked_at": "2026-11-01T10:49:28.167Z"
     },
     {
       "year": 2025,
@@ -284,7 +284,7 @@ window.LAB_PUBLICATION_DATA={
       "oa_url": "https://doi.org/10.1016/j.apsadv.2025.100774",
       "publisher_landing_url": "https://doi.org/10.1016/j.apsadv.2025.100774",
       "pii": "",
-      "journal_url_checked_at": "2026-10-18T08:21:45.048Z"
+      "journal_url_checked_at": "2026-11-01T10:49:28.167Z"
     },
     {
       "year": 2025,
@@ -315,7 +315,7 @@ window.LAB_PUBLICATION_DATA={
       "oa_url": "https://doi.org/10.1177/25726641251316396",
       "publisher_landing_url": "https://doi.org/10.1177/25726641251316396",
       "pii": "",
-      "journal_url_checked_at": "2026-10-18T08:21:45.048Z"
+      "journal_url_checked_at": "2026-11-01T10:49:28.167Z"
     },
     {
       "year": 2025,
@@ -379,7 +379,7 @@ window.LAB_PUBLICATION_DATA={
       "oa_url": "",
       "publisher_landing_url": "https://doi.org/10.1016/j.chemosphere.2024.143871",
       "pii": "",
-      "journal_url_checked_at": "2026-10-18T08:21:45.048Z"
+      "journal_url_checked_at": "2026-11-01T10:49:28.167Z"
     },
     {
       "year": 2024,
@@ -439,7 +439,7 @@ window.LAB_PUBLICATION_DATA={
       "oa_url": "https://doi.org/10.1038/s41598-024-69681-0",
       "publisher_landing_url": "https://doi.org/10.1038/s41598-024-69681-0",
       "pii": "",
-      "journal_url_checked_at": "2026-10-18T08:21:45.048Z",
+      "journal_url_checked_at": "2026-11-01T10:49:28.167Z",
       "graphical_abstract": "assets/publications/publisher-10-1038-s41598-024-69681-0.png",
       "graphical_abstract_kind": "publisher_preview"
     },
@@ -504,7 +504,7 @@ window.LAB_PUBLICATION_DATA={
       "oa_url": "https://doi.org/10.3390/min14030311",
       "publisher_landing_url": "https://doi.org/10.3390/min14030311",
       "pii": "",
-      "journal_url_checked_at": "2026-10-18T08:21:45.048Z"
+      "journal_url_checked_at": "2026-11-01T10:49:28.167Z"
     },
     {
       "year": 2023,
@@ -537,7 +537,7 @@ window.LAB_PUBLICATION_DATA={
       "oa_url": "",
       "publisher_landing_url": "https://doi.org/10.1016/j.coal.2023.104370",
       "pii": "",
-      "journal_url_checked_at": "2026-10-18T08:21:45.048Z"
+      "journal_url_checked_at": "2026-11-01T10:49:28.167Z"
     },
     {
       "year": 2023,
@@ -570,7 +570,7 @@ window.LAB_PUBLICATION_DATA={
       "oa_url": "https://doi.org/10.1016/j.seppur.2023.124530",
       "publisher_landing_url": "https://doi.org/10.1016/j.seppur.2023.124530",
       "pii": "",
-      "journal_url_checked_at": "2026-10-18T08:21:45.048Z"
+      "journal_url_checked_at": "2026-11-01T10:49:28.167Z"
     },
     {
       "year": 2022,
@@ -634,7 +634,7 @@ window.LAB_PUBLICATION_DATA={
       "oa_url": "https://doi.org/10.1016/j.jhazmat.2022.129732",
       "publisher_landing_url": "https://doi.org/10.1016/j.jhazmat.2022.129732",
       "pii": "",
-      "journal_url_checked_at": "2026-10-18T08:21:45.048Z"
+      "journal_url_checked_at": "2026-11-01T10:49:28.167Z"
     },
     {
       "year": 2022,
@@ -667,7 +667,7 @@ window.LAB_PUBLICATION_DATA={
       "oa_url": "https://doi.org/10.1016/j.jhazmat.2022.128373",
       "publisher_landing_url": "https://doi.org/10.1016/j.jhazmat.2022.128373",
       "pii": "",
-      "journal_url_checked_at": "2026-10-18T08:21:45.048Z"
+      "journal_url_checked_at": "2026-11-01T10:49:28.167Z"
     },
     {
       "year": 2020,
@@ -698,7 +698,7 @@ window.LAB_PUBLICATION_DATA={
       "oa_url": "http://hdl.handle.net/2115/82853",
       "publisher_landing_url": "https://doi.org/10.1080/00223131.2020.1775717",
       "pii": "",
-      "journal_url_checked_at": "2026-10-18T08:21:45.048Z"
+      "journal_url_checked_at": "2026-11-01T10:49:28.167Z"
     }
   ]
 };

@@ -1,9 +1,9 @@
 window.LAB_PUBLICATION_DATA={
-  "last_updated": "2026-11-04T19:44:20.740Z",
+  "last_updated": "2026-11-07T12:57:49.974Z",
   "source": "OpenAlex (ORCID) with curated corrections",
   "metrics": {
     "publications": 22,
-    "citations": 271,
+    "citations": 272,
     "h_index": 8,
     "i10_index": 8
   },
@@ -609,7 +609,7 @@ window.LAB_PUBLICATION_DATA={
       "authors": "Raudhatul Islam Chaerun, Natatsawas Soonthornwiphat, Kanako Toda, Kazuma Kuroda, Xiaobo Niu, Ryosuke Kikuchi, Tsubasa Otake, Yogarajah Elakneswaran, John L. Provis, Tsutomu Satō",
       "journal": "Journal of Hazardous Materials",
       "details": "440, 129732–129732",
-      "citations": 31,
+      "citations": 32,
       "url": "https://doi.org/10.1016/j.jhazmat.2022.129732",
       "doi": "10.1016/j.jhazmat.2022.129732",
       "type": "article",

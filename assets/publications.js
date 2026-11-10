@@ -1,9 +1,9 @@
 window.LAB_PUBLICATION_DATA={
-  "last_updated": "2026-11-07T12:57:49.974Z",
+  "last_updated": "2026-11-10T19:42:17.846Z",
   "source": "OpenAlex (ORCID) with curated corrections",
   "metrics": {
     "publications": 22,
-    "citations": 272,
+    "citations": 275,
     "h_index": 8,
     "i10_index": 8
   },
@@ -200,7 +200,7 @@ window.LAB_PUBLICATION_DATA={
       "authors": "Siti Khodijah Chaerun, Ronny Winarko, Raudhatul Islam Chaerun, Fika Rofiek Mufakhir, Sarinah Tiodora Lumbantobing, Aisyah Minzikrina Masbar Rus, Muhammad Hafid Masruri, Zela Tanlega Ichlas, Wahyudin Prawira Minwal, Imam Santoso, Widi Astuti",
       "journal": "Journal of Sustainable Metallurgy",
       "details": "11(4), 3646–3658",
-      "citations": 10,
+      "citations": 11,
       "url": "https://doi.org/10.1007/s40831-025-01320-y",
       "doi": "10.1007/s40831-025-01320-y",
       "type": "article",
@@ -323,7 +323,7 @@ window.LAB_PUBLICATION_DATA={
       "authors": "Raudhatul Islam Chaerun, Nadiya Ayu Astarini, Akhmad Al Ittikhad, Hendy Gilang Syahputra, Ronny Winarko, Siti Khodijah Chaerun",
       "journal": "Green Energy and Technology",
       "details": ", 251–314",
-      "citations": 5,
+      "citations": 6,
       "url": "https://doi.org/10.1007/978-981-96-1921-4_5",
       "doi": "10.1007/978-981-96-1921-4_5",
       "type": "book-chapter",
@@ -416,7 +416,7 @@ window.LAB_PUBLICATION_DATA={
       "authors": "Danni Gathot Harbowo, Aswan Aswan, Yahdi Zaim, Siti Khodijah Chaerun, Raudhatul Islam Chaerun, Widi Astuti, Tsutomu Sato",
       "journal": "Scientific Reports",
       "details": "14(1), 19101–19101",
-      "citations": 4,
+      "citations": 5,
       "url": "https://doi.org/10.1038/s41598-024-69681-0",
       "doi": "10.1038/s41598-024-69681-0",
       "type": "article",

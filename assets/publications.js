@@ -1,9 +1,9 @@
 window.LAB_PUBLICATION_DATA={
-  "last_updated": "2026-11-10T19:42:17.846Z",
+  "last_updated": "2026-11-11T19:34:13.901Z",
   "source": "OpenAlex (ORCID) with curated corrections",
   "metrics": {
     "publications": 22,
-    "citations": 275,
+    "citations": 276,
     "h_index": 8,
     "i10_index": 8
   },
@@ -200,7 +200,7 @@ window.LAB_PUBLICATION_DATA={
       "authors": "Siti Khodijah Chaerun, Ronny Winarko, Raudhatul Islam Chaerun, Fika Rofiek Mufakhir, Sarinah Tiodora Lumbantobing, Aisyah Minzikrina Masbar Rus, Muhammad Hafid Masruri, Zela Tanlega Ichlas, Wahyudin Prawira Minwal, Imam Santoso, Widi Astuti",
       "journal": "Journal of Sustainable Metallurgy",
       "details": "11(4), 3646–3658",
-      "citations": 11,
+      "citations": 12,
       "url": "https://doi.org/10.1007/s40831-025-01320-y",
       "doi": "10.1007/s40831-025-01320-y",
       "type": "article",

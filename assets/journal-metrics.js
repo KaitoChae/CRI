@@ -1,5 +1,5 @@
 window.CRI_JOURNAL_METRICS={
-  "updated_at": "2026-11-15T06:26:38.652Z",
+  "updated_at": "2026-11-15T11:33:24.589Z",
   "by_issn": {
     "13835866": {
       "impact_factor": 9.1,
@@ -99,7 +99,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_issn": "20452322"
     },
     "21993823": {
-      "impact_factor": 3.61,
+      "impact_factor": 3.62,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
@@ -136,7 +136,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_issn": "25726641"
     },
     "26665239": {
-      "impact_factor": 6.36,
+      "impact_factor": 6.35,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
@@ -181,7 +181,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_issn": "28371445"
     },
     "29481546": {
-      "impact_factor": 5.62,
+      "impact_factor": 5.65,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
@@ -252,7 +252,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_source": "SCImago Journal & Country Rank"
     },
     "00456535": {
-      "impact_factor": 11.71,
+      "impact_factor": 11.74,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
@@ -387,7 +387,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_issn": "09500618"
     },
     "journal of sustainable metallurgy": {
-      "impact_factor": 3.61,
+      "impact_factor": 3.62,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
@@ -415,7 +415,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_issn": "28371445"
     },
     "applied surface science advances": {
-      "impact_factor": 6.36,
+      "impact_factor": 6.35,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
@@ -470,7 +470,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_issn": "18653529"
     },
     "chemosphere": {
-      "impact_factor": 11.71,
+      "impact_factor": 11.74,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
@@ -590,7 +590,7 @@ window.CRI_JOURNAL_METRICS={
       "issn": ""
     },
     "discover civil engineering": {
-      "impact_factor": 5.62,
+      "impact_factor": 5.65,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
@@ -626,6 +626,6 @@ window.CRI_JOURNAL_METRICS={
     "reference module in earth systems and environmental sciences": {}
   },
   "by_doi": {},
-  "sjr_last_checked_at": "2026-11-14T10:59:15.720Z",
+  "sjr_last_checked_at": "2026-11-15T11:33:24.589Z",
   "sjr_update_status": "SCImago unavailable — displaying dated, previously obtained data"
 };

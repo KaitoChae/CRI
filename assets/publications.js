@@ -1,9 +1,9 @@
 window.LAB_PUBLICATION_DATA={
-  "last_updated": "2026-11-16T21:59:13.193Z",
+  "last_updated": "2026-11-17T20:53:33.613Z",
   "source": "OpenAlex (ORCID) with curated corrections",
   "metrics": {
     "publications": 22,
-    "citations": 296,
+    "citations": 297,
     "h_index": 8,
     "i10_index": 8
   },
@@ -582,7 +582,7 @@ window.LAB_PUBLICATION_DATA={
       "url": "https://doi.org/10.3985/mcwmr.33.448",
       "type": "article",
       "publication_type": "Research article",
-      "citations": 6,
+      "citations": 7,
       "publisher": "Japan Society of Waste Management Experts",
       "publisher_url": "",
       "journal_url": "https://www.jstage.jst.go.jp/browse/mcwmr",

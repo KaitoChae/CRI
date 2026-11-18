@@ -1,5 +1,5 @@
 window.LAB_PUBLICATION_DATA={
-  "last_updated": "2026-11-17T20:53:33.613Z",
+  "last_updated": "2026-11-18T20:29:00.816Z",
   "source": "OpenAlex (ORCID) with curated corrections",
   "metrics": {
     "publications": 22,
@@ -695,7 +695,7 @@ window.LAB_PUBLICATION_DATA={
       "book_title": "",
       "conference_proceedings": false,
       "open_access": true,
-      "oa_url": "http://hdl.handle.net/2115/82853",
+      "oa_url": "https://hdl.handle.net/2115/82853",
       "publisher_landing_url": "https://doi.org/10.1080/00223131.2020.1775717",
       "pii": "",
       "journal_url_checked_at": "2026-11-15T11:33:27.332Z"

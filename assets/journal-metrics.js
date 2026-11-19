@@ -1,5 +1,5 @@
 window.CRI_JOURNAL_METRICS={
-  "updated_at": "2026-11-19T07:22:10.922Z",
+  "updated_at": "2026-11-19T12:14:07.477Z",
   "by_issn": {
     "13835866": {
       "impact_factor": 9.1,
@@ -136,7 +136,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_issn": "25726641"
     },
     "26665239": {
-      "impact_factor": 11.21,
+      "impact_factor": 11.22,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
@@ -167,7 +167,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_issn": "27728269"
     },
     "28371445": {
-      "impact_factor": 4.22,
+      "impact_factor": 4.23,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
@@ -401,7 +401,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_issn": "21993823"
     },
     "acs sustainable resource management": {
-      "impact_factor": 4.22,
+      "impact_factor": 4.23,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
@@ -415,7 +415,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_issn": "28371445"
     },
     "applied surface science advances": {
-      "impact_factor": 11.21,
+      "impact_factor": 11.22,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
@@ -626,6 +626,6 @@ window.CRI_JOURNAL_METRICS={
     "reference module in earth systems and environmental sciences": {}
   },
   "by_doi": {},
-  "sjr_last_checked_at": "2026-11-18T12:20:01.805Z",
+  "sjr_last_checked_at": "2026-11-19T12:14:07.477Z",
   "sjr_update_status": "SCImago unavailable — displaying dated, previously obtained data"
 };

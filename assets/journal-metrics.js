@@ -1,5 +1,5 @@
 window.CRI_JOURNAL_METRICS={
-  "updated_at": "2026-11-24T14:19:47.293Z",
+  "updated_at": "2026-11-24T22:24:38.442Z",
   "by_issn": {
     "13835866": {
       "impact_factor": 9.1,
@@ -136,7 +136,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_issn": "25726641"
     },
     "26665239": {
-      "impact_factor": 11.26,
+      "impact_factor": 11.28,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
@@ -181,7 +181,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_issn": "28371445"
     },
     "29481546": {
-      "impact_factor": 5.39,
+      "impact_factor": 5.4,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
@@ -415,7 +415,7 @@ window.CRI_JOURNAL_METRICS={
       "sjr_issn": "28371445"
     },
     "applied surface science advances": {
-      "impact_factor": 11.26,
+      "impact_factor": 11.28,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",
@@ -590,7 +590,7 @@ window.CRI_JOURNAL_METRICS={
       "issn": ""
     },
     "discover civil engineering": {
-      "impact_factor": 5.39,
+      "impact_factor": 5.4,
       "impact_factor_year": 2025,
       "impact_factor_source": "OpenAlex 2-year mean citedness (not Clarivate JIF)",
       "impact_factor_kind": "openalex",

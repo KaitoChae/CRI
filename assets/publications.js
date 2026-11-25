@@ -1,9 +1,9 @@
 window.LAB_PUBLICATION_DATA={
-  "last_updated": "2026-11-20T20:13:58.959Z",
+  "last_updated": "2026-11-25T13:36:06.316Z",
   "source": "OpenAlex (ORCID) with curated corrections",
   "metrics": {
     "publications": 22,
-    "citations": 297,
+    "citations": 296,
     "h_index": 8,
     "i10_index": 8
   },
@@ -675,7 +675,7 @@ window.LAB_PUBLICATION_DATA={
       "authors": "Natatsawas Soonthornwiphat, Yutaro Kobayashi, Kanako Toda, Kazuma Kuroda, Raudhatul Islam Chaerun, Tsubasa Otake, Yogarajah Elakneswaran, John L. Provis, Tsutomu Satō",
       "journal": "Journal of Nuclear Science and Technology",
       "details": "57(10), 1181–1188",
-      "citations": 29,
+      "citations": 28,
       "url": "https://doi.org/10.1080/00223131.2020.1775717",
       "doi": "10.1080/00223131.2020.1775717",
       "type": "article",

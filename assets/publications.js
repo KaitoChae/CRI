@@ -1,9 +1,9 @@
 window.LAB_PUBLICATION_DATA={
-  "last_updated": "2026-11-26T13:14:03.177Z",
+  "last_updated": "2026-11-28T12:27:39.446Z",
   "source": "OpenAlex (ORCID) with curated corrections",
   "metrics": {
     "publications": 22,
-    "citations": 296,
+    "citations": 297,
     "h_index": 8,
     "i10_index": 8
   },
@@ -545,7 +545,7 @@ window.LAB_PUBLICATION_DATA={
       "authors": "Xiaobo Niu, Yogarajah Elakneswaran, Raudhatul Islam Chaerun, Chuwei Fang, Naoki Hiroyoshi, John L. Provis, Tsutomu Satō",
       "journal": "Separation and Purification Technology",
       "details": "324, 124530–124530",
-      "citations": 27,
+      "citations": 28,
       "url": "https://doi.org/10.1016/j.seppur.2023.124530",
       "doi": "10.1016/j.seppur.2023.124530",
       "type": "article",
